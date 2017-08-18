@@ -267,6 +267,10 @@ class Main extends MY_Controller {
                         {
                             $event = explode('-',$query[2]);
                             $eventData = $this->dashboard_model->getFullEventInfoById($event[1]);
+                            if(!myIsArray($eventData))
+                            {
+                                $eventData = $this->dashboard_model->getCompEventInfoById($event[1]);
+                            }
                             //$eventAtt = $this->dashboard_model->getEventAttById($event[1]);
                             $data['meta']['title'] = $eventData[0]['eventName'];
                             $d = date_create($eventData[0]['eventDate']);
@@ -299,6 +303,10 @@ class Main extends MY_Controller {
                         {
                             //$event = explode('-',$query[2]);
                             $eventData = $this->dashboard_model->getFullEventInfoBySlug($query[2]);
+                            if(!myIsArray($eventData))
+                            {
+                                $eventData = $this->dashboard_model->getCompEventInfoBySlug($query[2]);
+                            }
                             //$eventAtt = $this->dashboard_model->getEventAttById($event[1]);
                             $data['meta']['title'] = $eventData[0]['eventName'];
                             $d = date_create($eventData[0]['eventDate']);
@@ -500,6 +508,10 @@ class Main extends MY_Controller {
                             {
                                 //$event = explode('-',$query[2]);
                                 $eventData = $this->dashboard_model->getFullEventInfoBySlug($query[2]);
+                                if(!myIsArray($eventData))
+                                {
+                                    $eventData = $this->dashboard_model->getCompEventInfoBySlug($query[2]);
+                                }
                                 //$eventAtt = $this->dashboard_model->getEventAttById($event[1]);
                                 $data['meta']['title'] = $eventData[0]['eventName'];
                                 $d = date_create($eventData[0]['eventDate']);
@@ -662,6 +674,11 @@ class Main extends MY_Controller {
         /*$decodedS = explode('-',$eventId);
         $eventId = $decodedS[count($decodedS)-1];*/
         $events = $this->dashboard_model->getFullEventInfoBySlug($eventSlug);
+        if(!myIsArray($events))
+        {
+            $events = $this->dashboard_model->getCompEventInfoBySlug($eventSlug);
+            $data['eventCompleted'] = true;
+        }
 
         $data['meta']['title'] = $events[0]['eventName'];
         $data['eventDetails'] = $events;

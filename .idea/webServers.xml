@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6a9cea67-1f50-41f9-a028-ae12c9d2de42" name="live mobile" url="http://doolally.io">
+        <fileTransfer host="doolally.io" port="22" privateKey="C:\Users\anshul\Downloads\doolProd.ppk" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

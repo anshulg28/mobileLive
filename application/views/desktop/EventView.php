@@ -183,7 +183,7 @@
                                     <a href="http://beerolympics.in" target="_blank" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn">Visit Now </a>
                                     <?php
                                 }
-                                elseif($row['isEventEverywhere'] == STATUS_YES)
+                                elseif($row['isEventEverywhere'] == STATUS_YES || (isset($eventCompleted) && $eventCompleted))
                                 {
                                     ?>
                                     <!--<a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for creating! </a>-->

@@ -199,7 +199,7 @@
                                             <a href="http://beerolympics.in" target="_blank" class="button button-big button-fill bookNow-event-btn external">Visit Now </a>
                                             <?php
                                         }
-                                        elseif($row['isEventEverywhere'] == STATUS_YES)
+                                        elseif($row['isEventEverywhere'] == STATUS_YES || (isset($eventCompleted) && $eventCompleted))
                                         {
                                             ?>
                                             <!--<a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for creating! </a>-->

@@ -803,11 +803,12 @@ class Dashboard_Model extends CI_Model
 
     public function getCompEventInfoBySlug($eventSlug)
     {
-        $query = "SELECT em.*, ea.filename, l.locName, l.mapLink
+        $query = "SELECT em.*, ea.filename, l.locName, l.mapLink, eh.highId
                   FROM eventcompletedmaster em
                   LEFT JOIN eventattachment ea ON ea.eventId = em.eventId
                   LEFT JOIN locationmaster l ON eventPlace = l.id
                   LEFT JOIN eventslugmaster esm ON em.eventId = esm.eventId
+                  LEFT JOIN eventshighmaster eh ON em.eventId = eh.eventId
                   WHERE esm.eventSlug LIKE '".$eventSlug."' GROUP BY em.eventId";
 
         $result = $this->db->query($query)->result_array();
