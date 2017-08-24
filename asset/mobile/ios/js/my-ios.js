@@ -452,6 +452,7 @@ myApp.onPageInit('eventAdd', function (page) {
                 'eventDate' : $$('.event-add #eventDate').val()
             };
 
+            var errUrl = base_url+'checkEventSpace';
             $.ajax({
                 type:"POST",
                 dataType: 'json',
@@ -471,7 +472,7 @@ myApp.onPageInit('eventAdd', function (page) {
                     vex.dialog.alert({
                         unsafeMessage: '<label class="head-title">Error!</label><br><br>Some Error Occurred!'
                     });
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });
@@ -489,6 +490,7 @@ myApp.onPageInit('eventAdd', function (page) {
                 'eventDate' : $$('.event-add #eventDate').val()
             };
 
+            var errUrl = base_url+'checkEventSpace';
             $.ajax({
                 type:"POST",
                 dataType: 'json',
@@ -508,7 +510,7 @@ myApp.onPageInit('eventAdd', function (page) {
                     vex.dialog.alert({
                         unsafeMessage: '<label class="head-title">Error!</label><br><br>Some Error Occurred!'
                     });
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });
@@ -683,6 +685,7 @@ myApp.onPageInit('eventAdd', function (page) {
             xhr.abort();
             myApp.showIndicator();
             cropData['imgData'] = $('#img-container').cropper('getCroppedCanvas').toDataURL();
+            var errUrl = base_url+'dashboard/cropEventImage';
             $.ajax({
                 type:'POST',
                 dataType:'json',
@@ -722,7 +725,7 @@ myApp.onPageInit('eventAdd', function (page) {
                         hold:10*1000
                     });
                     xhr.abort();
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                     return false;
                 }
@@ -1045,6 +1048,7 @@ myApp.onPageInit('eventEdit', function (page) {
             xhr.abort();
             myApp.showIndicator();
             cropData['imgData'] = $('#img-container').cropper('getCroppedCanvas').toDataURL();
+            var errUrl = base_url+'dashboard/cropEventImage';
             $.ajax({
                 type:'POST',
                 dataType:'json',
@@ -1084,7 +1088,7 @@ myApp.onPageInit('eventEdit', function (page) {
                         hold:10*1000
                     });
                     xhr.abort();
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                     return false;
                 }
@@ -1372,6 +1376,7 @@ myApp.onPageInit('songlist', function(page){
                     'tapId': tapId,
                     'location': jukeLong+','+jukeLat
                 };
+                var errUrl = base_url+'main/playTapSong';
                 $.ajax({
                     type:'POST',
                     dataType:'json',
@@ -1420,7 +1425,7 @@ myApp.onPageInit('songlist', function(page){
                         vex.dialog.alert({
                             unsafeMessage: '<label class="head-title">Error!</label><br><br>Some Error Occurred!'
                         });
-                        var err = '<pre>'+xhr.responseText+'</pre>';
+                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                         saveErrorLog(err);
                     }
                 });
@@ -1444,6 +1449,7 @@ myApp.onPageInit('songlist', function(page){
             console.log('User signed out.');
         });
         myApp.showIndicator();
+        var errUrl = base_url+'main/appLogout';
         $$.ajax({
             method:"GET",
             url: base_url+'main/appLogout',
@@ -1463,7 +1469,7 @@ myApp.onPageInit('songlist', function(page){
                     title: 'Error!',
                     message: 'Some Error Occurred!'
                 });
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -2613,6 +2619,7 @@ $$(document).on('click','#logout-btn', function(){
         });
     }
     myApp.showIndicator();
+    var errUrl = base_url+'main/appLogout';
     $$.ajax({
         method:"GET",
         url: base_url+'main/appLogout',
@@ -2633,7 +2640,7 @@ $$(document).on('click','#logout-btn', function(){
                 title: 'Error!',
                 message: 'Some Error Occurred!'
             });
-            var err = '<pre>'+xhr.responseText+'</pre>';
+            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
             saveErrorLog(err);
         }
     });
@@ -3012,6 +3019,7 @@ function urlshort(url)
 function cancelEvent(eventId)
 {
     myApp.showIndicator();
+    var errUrl = base_url+'dashboard/cancelEvent/'+eventId;
     $$.ajax({
         method:"GET",
         url: base_url+'dashboard/cancelEvent/'+eventId,
@@ -3033,7 +3041,7 @@ function cancelEvent(eventId)
                 message: 'Some Error Occurred!'
             });
             vex.closeTop();
-            var err = '<pre>'+xhr.responseText+'</pre>';
+            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
             saveErrorLog(err);
         }
     });
@@ -3175,6 +3183,7 @@ function statusChangeCallback(response)
                 'email': response.email
             };
 
+            var errUrl = base_url+'main/checkJukeboxUser';
             myApp.showIndicator();
             $.ajax({
                 type:'POST',
@@ -3192,7 +3201,7 @@ function statusChangeCallback(response)
                     vex.dialog.alert({
                         unsafeMessage: '<label class="head-title">Error!</label><br><br>Some Error Occurred!'
                     });
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });
@@ -3207,6 +3216,7 @@ function onSuccess(googleUser) {
         'email': googleUser.getBasicProfile().getEmail()
     };
 
+    var errUrl = base_url+'main/checkJukeboxUser';
     myApp.showIndicator();
     $.ajax({
         type:'POST',
@@ -3224,7 +3234,7 @@ function onSuccess(googleUser) {
             vex.dialog.alert({
                 unsafeMessage: '<label class="head-title">Error!</label><br><br>Some Error Occurred!'
             });
-            var err = '<pre>'+xhr.responseText+'</pre>';
+            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
             saveErrorLog(err);
         }
     });
@@ -3271,6 +3281,7 @@ function jukeboxLoginFunc(ele)
     }
     $(ele).attr('disabled','disabled');
     myApp.showIndicator();
+    var errUrl = base_url+'main/checkJukeboxUser';
     $.ajax({
         type:'POST',
         dataType:'json',
@@ -3289,7 +3300,7 @@ function jukeboxLoginFunc(ele)
             vex.dialog.alert({
                 unsafeMessage: '<label class="head-title">Error!</label><br><br>Some Error Occurred!'
             });
-            var err = '<pre>'+xhr.responseText+'</pre>';
+            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
             saveErrorLog(err);
         }
     });
@@ -3336,6 +3347,7 @@ $(document).on('click','.eve-cancel-btn', function(){
         message: 'Are you sure you want to cancel?',
         callback: function (value) {
             if (value) {
+                var errUrl = base_url+'eventCancel';
                 myApp.showIndicator();
                 $.ajax({
                     type:'POST',
@@ -3371,7 +3383,7 @@ $(document).on('click','.eve-cancel-btn', function(){
                         vex.dialog.alert({
                             unsafeMessage: '<label class="head-title">Error!</label><br><br>Some Error Occurred!'
                         });
-                        var err = '<pre>'+xhr.responseText+'</pre>';
+                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                         saveErrorLog(err);
                     }
                 });

@@ -1376,6 +1376,7 @@
     });
     function load(url)
     {
+        var errUrl = url;
         $.ajax({
             type:'POST',
             cache: false,
@@ -1411,7 +1412,7 @@
             error: function(xhr, status ,error)
             {
                 alert('Error Fetching Details!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -1604,6 +1605,7 @@
                     'email': response.email
                 };
 
+                var errUrl = base_url+'main/checkJukeboxUser';
                 showProgressLoader();
                 $.ajax({
                     type:'POST',
@@ -1623,7 +1625,7 @@
                         vex.dialog.alert({
                             unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
                         });
-                        var err = '<pre>'+xhr.responseText+'</pre>';
+                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                         saveErrorLog(err);
                     }
                 });
@@ -1639,6 +1641,7 @@
             'email': googleUser.getBasicProfile().getEmail()
         };
 
+        var errUrl = base_url+'main/checkJukeboxUser';
         showProgressLoader();
         $.ajax({
             type:'POST',
@@ -1658,7 +1661,7 @@
                 vex.dialog.alert({
                     unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
                 });
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -1694,6 +1697,7 @@
             });
         }
         $(this).attr('disabled','disabled');
+        var errUrl = base_url+'main/checkJukeboxUser';
         showProgressLoader();
         $.ajax({
             type:'POST',
@@ -1713,7 +1717,7 @@
                 vex.dialog.alert({
                     unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
                 });
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -1729,6 +1733,7 @@
             GoogleAuth.signOut();
         }*/
         showProgressLoader();
+        var errUrl = base_url+'main/appLogout';
         $.ajax({
             type:'GET',
             dataType:'json',
@@ -1747,7 +1752,7 @@
                 vex.dialog.alert({
                     unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
                 });
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -1768,6 +1773,7 @@
                     'tapId': tapId,
                     'location': jukeLong+','+jukeLat
                 };
+                var errUrl = base_url+'main/playTapSong';
                 $.ajax({
                     type:'POST',
                     dataType:'json',
@@ -1802,7 +1808,7 @@
                         vex.dialog.alert({
                             unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
                         });
-                        var err = '<pre>'+xhr.responseText+'</pre>';
+                        var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                         saveErrorLog(err);
                     }
                 });
@@ -1831,6 +1837,7 @@
         }
         $(this).find('button[type="submit"]').attr('disabled','disabled');
         showProgressLoader();
+        var errUrl = base_url+'main/checkUser';
         $.ajax({
             type:'POST',
             dataType:'json',
@@ -1859,7 +1866,7 @@
                 vex.dialog.alert({
                     unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
                 });
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -2143,6 +2150,7 @@
                 'eventDate' : $('.event-add-page #eventDate').val()
             };
 
+            var errUrl = base_url+'checkEventSpace';
             $.ajax({
                 type:"POST",
                 dataType: 'json',
@@ -2162,7 +2170,7 @@
                     vex.dialog.alert({
                         unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
                     });
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });
@@ -2254,6 +2262,7 @@
         {
             showProgressLoader();
             cropData['imgData'] = $('#img-container').cropper('getCroppedCanvas').toDataURL();
+            var errUrl = base_url+'dashboard/cropEventImage';
             $.ajax({
                 type:'POST',
                 dataType:'json',
@@ -2281,7 +2290,7 @@
                 {
                     hideProgressLoader();
                     mySnackTime('Some Error Occurred!');
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                     return false;
                 }
@@ -2314,6 +2323,7 @@
         if(!isReqPending)
         {
             isReqPending = true;
+            var errUrl = $(ele).attr('action');
             showProgressLoader();
             $.ajax({
                 type:'POST',
@@ -2349,7 +2359,7 @@
                     vex.dialog.alert({
                         unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
                     });
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });
@@ -2443,6 +2453,7 @@
         if(typeof cropData['imgUrl'] != 'undefined' && eventEditStatus === false)
         {
             showProgressLoader();
+            var errUrl = base_url+'dashboard/cropEventImage';
             cropData['imgData'] = $('#img-container').cropper('getCroppedCanvas').toDataURL();
             $.ajax({
                 type:'POST',
@@ -2471,7 +2482,7 @@
                 {
                     hideProgressLoader();
                     mySnackTime('Some Error Occurred!');
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                     return false;
                 }
@@ -2504,6 +2515,7 @@
         if(!isReqEditPending)
         {
             isReqEditPending = true;
+            var errUrl = $(ele).attr('action');
             showProgressLoader();
             $.ajax({
                 type:'POST',
@@ -2554,7 +2566,7 @@
                     vex.dialog.alert({
                         unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
                     });
-                    var err = '<pre>'+xhr.responseText+'</pre>';
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                     saveErrorLog(err);
                 }
             });
@@ -2564,6 +2576,7 @@
 
     $(document).on('click','#dashboard-logout', function(){
         showProgressLoader();
+        var errUrl = base_url+'main/appLogout';
         $.ajax({
             type:'GET',
             dataType:'json',
@@ -2582,7 +2595,7 @@
                 vex.dialog.alert({
                     unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
                 });
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -2649,6 +2662,7 @@
     function cancelEvent(eventId)
     {
         showProgressLoader();
+        var errUrl = base_url+'dashboard/cancelEvent/'+eventId;
         $.ajax({
             method:"GET",
             url: base_url+'dashboard/cancelEvent/'+eventId,
@@ -2664,7 +2678,7 @@
             error: function(xhr, status, error){
                hideProgressLoader();
                 mySnackTime('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
                 vex.closeTop();
             }
@@ -2680,6 +2694,7 @@
             callback: function (value) {
                 if (value) {
                     showProgressLoader();
+                    var errUrl = base_url+'eventCancel';
                     $.ajax({
                         type: 'POST',
                         dataType: 'json',
@@ -2712,7 +2727,7 @@
                             vex.dialog.alert({
                                 unsafeMessage: '<label class="head-title">Error!</label><br><br>Some Error Occurred!'
                             });
-                            var err = '<pre>'+xhr.responseText+'</pre>';
+                            var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                             saveErrorLog(err);
                         }
                     });
@@ -3024,6 +3039,7 @@
 
         var ifError = '';
         showCustomLoader();
+        var errUrl = 'https://developer.eventshigh.com/refund_booking?key=ev3nt5h1ghte5tK3y';
         $.ajax({
             type:'POST',
             dataType: 'json',
@@ -3045,7 +3061,7 @@
             error: function(xhr, status, error){
                 hideCustomLoader();
                 bootbox.alert('Some Error Occurred!');
-                var err = '<pre>'+xhr.responseText+'</pre>';
+                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
