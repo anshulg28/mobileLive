@@ -280,6 +280,37 @@ if(!function_exists('isEventFinished'))
     }
 }
 
+if(!function_exists('isEventStarted'))
+{
+    function isEventStarted($eventDate,$startTime) {
+
+        $result = false;
+
+        $date1 = date_create(date('Y-m-d'));
+        $date2 = date_create($eventDate);
+        $diff = date_diff($date1, $date2);
+        if($diff->format("%a") != '0')
+        {
+            $result = false;
+        }
+        else
+        {
+            $eventTime = date("H:i", strtotime($startTime));
+            $nowTime = date('H:i');
+            if($nowTime > $eventTime)
+            {
+                $result = true;
+            }
+            else
+            {
+                $result = false;
+            }
+        }
+
+        return $result;
+    }
+}
+
 if(!function_exists('slugify'))
 {
     function slugify($text)

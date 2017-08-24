@@ -189,6 +189,12 @@
                                     <!--<a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for creating! </a>-->
                                     <?php
                                 }
+                                elseif(isEventStarted($row['eventDate'], $row['startTime']))
+                                {
+                                    ?>
+                                    <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Event Started! </a>
+                                    <?php
+                                }
                                 elseif(isset($userCreated) && $userCreated === true)
                                 {
                                     ?>

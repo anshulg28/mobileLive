@@ -74,15 +74,17 @@
                         <ul class="pagination list-of-song"></ul>
                         <ul class="list my-song-list">
                             <?php
-                            foreach($songs[0] as $key => $row)
+                            foreach($songs as $playKey => $playRow)
                             {
+                                foreach($playRow as $key => $row)
+                                {
 
-                                ?>
-                                <li class="request_song_btn" data-songId="<?php echo $row['id'];?>"
-                                    data-tapId="<?php echo $tapId;?>">
-                                    <div class="item-content">
-                                        <div class="item-media">
-                                            <?php
+                                    ?>
+                                    <li class="request_song_btn" data-songId="<?php echo $row['id'];?>"
+                                        data-tapId="<?php echo $tapId;?>">
+                                        <div class="item-content">
+                                            <div class="item-media">
+                                                <?php
                                                 if($row['albumartThumbnail'] == '')
                                                 {
                                                     ?>
@@ -96,22 +98,23 @@
 
                                                     <?php
                                                 }
-                                            ?>
-                                        </div>
-                                        <div class="item-inner">
-                                            <div class="item-title-row">
-                                                <div class="item-title"><?php echo $row['name'];?></div>
+                                                ?>
                                             </div>
-                                            <div class="item-subtitle">
-                                                <?php echo $row['artist'];?>
-                                                <div class="plus-sign-btn">
-                                                    <i class="fa fa-plus"></i>
+                                            <div class="item-inner">
+                                                <div class="item-title-row">
+                                                    <div class="item-title"><?php echo $row['name'];?></div>
+                                                </div>
+                                                <div class="item-subtitle">
+                                                    <?php echo $row['artist'];?>
+                                                    <div class="plus-sign-btn">
+                                                        <i class="fa fa-plus"></i>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </li>
-                                <?php
+                                    </li>
+                                    <?php
+                                }
                             }
                             ?>
                         </ul>

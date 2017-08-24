@@ -20,25 +20,27 @@ if(isset($status) && $status === true)
             <ul class="demo-list-two mdl-list list clear">
                 <?php
                 //$songCount = 0;
-                foreach($songs[0] as $key => $row)
+                foreach($songs as $playKey => $playRow)
                 {
-                    ?>
-                    <li class="mdl-list__item mdl-list__item--two-line demo-card-square mdl-shadow--2dp request_song_btn" data-songId="<?php echo $row['id'];?>"
-                        data-tapId="<?php echo $tapId;?>">
+                    foreach($playRow as $key => $row)
+                    {
+                        ?>
+                        <li class="mdl-list__item mdl-list__item--two-line demo-card-square mdl-shadow--2dp request_song_btn" data-songId="<?php echo $row['id'];?>"
+                            data-tapId="<?php echo $tapId;?>">
                         <span class="mdl-list__item-primary-content">
                             <?php
-                                if($row['albumartThumbnail'] == '')
-                                {
-                                    ?>
-                                    <i class="fa fa-music music-placeholder mdl-list__item-avatar"></i>
-                                    <?php
-                                }
-                                else
-                                {
-                                    ?>
-                                    <img class="queue-img-icon mdl-list__item-avatar" src="<?php $url = preg_replace("/^http:/i", "https:", $row['albumartThumbnail']); echo $url;?>" width="44"/>
-                                    <?php
-                                }
+                            if($row['albumartThumbnail'] == '')
+                            {
+                                ?>
+                                <i class="fa fa-music music-placeholder mdl-list__item-avatar"></i>
+                                <?php
+                            }
+                            else
+                            {
+                                ?>
+                                <img class="queue-img-icon mdl-list__item-avatar" src="<?php $url = preg_replace("/^http:/i", "https:", $row['albumartThumbnail']); echo $url;?>" width="44"/>
+                                <?php
+                            }
                             ?>
                             <span class="song-name">
                                 <?php
@@ -48,12 +50,13 @@ if(isset($status) && $status === true)
                             </span>
                             <span class="mdl-list__item-sub-title artist-name"><?php echo $row['artist'];?></span>
                         </span>
-                        <span class="mdl-list__item-secondary-content">
+                            <span class="mdl-list__item-secondary-content">
                             <i class="fa fa-plus"></i>
                         </span>
-                    </li>
-                    <?php
-                    //$songCount++;
+                        </li>
+                        <?php
+                        //$songCount++;
+                    }
                 }
                 ?>
             </ul>
@@ -94,7 +97,7 @@ else
 ?>
 </div>
 <script>
-    var tapId = <?php echo $tapId;?>;
+    var tapId = '<?php if(isset($tapId)){ echo $tapId;}else{echo '';};?>';
     $(function() {
         var monkeyList = new List('song-list', {
             valueNames: ['song-name','artist-name'],
@@ -120,7 +123,7 @@ else
     $(document).on('keyup','#sample3', function(){
         var keyText = $(this).val();
 
-        if(keyText != '' && $('.demo-list-two li').length == 0)
+        if(keyText != '' && $('.demo-list-two li').length == 0 && tapId != '')
         {
             $.ajax({
                 type:'POST',

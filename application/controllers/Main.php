@@ -1613,6 +1613,7 @@ class Main extends MY_Controller {
         $post = $this->input->post();
         $data = array();
 
+        $data['tapId'] = '';
         if(isSessionVariableSet($this->isMobUserSession) === FALSE)
         {
             $data['status'] = FALSE;
