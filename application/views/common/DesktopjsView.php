@@ -404,6 +404,7 @@
 
     var isFnbShare = false;
     var fnbId = 0;
+    var isRegistered = false;
 
     $(window).load(function(){
         $('.mainFeed-img').each(function(i,val){
@@ -426,6 +427,7 @@
             showProgressLoader();
             setTimeout(function(){
                 pushHistory('Doolally','event_dash',true);
+                isRegistered = true;
             },500);
         }
         else if($('#MojoStatus').val() == '2' || $('#eventsHigh').val() == '2')
@@ -530,6 +532,7 @@
                 data:{url:$(ele).val()},
                 success: function(data)
                 {
+
                     if(typeof data.image === 'undefined')
                     {
                         $(ele).parent().find('.liveurl').find('img').attr('src',base_url+'asset/images/placeholder.jpg');
@@ -541,11 +544,16 @@
                         //$(ele).parent().find('.liveurl').find('img').attr('data-src',);
                         //$(ele).parent().find('.liveurl').find('img').addClass('lazy');
                     }
-                    var mainTitle = data.title;
-                    if(data.title.length>45)
+                    var mainTitle = '';
+                    if(typeof data.title !== 'undefined')
                     {
-                        mainTitle = data.title.substr(0,45)+'...';
+                        mainTitle = data.title;
+                        if(data.title.length>45)
+                        {
+                            mainTitle = data.title.substr(0,45)+'...';
+                        }
                     }
+
                     $(ele).parent().find('.liveurl').find('.title').html(mainTitle);
                     $(ele).parent().find('.liveurl').find('.description').html(data.site_name);
                     $(ele).parent().find('.liveurl').removeClass('hide');
@@ -627,6 +635,8 @@
     var timelineScroll = 0;
     var eventScroll = 0;
     var fnbScroll = 0;
+    var lastFetched = 1;
+    var alreadyFetchingFeeds = false;
     $('.mdl-layout__content').scroll(function() {
 
         if($(this).scrollTop() >= 500)
@@ -686,8 +696,7 @@
                     // Update last loaded index
                     lastIndex = totalToLoad;
                     if (lastIndex >= maxItems) {
-                        // Nothing more to load, detach infinite scroll events to prevent unnecessary loading
-                        $('#loading-icn').parent().remove();
+                        getMeMoreFeeds(lastFetched);
                     }
                 },1000);
 
@@ -1005,7 +1014,7 @@
                     bigCardHtml += '<div class="my-card-items"><div class="mdl-card mdl-shadow--2dp demo-card-header-pic">';
                     bigCardHtml += '<div class="card-content"><div class="card-content-inner">';
                     bigCardHtml += '<ul class="mdl-list main-avatar-list"><li class="mdl-list__item mdl-list__item--two-line">';
-                    bigCardHtml += '<span class="mdl-list__item-primary-content"><img class="myAvtar-list mdl-list__item-avatar lazy" data-src="'+data[i]['poster_image']+'" width="44"/>';
+                    bigCardHtml += '<span class="mdl-list__item-primary-content"><img class="myAvtar-list mdl-list__item-avatar" src="'+data[i]['poster_image']+'" width="44"/>';
                     bigCardHtml += '<span class="avatar-title">'+data[i]['poster_name'].capitalize()+'</span>';
                     if(data[i].hasOwnProperty('source'))
                     {
@@ -1091,7 +1100,7 @@
                     bigCardHtml += '<div class="my-card-items"><div class="mdl-card mdl-shadow--2dp demo-card-header-pic">';
                     bigCardHtml += '<div class="card-content"><div class="card-content-inner">';
                     bigCardHtml += '<ul class="mdl-list main-avatar-list"><li class="mdl-list__item mdl-list__item--two-line">';
-                    bigCardHtml += '<span class="mdl-list__item-primary-content"><img class="myAvtar-list mdl-list__item-avatar lazy" data-src="https://graph.facebook.com/v2.7/'+data[i]['from']['id']+'/picture" width="44"/>';
+                    bigCardHtml += '<span class="mdl-list__item-primary-content"><img class="myAvtar-list mdl-list__item-avatar" src="https://graph.facebook.com/v2.7/'+data[i]['from']['id']+'/picture" width="44"/>';
                     bigCardHtml += '<span class="avatar-title">'+data[i]['from']['name'].capitalize()+'</span>';
                     bigCardHtml += '</span><span class="mdl-list__item-secondary-content">';
                     bigCardHtml += '<span class="mdl-list__item-secondary-info">';
@@ -1148,26 +1157,27 @@
 
                     data[i]['text'] = data[i]['text'].replace(/(#[a-z\d-]+)/ig,"<label>$1</label>");
                     data[i]['text'] = data[i]['text'].replace(/(@[a-z\d-]+)/ig,"<label>$1</label>");
-                    if(data[i]['text'].length > 140)
+                    truncated_RestaurantName = data[i]['text'];
+                    /*if(data[i]['text'].length > 140)
                     {
                         truncated_RestaurantName = data[i]['text'].substr(0,140)+'..';
                     }
                     else
                     {
                         truncated_RestaurantName = data[i]['text'];
-                    }
+                    }*/
 
                     var bigCardHtml = '';
                     bigCardHtml += '<a href="https://twitter.com/'+data[i]['user']['screen_name']+'/status/'+data[i]['id_str']+'" target="_blank" class="twitter-wrapper new-post-wrapper hide">';
                     bigCardHtml += '<div class="my-card-items"><div class="mdl-card mdl-shadow--2dp demo-card-header-pic">';
                     bigCardHtml += '<div class="card-content"><div class="card-content-inner">';
                     bigCardHtml += '<ul class="mdl-list main-avatar-list"><li class="mdl-list__item mdl-list__item--two-line">';
-                    bigCardHtml += '<span class="mdl-list__item-primary-content"><img class="myAvtar-list mdl-list__item-avatar lazy" data-src="'+data[i]['user']['profile_image_url_https']+'" width="44"/>';
+                    bigCardHtml += '<span class="mdl-list__item-primary-content"><img class="myAvtar-list mdl-list__item-avatar" src="'+data[i]['user']['profile_image_url_https']+'" width="44"/>';
                     bigCardHtml += '<span class="avatar-title">'+data[i]['user']['name'].capitalize()+'</span>';
                     bigCardHtml += '<span class="mdl-list__item-sub-title">@'+data[i]['user']['screen_name']+'</span>';
                     bigCardHtml += '</span><span class="mdl-list__item-secondary-content">';
                     bigCardHtml += '<span class="mdl-list__item-secondary-info">';
-                    bigCardHtml += '<i class="fa fa-twitter social-icon-gap"></i></span>';
+                    bigCardHtml += '<i class="fa fa-twitter fa-15x social-icon-gap"></i></span>';
                     bigCardHtml += '<span class="mdl-list__item-secondary-action">';
                     bigCardHtml += '<time class="timeago time-stamp" datetime="'+data[i]['created_at']+'"></time></span></span>';
                     bigCardHtml += '</li></ul>';
@@ -1262,7 +1272,7 @@
                         bigCardHtml += '</div></div></div>';
                     }
 
-                    if(data[i]['is_quote_status'] != null && data[i]['is_quote_status'] == true)
+                    if(data[i]['is_quote_status'] != null && data[i]['is_quote_status'] == false)
                     {
                         bigCardHtml += '<div class="mdl-card__supporting-text">';
                         bigCardHtml += '<p class="final-card-text">'+truncated_RestaurantName+'</p>';
@@ -1297,6 +1307,371 @@
         $("time.timeago").timeago();
     }
 
+    var foundMoreFeeds = false;
+    function getMeMoreFeeds(lastNum)
+    {
+        if(!alreadyFetchingFeeds)
+        {
+            alreadyFetchingFeeds = true;
+            $.ajax({
+                type:'GET',
+                dataType:'json',
+                url:base_url+'main/getMoreFeeds/'+lastNum,
+                success: function(data)
+                {
+                    alreadyFetchingFeeds = false;
+                    if(data.status == true)
+                    {
+                        lastFetched += 1;
+                        foundMoreFeeds = true;
+                        appendCards(data.moreFeeds);
+                    }
+                    else
+                    {
+                        // Nothing more to load, detach infinite scroll events to prevent unnecessary loading
+                        $('#loading-icn').parent().remove();
+                    }
+                },
+                error: function(){
+                    alreadyFetchingFeeds = false;
+                    console.log('error');
+                    // Nothing more to load, detach infinite scroll events to prevent unnecessary loading
+                    $('#loading-icn').parent().remove();
+                }
+            });
+        }
+    }
+
+    function appendCards(data)
+    {
+        var totalNew = 0;
+        var oldHeight = $('section#timelineTab').height();
+        var currData = '';
+        for(var i=0;i<data.length;i++) //for(var i=(data.length-1);i>=0;i--)
+        {
+            currData = i;
+            try
+            {
+                if(typeof data[i] != 'object')
+                {
+                    data[i] = eval('('+data[i]+')');
+                }
+                switch(data[i]['socialType'])
+                {
+                    case 'i':
+                        var truncated_RestaurantName ='';
+                        if(data[i]['unformatted_message'] != null)
+                        {
+                            var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+                            var backupLink = urlRegex.exec(data[i]['unformatted_message']);
+                            var truncated_RestaurantName ='';
+                            data[i]['unformatted_message'] = data[i]['unformatted_message'].replace(urlRegex,'');
+
+                            data[i]['unformatted_message'] = data[i]['unformatted_message'].replace(/(#[a-z\d-]+)/ig,"<label>$1</label>");
+                            data[i]['unformatted_message'] = data[i]['unformatted_message'].replace(/(@[a-z\d-]+)/ig,"<label>$1</label>");
+                            if(data[i]['unformatted_message'].length > 140)
+                            {
+                                truncated_RestaurantName = data[i]['unformatted_message'].substr(0,140)+'..';
+                            }
+                            else
+                            {
+                                truncated_RestaurantName = data[i]['unformatted_message'];
+                            }
+                        }
+                        else
+                        {
+                            truncated_RestaurantName = '';
+                        }
+
+                        var bigCardHtml = '';
+                        bigCardHtml += '<a href="'+data[i]['full_url']+'" target="_blank" class="instagram-wrapper new-post-wrapper">';
+                        bigCardHtml += '<div class="my-card-items hide"><div class="mdl-card mdl-shadow--2dp demo-card-header-pic">';
+                        bigCardHtml += '<div class="card-content"><div class="card-content-inner">';
+                        bigCardHtml += '<ul class="mdl-list main-avatar-list"><li class="mdl-list__item mdl-list__item--two-line">';
+                        bigCardHtml += '<span class="mdl-list__item-primary-content"><img class="myAvtar-list mdl-list__item-avatar" src="'+data[i]['poster_image']+'" width="44"/>';
+                        bigCardHtml += '<span class="avatar-title">'+data[i]['poster_name'].capitalize()+'</span>';
+                        if(data[i].hasOwnProperty('source'))
+                        {
+                            if(data[i]['source']['term_type'] == 'hashtag')
+                            {
+                                bigCardHtml += '<span class="mdl-list__item-sub-title">#'+data[i]['source']['term']+'</span>';
+                            }
+                            else if(data[i]['source']['term_type'] == 'hashtag')
+                            {
+                                <?php $locs = $this->config->item('insta_locationMap');?>
+                                bigCardHtml += '<span class="mdl-list__item-sub-title">'+getInstaLoc(data[i]['source']['term'])+'</span>';
+                            }
+                            else
+                            {
+                                bigCardHtml += '<span class="mdl-list__item-sub-title">@'+data[i]['source']['term']+'</span>';
+                            }
+                        }
+                        bigCardHtml += '</span><span class="mdl-list__item-secondary-content">';
+                        bigCardHtml += '<span class="mdl-list__item-secondary-info">';
+                        bigCardHtml += '<i class="fa fa-instagram social-icon-gap"></i></span>';
+                        bigCardHtml += '<span class="mdl-list__item-secondary-action">';
+                        bigCardHtml += '<time class="timeago time-stamp" datetime="'+data[i]['created_at']+'"></time></span></span>';
+                        bigCardHtml += '</li></ul>';
+                        if(data[i].hasOwnProperty('image'))
+                        {
+                            bigCardHtml += '<img src="'+data[i]['image']+'" class="mainFeed-img"/>';
+                        }
+                        else if(data[i].hasOwnProperty('video'))
+                        {
+                            if(data[i]['video'].indexOf('youtube') != -1 || data[i]['video'].indexOf('youtu.be') != -1)
+                            {
+                                bigCardHtml += '<iframe width="100%" src="'+data[i]['video']+'" frameborder="0" allowfullscreen>';
+                                bigCardHtml += '</iframe>';
+                            }
+                            else
+                            {
+                                bigCardHtml += '<video width="100%" controls>';
+                                bigCardHtml += '<source src="'+data[i]['video']+'">No Video found!';
+                                bigCardHtml += '</video>';
+                            }
+                        }
+                        else if(typeof backupLink !== 'undefined')
+                        {
+                            bigCardHtml += '<div class="link-card-wrapper">';
+                            bigCardHtml += '<input type="hidden" class="my-link-url" value="'+backupLink[0]+'"/>';
+                            bigCardHtml += '<div class="liveurl feed-image-container hide">';
+                            bigCardHtml += '<img src="" class="link-image mainFeed-img lazy lazy-fadein"/>';
+                            bigCardHtml += '<div class="details"><div class="title"></div><div class="description"></div>';
+                            bigCardHtml += '</div></div></div>';
+                        }
+
+                        bigCardHtml += '<div class="mdl-card__supporting-text">';
+                        bigCardHtml += '<p class="final-card-text">'+truncated_RestaurantName+'</p>';
+                        bigCardHtml += '</div></div></div></div></div></a>';
+
+                        $('section#timelineTab .custom-accordion').append(bigCardHtml);
+
+                        totalNew++;
+                        break;
+                    case 'f':
+                        var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+                        var backupLink = urlRegex.exec(data[i]['message']);
+                        var truncated_RestaurantName ='';
+                        data[i]['message'] = data[i]['message'].replace(urlRegex,'');
+
+                        data[i]['message'] = data[i]['message'].replace(/(#[a-z\d-]+)/ig,"<label>$1</label>");
+                        data[i]['message'] = data[i]['message'].replace(/(@[a-z\d-]+)/ig,"<label>$1</label>");
+                        if(data[i]['message'].length > 140)
+                        {
+                            truncated_RestaurantName = data[i]['message'].substr(0,140)+'..';
+                        }
+                        else
+                        {
+                            truncated_RestaurantName = data[i]['message'];
+                        }
+                        var bigCardHtml = '';
+                        bigCardHtml += '<a href="'+data[i]['permalink_url']+'" target="_blank" class="facebook-wrapper new-post-wrapper">';
+                        bigCardHtml += '<div class="my-card-items hide"><div class="mdl-card mdl-shadow--2dp demo-card-header-pic">';
+                        bigCardHtml += '<div class="card-content"><div class="card-content-inner">';
+                        bigCardHtml += '<ul class="mdl-list main-avatar-list"><li class="mdl-list__item mdl-list__item--two-line">';
+                        bigCardHtml += '<span class="mdl-list__item-primary-content"><img class="myAvtar-list mdl-list__item-avatar" src="https://graph.facebook.com/v2.7/'+data[i]['from']['id']+'/picture" width="44"/>';
+                        bigCardHtml += '<span class="avatar-title">'+data[i]['from']['name'].capitalize()+'</span>';
+                        bigCardHtml += '</span><span class="mdl-list__item-secondary-content">';
+                        bigCardHtml += '<span class="mdl-list__item-secondary-info">';
+                        bigCardHtml += '<i class="fa fa-facebook social-icon-gap"></i></span>';
+                        bigCardHtml += '<span class="mdl-list__item-secondary-action">';
+                        bigCardHtml += '<time class="timeago time-stamp" datetime="'+data[i]['created_at']+'"></time></span></span>';
+                        bigCardHtml += '</li></ul>';
+                        if(data[i].hasOwnProperty('source'))
+                        {
+                            if(data[i]['source'].indexOf('youtube') != -1 || data[i]['source'].indexOf('youtu.be') != -1)
+                            {
+                                bigCardHtml += '<iframe width="100%" src="'+data[i]['source']+'" frameborder="0" allowfullscreen>';
+                                bigCardHtml += '</iframe>';
+                            }
+                            else
+                            {
+                                bigCardHtml += '<video width="100%" controls>';
+                                bigCardHtml += '<source src="'+data[i]['source']+'">No Video found!';
+                                bigCardHtml += '</video>';
+                            }
+                        }
+
+                        else if(data[i].hasOwnProperty('picture'))
+                        {
+                            bigCardHtml += '<img src="'+data[i]['picture']+'" class="mainFeed-img"/>';
+                        }
+                        else if(typeof backupLink !== 'undefined' && backupLink != null)
+                        {
+                            bigCardHtml += '<div class="link-card-wrapper">';
+                            bigCardHtml += '<input type="hidden" class="my-link-url" value="'+backupLink[0]+'"/>';
+                            bigCardHtml += '<div class="liveurl feed-image-container hide">';
+                            bigCardHtml += '<img src="" class="link-image mainFeed-img lazy lazy-fadein"/>';
+                            bigCardHtml += '<div class="details"><div class="title"></div><div class="description"></div>';
+                            bigCardHtml += '</div></div></div>';
+                        }
+
+                        bigCardHtml += '<div class="mdl-card__supporting-text">';
+                        bigCardHtml += '<p class="final-card-text">'+truncated_RestaurantName+'</p>';
+                        bigCardHtml += '</div></div></div></div></div></a>';
+
+                        $('section#timelineTab .custom-accordion').append(bigCardHtml);
+                        totalNew++;
+                        break;
+                    case 't':
+                        var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+                        //var httpPattern = "!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=&_/]+!";
+                        var truncated_RestaurantName ='';
+                        data[i]['text'] = data[i]['text'].replace(urlRegex,'');
+
+                        data[i]['text'] = data[i]['text'].replace(/(#[a-z\d-]+)/ig,"<label>$1</label>");
+                        data[i]['text'] = data[i]['text'].replace(/(@[a-z\d-]+)/ig,"<label>$1</label>");
+                        truncated_RestaurantName = data[i]['text'];
+
+                        /*if(data[i]['text'].length > 140)
+                         {
+                         truncated_RestaurantName = data[i]['text'].substr(0,140)+'..';
+                         }
+                         else
+                         {
+                         truncated_RestaurantName = data[i]['text'];
+                         }*/
+
+                        var bigCardHtml = '';
+                        bigCardHtml += '<a href="https://twitter.com/'+data[i]['user']['screen_name']+'/status/'+data[i]['id_str']+'" target="_blank" class="twitter-wrapper new-post-wrapper">';
+                        bigCardHtml += '<div class="my-card-items hide"><div class="mdl-card mdl-shadow--2dp demo-card-header-pic">';
+                        bigCardHtml += '<div class="card-content"><div class="card-content-inner">';
+                        bigCardHtml += '<ul class="mdl-list main-avatar-list"><li class="mdl-list__item mdl-list__item--two-line">';
+                        bigCardHtml += '<span class="mdl-list__item-primary-content"><img class="myAvtar-list mdl-list__item-avatar" src="'+data[i]['user']['profile_image_url_https']+'" width="44"/>';
+                        bigCardHtml += '<span class="avatar-title">'+data[i]['user']['name'].capitalize()+'</span>';
+                        bigCardHtml += '<span class="mdl-list__item-sub-title">@'+data[i]['user']['screen_name']+'</span>';
+                        bigCardHtml += '</span><span class="mdl-list__item-secondary-content">';
+                        bigCardHtml += '<span class="mdl-list__item-secondary-info">';
+                        bigCardHtml += '<i class="fa fa-twitter fa-15x social-icon-gap"></i></span>';
+                        bigCardHtml += '<span class="mdl-list__item-secondary-action">';
+                        bigCardHtml += '<time class="timeago time-stamp" datetime="'+data[i]['created_at']+'"></time></span></span>';
+                        bigCardHtml += '</li></ul>';
+
+                        if(data[i].hasOwnProperty('extended_entities'))
+                        {
+                            var imageLimit = 0;
+                            for(var j=0;j<data[i]['extended_entities']['media'].length;j++)
+                            {
+                                if(imageLimit >= 1)
+                                {
+                                    break;
+                                }
+                                imageLimit++;
+                                if(typeof data[i]['extended_entities']['media'][j]['media_url_https'] != 'undefined' &&
+                                    data[i]['extended_entities']['media'][j]['media_url_https'] != '')
+                                {
+                                    bigCardHtml += '<img src="'+data[i]['extended_entities']['media'][j]['media_url_https']+'" class="mainFeed-img"/>';
+                                }
+                                else if(data[i]['extended_entities']['media'][j].hasOwnProperty('video_info') && data[i]['extended_entities']['media'][j]['video_info']['variants'] != null)
+                                {
+                                    var videoUrl = '';
+                                    var videoType = '';
+                                    for(var k=0;k<data[i]['extended_entities']['media'][j]['video_info']['variants'].length;k++)
+                                    {
+                                        if(data[i]['extended_entities']['media'][j]['video_info']['variants'][k].hasOwnProperty('bitrate'))
+                                        {
+                                            videoUrl = data[i]['extended_entities']['media'][j]['video_info']['variants'][k]['url'];
+                                            videoType = data[i]['extended_entities']['media'][j]['video_info']['variants'][k]['content_type'];
+                                        }
+                                    }
+                                    if(videoUrl.indexOf('youtube') != -1 || videoUrl.indexOf('youtu.be') != -1)
+                                    {
+                                        bigCardHtml += '<iframe width="100%" src="'+videoUrl+'" frameborder="0" allowfullscreen>';
+                                        bigCardHtml += '</iframe>';
+                                    }
+                                    else
+                                    {
+                                        bigCardHtml += '<video width="100%" controls>';
+                                        bigCardHtml += '<source src="'+videoUrl+'" type="'+videoType+'">No Video found!';
+                                        bigCardHtml += '</video>';
+                                    }
+                                }
+                            }
+                        }
+                        else if(data[i]['is_quote_status'] != null && data[i]['is_quote_status'] == true)
+                        {
+                            bigCardHtml += '<div class="mdl-card__supporting-text">';
+                            bigCardHtml += '<p class="final-card-text">'+truncated_RestaurantName+'</p></div>';
+                            if(data[i]['quoted_status'] != null && Array.isArray(data[i]['quoted_status']))
+                            {
+                                bigCardHtml += '<div class="content-block inset quoted-block">';
+                                bigCardHtml += '<div class="content-block-inner">';
+                                bigCardHtml += '<ul class="mdl-list">';
+                                bigCardHtml += '<li class="mdl-list__item mdl-list__item--two-line"><span class="mdl-list__item-primary-content">';
+                                bigCardHtml += '<span>'+data[i]['quoted_status']['user']['name']+'</span>';
+                                bigCardHtml += '<span class="mdl-list__item-sub-title">@'+data[i]['quoted_status']['user']['screen_name']+'</span>';
+                                bigCardHtml += '</span></li></ul>';
+                                data[i]['quoted_status']['text'] = data[i]['quoted_status']['text'].replace(urlRegex,'');
+
+                                data[i]['quoted_status']['text'] = data[i]['quoted_status']['text'].replace(/(#[a-z\d-]+)/ig,"<label>$1</label>");
+                                data[i]['quoted_status']['text'] = data[i]['quoted_status']['text'].replace(/(@[a-z\d-]+)/ig,"<label>$1</label>");
+                                bigCardHtml += '<div class="mdl-card__supporting-text">';
+                                bigCardHtml += '<p class="final-card-text">'+data[i]['quoted_status']['text']+'</p></div>';
+                                bigCardHtml += '</div></div>';
+                            }
+                            else if(data[i]['retweeted_status'] != null && Array.isArray(data[i]['retweeted_status']))
+                            {
+                                bigCardHtml += '<div class="content-block inset quoted-block">';
+                                bigCardHtml += '<div class="content-block-inner">';
+                                bigCardHtml += '<ul class="mdl-list">';
+                                bigCardHtml += '<li class="mdl-list__item mdl-list__item--two-line"><span class="mdl-list__item-primary-content">';
+                                bigCardHtml += '<span>'+data[i]['retweeted_status']['quoted_status']['user']['name']+'</span>';
+                                bigCardHtml += '<span class="mdl-list__item-sub-title">@'+data[i]['retweeted_status']['quoted_status']['user']['screen_name']+'</span>';
+                                bigCardHtml += '</span></li></ul>';
+                                data[i]['retweeted_status']['quoted_status']['text'] = data[i]['retweeted_status']['quoted_status']['text'].replace(urlRegex,'');
+
+                                data[i]['retweeted_status']['quoted_status']['text'] = data[i]['retweeted_status']['quoted_status']['text'].replace(/(#[a-z\d-]+)/ig,"<label>$1</label>");
+                                data[i]['retweeted_status']['quoted_status']['text'] = data[i]['retweeted_status']['quoted_status']['text'].replace(/(@[a-z\d-]+)/ig,"<label>$1</label>");
+                                bigCardHtml += '<div class="mdl-card__supporting-text">';
+                                bigCardHtml += '<p class="final-card-text">'+data[i]['retweeted_status']['quoted_status']['text']+'</p></div>';
+                                bigCardHtml += '</div></div>';
+                            }
+                        }
+                        else if(data[i]['entities']['urls'] != null && data[i]['entities']['urls'].length > 0)
+                        {
+                            bigCardHtml += '<div class="link-card-wrapper">';
+                            bigCardHtml += '<input type="hidden" class="my-link-url" value="'+data[i]['entities']['urls'][0]['expanded_url']+'"/>';
+                            bigCardHtml += '<div class="liveurl feed-image-container hide">';
+                            bigCardHtml += '<img src="" class="link-image mainFeed-img lazy lazy-fadein"/>';
+                            bigCardHtml += '<div class="details"><div class="title"></div><div class="description"></div>';
+                            bigCardHtml += '</div></div></div>';
+                        }
+
+                        if(data[i]['is_quote_status'] != null && data[i]['is_quote_status'] == false)
+                        {
+                            bigCardHtml += '<div class="mdl-card__supporting-text">';
+                            bigCardHtml += '<p class="final-card-text">'+truncated_RestaurantName+'</p>';
+                            bigCardHtml += '</div>';
+                        }
+                        bigCardHtml += '</div></div></div></div></a>';
+
+                        $('section#timelineTab .custom-accordion').append(bigCardHtml);
+                        /*var oldHeight = $('.custom-accordion').height();
+                         $('.custom-accordion').prepend(bigCardHtml);
+                         var total = currentPos+($('.custom-accordion').height()- oldHeight);
+                         $('.page-content').scrollTop(total);*/
+                        totalNew++;
+                        break;
+                }
+            }
+            catch(ex)
+            {
+                var err = currData+' Error: '+ex.message+' Stack: '+ex.stack;
+                saveErrorLog(err);
+            }
+        }
+
+        //$('section#timelineTab .new-post-wrapper').removeClass('hide').removeClass('new-post-wrapper');
+        var total = timelineScroll+($('section#timelineTab .custom-accordion').height()- oldHeight);
+        $('.mdl-layout__content').animate({
+            scrollTop: total
+        },100);
+
+        maxItems = $('.custom-accordion .my-card-items').length;
+
+        $("time.timeago").timeago();
+
+    }
     function getInstaLoc(locId)
     {
         var taproom = '';
@@ -1948,9 +2323,17 @@
             var data = new FormData;
             data.append('attachment', ele.files[i]);
             xhr[i].send(data);
+            var currentXhr = xhr[i];
             xhr[i].onreadystatechange = function(e) {
-                if (e.srcElement.readyState == 4 && e.srcElement.status == 200) {
-                    if(e.srcElement.responseText == 'Some Error Occurred!')
+                var eles = e.srcElement;
+                if(typeof e.srcElement === 'undefined')
+                {
+                    eles = currentXhr;
+                }
+
+                if (eles.readyState == 4 && eles.status == 200)
+                {
+                    if(eles.responseText == 'Some Error Occurred!')
                     {
                         vex.dialog.buttons.YES.text = 'Close';
                         vex.dialog.alert({
@@ -1959,12 +2342,12 @@
                         return false;
                     }
                     filesArr = [];
-                    filesArr.push(e.srcElement.responseText);
+                    filesArr.push(eles.responseText);
                     document.querySelector('#eventProgress').addEventListener('mdl-componentupgraded', function() {
                         this.MaterialProgress.setProgress(0);
                     });
                     $('.event-add-page .event-img-after #eventProgress').addClass('hide');
-                    var eventImg = base_url+'uploads/events/thumb/'+e.srcElement.responseText;
+                    var eventImg = base_url+'uploads/events/thumb/'+eles.responseText;
                     $('.event-add-page .event-img-space').addClass('hide');
                     $('.event-add-page #cropContainerModal').removeClass('hide').find('#img-container').attr('src',eventImg);
                     cropData['imgUrl'] = eventImg;
@@ -2638,12 +3021,19 @@
     //Event details page events
     $(document).on('click','.event-details-page .event-cancel-btn', function(){
         var isConfirm = false;
-        vex.dialog.buttons.YES.text = 'Cancel Event';
-        vex.dialog.buttons.NO.text = 'Close';
-        vex.dialog.confirm({
-            unsafeMessage: '<label class="head-title">Cancel Event?</label><br><br>'+"We will send your cancellation request to the venue's Community Manager.",
-            showCloseButton: true,
-            afterClose: function(){
+        var cmName = $(this).attr('data-commName');
+        var cmNum = $(this).attr('data-commNum');
+        //vex.dialog.buttons.YES.text = 'Cancel Event';
+        //vex.dialog.buttons.NO.text = 'Close';
+        vex.dialog.alert({
+            unsafeMessage: '<label class="head-title">Cancel Event?</label><br><br>'+"Please Contact the venue's Community Manager("+cmName+"): "+cmNum
+            //showCloseButton: false,
+            /*callback: function (value) {
+                /!*if (value) {
+                    isConfirm = true;
+                }*!/
+            }*/
+            /*afterClose: function(){
                 vex.closeAll();
                 if(isConfirm)
                 {
@@ -2654,7 +3044,7 @@
                 if (value) {
                     isConfirm = true;
                 }
-            }
+            }*/
         });
         //confirmDialog('Cancel Event?', "Once you tap 'Cancel Event', your event will be cancelled within 48 hours. All" +
         //" the fees collected will be refunded to the attendees.",'Cancel Event', $$('.event-details #eventId').val(), false);
@@ -2705,7 +3095,7 @@
                             if (data.status == true) {
                                 vex.dialog.buttons.YES.text = 'Close';
                                 vex.dialog.alert({
-                                    unsafeMessage: '<label class="head-title">Success!</label><br><br>We will inform the organiser that you will not be attending the event. For paid events, the money will be fully refunded to you.',
+                                    unsafeMessage: '<label class="head-title">Success!</label><br><br>We will inform the organiser that you will not be attending the event. For paid events, the money will be refunded after deducting 2.24% transaction charges.',
                                     callback: function () {
                                         setTimeout(function () {
                                             replaceHistory('Doolally', 'event_dash', true);
@@ -3066,4 +3456,29 @@
             }
         });
     }
+</script>
+
+<!-- Event Related Scripts -->
+<script>
+    $(document).on('click','.final-booking-btn', function(e){
+        e.preventDefault();
+
+        var payLink = $(this).attr('data-href');
+        if(payLink != '')
+        {
+            vex.dialog.buttons.YES.text = 'Ok';
+            vex.dialog.alert({
+                unsafeMessage: '<div style="height:300px;overflow:auto">'+$('#eventBookTc').html()+'</div>',
+                afterClose: function(){
+                    var d=document.createElement("script");
+                    d.src=payLink;
+                    window.document.body.insertBefore(d, window.document.body.firstChild);
+                }
+            });
+        }
+        else
+        {
+            mySnackTime('Payment Gateway Error!');
+        }
+    });
 </script>

@@ -94,7 +94,7 @@ defined('DATE_FORMAT_SHARE')   OR define('DATE_FORMAT_SHARE', 'D, jS M');
 defined('EVENT_DATE_FORMAT')   OR define('EVENT_DATE_FORMAT', 'D, M j');
 defined('EVENT_INSIDE_DATE_FORMAT')   OR define('EVENT_INSIDE_DATE_FORMAT', 'D, M j, Y');
 defined('DATE_FORMAT_GRAPH_UI')   OR define('DATE_FORMAT_GRAPH_UI', 'j F');
-defined('DATE_MAIL_FORMAT_UI')   OR define('DATE_MAIL_FORMAT_UI', 'jS M Y');
+defined('DATE_MAIL_FORMAT_UI')   OR define('DATE_MAIL_FORMAT_UI', 'D, jS M Y');
 defined('DATE_TIME_FORMAT_UI')   OR define('DATE_TIME_FORMAT_UI', 'D, jS F, Y g:i a');
 
 /* Mail Type */
@@ -134,7 +134,7 @@ defined('GOOGLE_API_KEY') OR define('GOOGLE_API_KEY','AIzaSyBG3wamyMbQqRlqysulun
 defined('BCJUKEBOX_CLIENT') OR define('BCJUKEBOX_CLIENT','UUN5m270I7nxuuBDzukIVtAV0QxL5UQEV1FaYmUg');
 defined('TEXTLOCAL_API') OR define('TEXTLOCAL_API','cFIpDcHmYnc-mdteI9XWFa41zNZSq9Z3crlHtQAZCb');
 defined('EVENT_HIGH_KEY') OR define('EVENT_HIGH_KEY','D00la11y@ppKey');
-defined('EVENT_HIGH_ACCOUNT') OR define('EVENT_HIGH_ACCOUNT','doolally');
+defined('EVENT_HIGH_ACCOUNT') OR define('EVENT_HIGH_ACCOUNT','events@brewcraftsindia.com');
 defined('MEETUP_KEY') OR define('MEETUP_KEY','165c416c7672a5cc2f1a43292a2817');
 defined('MEETUP_GROUP') OR define('MEETUP_GROUP','meetup-group-XWIyWwft');
 
@@ -165,3 +165,5 @@ defined('OLD_DOOLALLY_FEE') OR define('OLD_DOOLALLY_FEE','250');
 defined('NEW_DOOLALLY_FEE') OR define('NEW_DOOLALLY_FEE','300');
 defined('DOOLALLY_FEE_MAIL_TEXT') OR define('DOOLALLY_FEE_MAIL_TEXT' ,'House Fries & Mocktail <b>OR</b> A Pint of Beer.');
 defined('DOOLALLY_CUSTOM_FEE_MAIL_TEXT') OR define('DOOLALLY_CUSTOM_FEE_MAIL_TEXT','Half Pint of Beer <b>OR</b> House Fries <b>OR</b> A Mocktail.');
+defined('EH_GATEWAY_CHARGE') OR define('EH_GATEWAY_CHARGE',5);
+defined('DOOLALLY_GATEWAY_CHARGE') OR define('DOOLALLY_GATEWAY_CHARGE',2.24);

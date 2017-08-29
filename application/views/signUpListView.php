@@ -35,18 +35,16 @@
                         <div class="row no-gutter">
                             <div class="col-100">
                                 <?php
-                                    if(isset($eventDetails) && myIsMultiArray($eventDetails))
+                                    if(isset($doolallyJoiners) && myIsMultiArray($doolallyJoiners))
                                     {
                                         ?>
                                         <div class="list-block">
                                             <ul>
                                         <?php
-                                        foreach($eventDetails as $key => $row)
+                                        foreach($doolallyJoiners as $key => $row)
                                         {
                                             $remain = (int)$row['quantity'] - 1;
-											if(stripos($row['paymentId'],'MOJO') !== false)
-											{
-												?>
+                                            ?>
                                                 <li class="item-content">
                                                     <div class="item-inner">
                                                         <div class="item-title">
@@ -69,27 +67,26 @@
                                                     </div>
                                                 </li>
                                             <?php
-											}
                                         }
                                         ?>
                                             </ul>
                                         </div>
                                         <?php
                                     }
-                                    if(isset($EHData) && myIsArray($EHData))
+                                    if(isset($ehJoiners) && myIsArray($ehJoiners))
                                 {
                                     ?>
                                     <div class="list-block">
                                         <ul>
                                             <?php
-                                            foreach($EHData as $key => $row)
+                                            foreach($ehJoiners as $key => $row)
                                             {
-                                                $remain = (int)$row['numTickets'] - 1;
+                                                $remain = (int)$row['quantity'] - 1;
                                                 ?>
                                                 <li class="item-content">
                                                     <div class="item-inner">
                                                         <div class="item-title">
-                                                            <?php echo $row['name'];?>
+                                                            <?php echo $row['firstName'].' '.$row['lastName'];?>
                                                             <?php
                                                             if($remain != 0)
                                                             {
@@ -100,7 +97,7 @@
                                                             ?>
                                                         </div>
                                                         <div class="item-after">
-                                                            <a href="mailto:<?php echo $row['email'];?>" class="external">
+                                                            <a href="mailto:<?php echo $row['emailId'];?>" class="external">
                                                                 <i class="ic_event_email_icon"></i>
                                                             </a>
                                                         </div>

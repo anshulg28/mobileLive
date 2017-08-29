@@ -143,8 +143,8 @@
                             <label class="mdl-textfield__label" for="eventPrice">Event Fee</label>
                             <span class="mdl-textfield__error">Input is not a number!</span>
                         </div>
-                        <div>Total Price: Rs. <span class="total-event-price"><?php echo NEW_DOOLALLY_FEE;?></span><br>
-                            ( + Rs <?php echo NEW_DOOLALLY_FEE;?> Doolally Fee)
+                        <div>( + Rs <?php echo NEW_DOOLALLY_FEE;?> Doolally Fee)<br>
+                            Total Price: Rs. <span class="total-event-price"><?php echo NEW_DOOLALLY_FEE;?></span>
                         </div>
                         <input type="hidden" name="eventPrice" value="0"/>
                     </div>
@@ -283,5 +283,6 @@
     componentHandler.upgradeDom();
     $(document).ready(function(){
         $('#location-div').addClass('is-dirty');
+        $('.readEvent-guide').click();
     });
 </script>

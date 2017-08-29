@@ -278,6 +278,12 @@
                                                         <i href="#" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event Cancelled</i>
                                                         <?php
                                                     }
+                                                    elseif(isEventStarted($row['eventDate'], $row['startTime']))
+                                                    {
+                                                        ?>
+                                                        <i href="#" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event Started</i>
+                                                        <?php
+                                                    }
                                                     else
                                                     {
                                                         ?>
@@ -321,5 +327,15 @@
          setTimeout(function(){
              $('.vex-dialog-prompt-input').select();
          },100);
+     });
+     $(document).ready(function(){
+         if(isRegistered)
+         {
+             isRegistered = false;
+             $('.eventDash .mdl-tabs__tab').removeClass('is-active');
+             $('.eventDash .mdl-tabs__panel').removeClass('is-active');
+             $('.eventDash a[href="#attending"]').addClass('is-active');
+             $('.eventDash #attending').addClass('is-active');
+         }
      });
  </script>

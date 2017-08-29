@@ -25,6 +25,7 @@
             </div>
             <div class="pages">
                 <div data-page="event" class="page">
+                    <div class="hide" id="eventBookTc"><?php echo $eventBookTc;?></div>
                     <div class="page-content">
                         <div class="content-block event-wrapper">
                             <div class="col-100 more-photos-wrapper">
@@ -205,12 +206,6 @@
                                             <!--<a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for creating! </a>-->
                                             <?php
                                         }
-                                        elseif(isEventStarted($row['eventDate'], $row['startTime']))
-                                        {
-                                            ?>
-                                            <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Event Started! </a>
-                                            <?php
-                                        }
                                         elseif(isset($userCreated) && $userCreated === true)
                                         {
                                             ?>
@@ -229,13 +224,7 @@
                                             <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Registration Full! </a>
                                             <?php
                                         }
-                                        elseif(isset($row['highId']) && $row['eventId'] == '398')
-                                        {
-                                            ?>
-                                            <a href="#" onclick='d=document.createElement("script");d.src="https://ticketing.eventshigh.com/ticketModal.jsp?eid=<?php echo $row['highId'];?>&src=fbTicketWidget&theme=jet-black&bg0=1"; window.document.body.insertBefore(d, window.document.body.firstChild);' class="button button-big button-fill bookNow-event-btn">Try With EventsHigh</a>
-                                            <?php
-                                        }
-										elseif(isset($isUnderReview) && $isUnderReview === true)
+                                        elseif(isset($isUnderReview) && $isUnderReview === true)
                                         {
                                             ?>
                                             <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Under Review </a>
@@ -246,6 +235,12 @@
                                         {
                                             ?>
                                             <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Event Canceled </a>
+                                            <?php
+                                        }
+                                        elseif(isset($row['eventPaymentLink']) && isStringSet($row['eventPaymentLink']) && stripos($row['eventPaymentLink'],'ticketing.eventshigh.com') !== FALSE)
+                                        {
+                                            ?>
+                                            <a href="#" data-href="<?php echo $row['eventPaymentLink'];?>" class="button button-big button-fill bookNow-event-btn final-booking-btn external">Book Now </a>
                                             <?php
                                         }
                                         elseif(isset($row['eventPaymentLink']) && isStringSet($row['eventPaymentLink']))

@@ -378,7 +378,7 @@
                                                                         <div class="link-card-wrapper">
                                                                             <input type="hidden" class="my-link-url" value="<?php echo $row['entities']['urls'][0]['expanded_url'];?>"/>
                                                                             <div class="liveurl feed-image-container hide">
-                                                                                <img src="" class="link-image mainFeed-img" />
+                                                                                <img src="" class="link-image linkFeed-img" />
                                                                                 <div class="details">
                                                                                     <div class="title"></div>
                                                                                     <div class="description"></div>
@@ -506,7 +506,7 @@
                                                                         <div class="link-card-wrapper">
                                                                             <input type="hidden" class="my-link-url" value="<?php echo $backupLink[0][0];?>"/>
                                                                             <div class="liveurl feed-image-container hide">
-                                                                                <img src="" class="link-image mainFeed-img" />
+                                                                                <img src="" class="link-image linkFeed-img" />
                                                                                 <div class="details">
                                                                                     <div class="title"></div>
                                                                                     <div class="description"></div>
@@ -654,7 +654,7 @@
                                                                         <div class="link-card-wrapper">
                                                                             <input type="hidden" class="my-link-url" value="<?php echo $backupLink[0][0];?>"/>
                                                                             <div class="liveurl feed-image-container hide">
-                                                                                <img src="" class="link-image mainFeed-img" />
+                                                                                <img src="" class="link-image linkFeed-img" />
                                                                                 <div class="details">
                                                                                     <div class="title"></div>
                                                                                     <div class="description"></div>
@@ -1535,7 +1535,7 @@
                         bigCardHtml += '<div class="link-card-wrapper">';
                         bigCardHtml += '<input type="hidden" class="my-link-url" value="'+backupLink[0]+'"/>';
                         bigCardHtml += '<div class="liveurl feed-image-container hide">';
-                        bigCardHtml += '<img src="" class="link-image mainFeed-img lazy lazy-fadein"/>';
+                        bigCardHtml += '<img src="" class="link-image linkFeed-img"/>';
                         bigCardHtml += '<div class="details"><div class="title"></div><div class="description"></div>';
                         bigCardHtml += '</div></div></div>';
                     }
@@ -1621,7 +1621,7 @@
                         bigCardHtml += '<div class="link-card-wrapper">';
                         bigCardHtml += '<input type="hidden" class="my-link-url" value="'+backupLink[0]+'"/>';
                         bigCardHtml += '<div class="liveurl feed-image-container hide">';
-                        bigCardHtml += '<img src="" class="link-image mainFeed-img lazy lazy-fadein"/>';
+                        bigCardHtml += '<img src="" class="link-image linkFeed-img"/>';
                         bigCardHtml += '<div class="details"><div class="title"></div><div class="description"></div>';
                         bigCardHtml += '</div></div></div>';
                     }
@@ -1753,7 +1753,7 @@
                         bigCardHtml += '<div class="link-card-wrapper">';
                         bigCardHtml += '<input type="hidden" class="my-link-url" value="'+data[i]['entities']['urls'][0]['expanded_url']+'"/>';
                         bigCardHtml += '<div class="liveurl feed-image-container hide">';
-                        bigCardHtml += '<img src="" class="link-image mainFeed-img lazy lazy-fadein"/>';
+                        bigCardHtml += '<img src="" class="link-image linkFeed-img"/>';
                         bigCardHtml += '<div class="details"><div class="title"></div><div class="description"></div>';
                         bigCardHtml += '</div></div></div>';
                     }

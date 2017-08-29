@@ -328,6 +328,12 @@
                                                             <a href="#" class="link color-black" disabled>Event Cancelled</a>
                                                             <?php
                                                         }
+                                                        elseif(isEventStarted($row['eventDate'], $row['startTime']))
+                                                        {
+                                                            ?>
+                                                            <a href="#" class="link color-black" disabled>Event Started</a>
+                                                            <?php
+                                                        }
                                                         else
                                                         {
                                                             ?>

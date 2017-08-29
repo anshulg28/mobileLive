@@ -156,18 +156,18 @@
 }
 .iosHome .modal-text
 {
-    height:300px;
+    height:250px;
     text-align: left;
 }
 .iosHome .modal.modal-in, .iosHome .modal-inner
 {
     border-radius:5px;
-    width: 270px;
-    overflow: visible;
+    /*width: 270px;*/
+    /*overflow: visible;*/
 }
 .iosHome .modal
 {
-    margin-left: -150px;
+    /*margin-left: -150px;*/
 }
 .iosHome .modal-title
 {
@@ -1542,7 +1542,7 @@
     border: 1px solid #ccc;
     border-radius: 50%;
 }
-.iosHome .mainFeed-img
+.iosHome .mainFeed-img, .iosHome .linkFeed-img
 {
     width:100%;
     /*width:100%;

@@ -83,11 +83,11 @@
                                                         else
                                                         {
                                                             $total = (int)$row['eventPrice'] * (int)$row['totalQuant'];
-                                                            /*if(isset($EHTotal))
+                                                            if(isset($EHTotal))
                                                             {
                                                                 $EHAmt = (int)$row['eventPrice'] * (int)$EHTotal;
                                                                 $total = $total + $EHAmt;
-                                                            }*/
+                                                            }
                                                             echo number_format($total);
                                                         }
                                                         ?>
@@ -111,10 +111,10 @@
                                                                     if(isset($row['totalQuant']))
                                                                     {
                                                                         $totQnt = $row['totalQuant'];
-                                                                        /*if(isset($EHTotal))
+                                                                        if(isset($EHTotal))
                                                                         {
                                                                             $totQnt += $EHTotal;
-                                                                        }*/
+                                                                        }
                                                                         echo $totQnt;
                                                                     }
                                                                     else
@@ -194,7 +194,7 @@
                                                     else
                                                     {
                                                         ?>
-                                                        <a href="#" class="item-link list-button color-black event-cancel-btn">Cancel Event</a>
+                                                        <a href="#" data-commNum="<?php echo $commDetails['mobNum'];?>" data-commName="<?php echo $commDetails['userName'];?>" class="item-link list-button color-black event-cancel-btn">Cancel Event</a>
                                                         <?php
                                                     }
                                                 ?>

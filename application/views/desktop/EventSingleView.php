@@ -142,14 +142,12 @@
                                 <span>Signups</span>
                             </div>
                             <?php
-                                if(isset($signupList) && myIsMultiArray($signupList))
+                                if(isset($DoolallySignupList) && myIsMultiArray($DoolallySignupList))
                                 {
-                                    foreach($signupList as $signKey => $signRow)
+                                    foreach($DoolallySignupList as $signKey => $signRow)
                                     {
-										$remain = (int)$signRow['quantity'] - 1;
-										if(stripos($signRow['paymentId'],'MOJO') !== false)
-										{
-											?>
+                                        $remain = (int)$signRow['quantity'] - 1;
+                                        ?>
                                         <div class="demo-list-action mdl-list">
                                             <div class="mdl-list__item">
                                                 <span class="mdl-list__item-primary-content">
@@ -171,21 +169,20 @@
                                             </div>
                                         </div>
                                         <?php
-										}
                                     }
                                 }
                             ?>
                             <?php
-                                if(isset($EHData) && myIsArray($EHData))
+                                if(isset($EhSignupList) && myIsArray($EhSignupList))
                             {
-                                foreach($EHData as $signKey => $signRow)
+                                foreach($EhSignupList as $signKey => $signRow)
                                 {
-                                    $remain = (int)$signRow['numTickets'] - 1;
+                                    $remain = (int)$signRow['quantity'] - 1;
                                     ?>
                                     <div class="demo-list-action mdl-list">
                                         <div class="mdl-list__item">
                                                 <span class="mdl-list__item-primary-content">
-                                                  <span><?php echo $signRow['name'];?></span>
+                                                  <span><?php echo $signRow['firstName'].' '.$signRow['lastName'];?></span>
                                                     <?php
                                                     if($remain != 0)
                                                     {
@@ -197,7 +194,7 @@
                                                     }
                                                     ?>
                                                 </span>
-                                            <i data-email="<?php echo $signRow['email'];?>" class="mdl-list__item-secondary-action contact-email">
+                                            <i data-email="<?php echo $signRow['emailId'];?>" class="mdl-list__item-secondary-action contact-email">
                                                 <i class="ic_event_email_icon"></i>
                                             </i>
                                         </div>
@@ -226,7 +223,7 @@
                                 {
                                     ?>
                                     <a href="<?php echo 'eventEdit/'.$row['eventSlug'];?>" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-bookNow dynamic">Edit Event</a>
-                                    <i class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-cancel-btn pull-right">Cancel Event</i>
+                                    <i data-commNum="<?php echo $commDetails['mobNum'];?>" data-commName="<?php echo $commDetails['userName'];?>" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-cancel-btn pull-right">Cancel Event</i>
                                     <?php
                                 }
 
