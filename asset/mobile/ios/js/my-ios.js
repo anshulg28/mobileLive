@@ -126,16 +126,25 @@ myApp.onPageInit('eventSingle', function (page) {
         var isConfirm = false;
         var cmName = $(this).attr('data-commName');
         var cmNum = $(this).attr('data-commNum');
-        //vex.dialog.buttons.YES.text = 'Cancel Event';
-        //vex.dialog.buttons.NO.text = 'Close';
-        vex.dialog.alert({
-            unsafeMessage: '<label class="head-title">Cancel Event?</label><br><br>'+"Please Contact the venue's Community Manager("+cmName+"): "+cmNum
-            //showCloseButton: true,
-            /*callback: function (value) {
+        var eveId = $(this).attr('data-eveId');
+        vex.dialog.buttons.YES.text = 'Cancel Event';
+        vex.dialog.buttons.NO.text = 'Close';
+        vex.dialog.confirm({
+            unsafeMessage: '<label class="head-title">Cancel Event?</label><br><br>'+
+            'Please Contact the venue\'s Community Manager ('+cmName+') on <a href="tel:'+cmNum+'">'+cmNum+'</a> to cancel your event.',
+            showCloseButton: true,
+            callback: function (value) {
                 if (value) {
-                    isConfirm = true;
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: base_url+'sendCancelRequest',
+                        data: {eventId: eveId},
+                        success: function(){},
+                        error: function(){}
+                    });
                 }
-            }*/
+            }
             /*afterClose: function(){
                 vex.closeAll();
                 if(isConfirm)

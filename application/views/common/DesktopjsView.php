@@ -3023,16 +3023,25 @@
         var isConfirm = false;
         var cmName = $(this).attr('data-commName');
         var cmNum = $(this).attr('data-commNum');
-        //vex.dialog.buttons.YES.text = 'Cancel Event';
-        //vex.dialog.buttons.NO.text = 'Close';
-        vex.dialog.alert({
-            unsafeMessage: '<label class="head-title">Cancel Event?</label><br><br>'+"Please Contact the venue's Community Manager("+cmName+"): "+cmNum
-            //showCloseButton: false,
-            /*callback: function (value) {
-                /!*if (value) {
-                    isConfirm = true;
-                }*!/
-            }*/
+        var eveId = $(this).attr('data-eveId');
+        vex.dialog.buttons.YES.text = 'Cancel Event';
+        vex.dialog.buttons.NO.text = 'Close';
+        vex.dialog.confirm({
+            unsafeMessage: '<label class="head-title">Cancel Event?</label><br><br>'+
+            'Please Contact the venue\'s Community Manager ('+cmName+') on <a href="tel:'+cmNum+'">'+cmNum+'</a> to cancel your event.',
+            showCloseButton: true,
+            callback: function (value) {
+                if (value) {
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: base_url+'sendCancelRequest',
+                        data: {eventId: eveId},
+                        success: function(){},
+                        error: function(){}
+                    });
+                }
+            }
             /*afterClose: function(){
                 vex.closeAll();
                 if(isConfirm)
@@ -3046,6 +3055,7 @@
                 }
             }*/
         });
+
         //confirmDialog('Cancel Event?', "Once you tap 'Cancel Event', your event will be cancelled within 48 hours. All" +
         //" the fees collected will be refunded to the attendees.",'Cancel Event', $$('.event-details #eventId').val(), false);
     });

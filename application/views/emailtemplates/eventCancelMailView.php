@@ -7,7 +7,9 @@
 
 <body>
     <p>
-        Please Cancel the event '<?php echo $mailData[0]['eventName'];?>' ASAP<br><br>
+        <?php echo $mailData[0]['creatorName'];?> wants to cancel the event '<?php echo $mailData[0]['eventName'];?>' on
+        <?php $d = date_create($mailData[0]['eventDate']); echo date_format($d,DATE_MAIL_FORMAT_UI);?> at <?php echo $mailData[0]['locName'];?>,
+        Taproom. Please call them on <?php echo $mailData[0]['creatorPhone'];?> or email <?php echo $mailData[0]['creatorEmail'];?>.<br><br>
         Thank you
     </p>
 

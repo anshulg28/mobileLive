@@ -2304,6 +2304,17 @@ class Main extends MY_Controller
         return true;
     }
 
+    public function sendCancelRequest()
+    {
+        $post = $this->input->post();
+
+        if(isset($post['eventId']))
+        {
+            $eventInfo = $this->dashboard_model->getFullEventInfoById($post['eventId']);
+            $this->sendemail_library->eventCancelMail($eventInfo);
+        }
+    }
+
     public function getMoreFeeds($postCount)
     {
         $data = array();

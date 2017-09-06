@@ -223,7 +223,7 @@
                                 {
                                     ?>
                                     <a href="<?php echo 'eventEdit/'.$row['eventSlug'];?>" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-bookNow dynamic">Edit Event</a>
-                                    <i data-commNum="<?php echo $commDetails['mobNum'];?>" data-commName="<?php echo $commDetails['userName'];?>" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-cancel-btn pull-right">Cancel Event</i>
+                                    <i data-eveId="<?php echo $row['eventId'];?>" data-commNum="<?php echo $commDetails['mobNum'];?>" data-commName="<?php echo $commDetails['userName'];?>" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-cancel-btn pull-right">Cancel Event</i>
                                     <?php
                                 }
 

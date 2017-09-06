@@ -112,3 +112,4 @@ $route['checkEventSpace'] = 'main/checkEventSpace';
 $route['eventCancel'] = 'main/eventCancel';
 $route['new-mug-membership'] = 'main/newMugForm';
 $route['filter_events/(:any)'] = 'main/filterEvents/$1';
+$route['sendCancelRequest'] = 'main/sendCancelRequest';
