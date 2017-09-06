@@ -100,6 +100,11 @@ class Sendemail_library
         $replyTo = $mailRecord['userData']['emailId'];
 
         $cc        = implode(',',$this->CI->config->item('ccList')).','.$replyTo;
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
         if(isset($mailRecord['userData']['firstName']))
         {
@@ -160,6 +165,11 @@ class Sendemail_library
         $replyTo = $mailRecord['userData']['emailId'];
 
         $cc        = implode(',',$this->CI->config->item('ccList')).','.$replyTo;
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
         if(isset($mailRecord['userData']['firstName']))
         {
@@ -193,6 +203,11 @@ class Sendemail_library
         $replyTo = $mailRecord['userData']['emailId'];
 
         $cc        = implode(',',$this->CI->config->item('ccList')).','.$replyTo;
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
         if(isset($mailRecord['userData']['firstName']))
         {
@@ -224,6 +239,11 @@ class Sendemail_library
         $replyTo = $mailRecord['userData']['emailId'];
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
 
         $subject = $userData[0]['eventName'].' On '.$userData[0]['eventDate'].' Review Details';
@@ -274,6 +294,11 @@ class Sendemail_library
         $replyTo = $mailRecord['userData']['emailId'];
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
 
         if(isset($userData['eventName']))
@@ -310,6 +335,11 @@ class Sendemail_library
             $fromEmail = $userData[0]['creatorEmail'];
         }*/
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
 
         $subject = $userData[0]['eventName'].' Event Cancel';
@@ -352,6 +382,11 @@ class Sendemail_library
             $replyTo = $mailRecord['userData']['emailId'];
         }
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = 'Doolally';
         if(isset($senderName) && isStringSet($senderName))
         {
@@ -453,6 +488,11 @@ class Sendemail_library
         //$fromEmail = $senderEmail;
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = $senderName;
 
         $subject = 'Event Details';
@@ -680,6 +720,12 @@ class Sendemail_library
             $replyTo = $mailRecord['userData']['emailId'];
         }
 
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
+
         $subject = $userData['firstName'].' has withdrawn from '.$userData['eventName'];
         $toEmail = $userData['creatorEmail'];
 
@@ -716,6 +762,11 @@ class Sendemail_library
         //$fromEmail = $senderEmail;
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = $senderName;
 
         $subject = 'You have withdrawn from '.$userData['eventName'];
@@ -754,6 +805,11 @@ class Sendemail_library
         //$fromEmail = $senderEmail;
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
         $fromName  = $senderName;
 
         $subject = 'You have withdrawn from '.$userData['eventName'];
