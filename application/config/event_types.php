@@ -86,7 +86,7 @@ $config['eventBookTc'] = '<div class="page-content">
         <h5><strong>General rules:</strong></h5>
         <p><ol>
         <li>Attendees are expected to reach the venue well in time before the scheduled time of the event.</li><br>
-        <li>For paid events, we charge Rs 300 per attendee which is fully redeemable for F&B at any Doolally Taproom in Mumbai.
+        <li>For paid events, we charge Rs 300 per attendee which is fully redeemable.
          You will receive it as a code in an email from us, along with your booking confirmation details.
           The code, however, does not have to be redeemed only on the event day and can be redeemed at your convenience.</li><br>
         <li>You will also be given access to a dashboard. This is where you can contact the organisers or us for more details. 

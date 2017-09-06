@@ -1786,239 +1786,240 @@ class Main extends MY_Controller
             $existEveNames = $isEventExists['eveData'][0]['eventNames'];
         }
 
-        //Event space is empty
-        if($eventSpace['status'] === FALSE)
+        //Check if user logged in?
+        if(isset($post['creatorPhone']) && isset($post['creatorEmail']))
         {
-            //Check if user logged in?
-            if(isset($post['creatorPhone']) && isset($post['creatorEmail']))
+            $userStatus = $this->checkPublicUser($post['creatorEmail'],$post['creatorPhone']);
+
+            if($userStatus['status'] === FALSE)
             {
-                $userStatus = $this->checkPublicUser($post['creatorEmail'],$post['creatorPhone']);
-
-                if($userStatus['status'] === FALSE)
-                {
-                    $userId = $userStatus['userData']['userId'];
-                }
-                else
-                {
-                    $userName = explode(' ',$post['creatorName']);
-                    if(count($userName)< 2)
-                    {
-                        $userName[1] = '';
-                    }
-
-                    $user = array(
-                        'userName' => $post['creatorEmail'],
-                        'firstName' => $userName[0],
-                        'lastName' => $userName[1],
-                        'password' => md5($post['creatorPhone']),
-                        'LoginPin' => null,
-                        'isPinChanged' => null,
-                        'emailId' => $post['creatorEmail'],
-                        'mobNum' => $post['creatorPhone'],
-                        'userType' => '4',
-                        'assignedLoc' => null,
-                        'ifActive' => '1',
-                        'insertedDate' => date('Y-m-d H:i:s'),
-                        'updateDate' => date('Y-m-d H:i:s'),
-                        'updatedBy' => $post['creatorName'],
-                        'lastLogin' => date('Y-m-d H:i:s')
-                    );
-
-                    $userId = $this->users_model->savePublicUser($user);
-                    /*$mailData= array(
-                        'creatorName' => $post['creatorName'],
-                        'creatorEmail' => $post['creatorEmail']
-                    );*/
-                    $isUserCreated = true;
-                    //$this->sendemail_library->memberWelcomeMail($mailData);
-                }
-
-                //Save event
-                if(isset($post['attachment']))
-                {
-                    $attachement = $post['attachment'];
-                    unset($post['attachment']);
-                }
-                $post['userId'] = $userId;
-                if(isset($post['ifMicRequired']) && myIsArray($post['ifMicRequired']))
-                {
-                    $post['ifMicRequired'] = $post['ifMicRequired'][0];
-                }
-                if(isset($post['ifProjectorRequired']) && myIsArray($post['ifProjectorRequired']))
-                {
-                    $post['ifProjectorRequired'] = $post['ifProjectorRequired'][0];
-                }
-                $post['startTime'] = date('H:i', strtotime($post['startTime']));
-                $post['endTime'] = date('H:i', strtotime($post['endTime']));
-                $eveSlug = slugify($post['eventName']);
-                $post['eventSlug'] = $eveSlug;
-                $post['eventShareLink'] = base_url().'?page/events/'.$eveSlug;
-                $post['shortUrl'] = null;
-                $eventId = $this->dashboard_model->saveEventRecord($post);
-
-                // Adding event slug to new table
-                $newSlugTab = array(
-                    'eventId' => $eventId,
-                    'eventSlug' => $eveSlug,
-                    'insertedDateTime' => date('Y-m-d H:i:s')
-                );
-                $this->dashboard_model->saveEventSlug($newSlugTab);
-
-                $shortDWName = $this->googleurlapi->shorten(base_url().'?page/events/'.$eveSlug);
-                if($shortDWName !== FALSE)
-                {
-                    $details['shortUrl'] = $shortDWName;
-                    $this->dashboard_model->updateEventRecord($details,$eventId);
-                }
-
-                $img_names = array();
-                if(isset($attachement))
-                {
-                    $img_names = explode(',',$attachement);
-                    for($i=0;$i<count($img_names);$i++)
-                    {
-                        $attArr = array(
-                            'eventId' => $eventId,
-                            'filename'=> $img_names[$i],
-                            'attachmentType' => '1'
-                        );
-                        $this->dashboard_model->saveEventAttachment($attArr);
-                    }
-                }
-
-                //Sending mail confirmation
-                $mailEvent= array(
-                    'creatorName' => $post['creatorName'],
-                    'creatorEmail' => $post['creatorEmail'],
-                    'eventName' => $post['eventName'],
-                    'eventPlace' => $post['eventPlace']
-                );
-                if($isUserCreated === TRUE)
-                {
-                    $mailEvent['creatorPhone'] = $post['creatorPhone'];
-                }
-                $loc = $this->locations_model->getLocationDetailsById($post['eventPlace']);
-                $mailVerify = $this->dashboard_model->getEventById($eventId);
-                $mailVerify[0]['locData'] = $loc['locData'];
-                $mailVerify[0]['attachment'] = $img_names[0];
-                $post['locData'] = $loc['locData'];
-                $mailVerify['isEventExists'] = $isEventExists['status'];
-                $mailVerify['eveNames'] = $existEveNames;
-                $this->sendemail_library->newEventMail($mailEvent);
-                $this->sendemail_library->eventVerifyMail($mailVerify);
-                $data['status'] = TRUE;
-                $this->login_model->setLastLogin($userId);
-                $this->generalfunction_library->setMobUserSession($userId);
-                echo json_encode($data);
-            }
-            //Or user logged in
-            elseif(isSessionVariableSet($this->userMobId))
-            {
-                $userId = $this->userMobId;
-                $userD = $this->users_model->getUserDetailsById($userId);
-                if($userD['status'] === true)
-                {
-                    if(isStringSet($userD['userData'][0]['firstName']))
-                    {
-                        $post['creatorName'] = $userD['userData'][0]['firstName'] . ' ' . $userD['userData'][0]['lastName'];
-                    }
-                    $post['creatorEmail'] = $userD['userData'][0]['emailId'];
-                    $post['creatorPhone'] = $userD['userData'][0]['mobNum'];
-                }
-                else
-                {
-                    $post['creatorName'] = '';
-                    $post['creatorEmail'] = '';
-                    $post['creatorPhone'] = '';
-                }
-                //Save event
-                if(isset($post['attachment']))
-                {
-                    $attachement = $post['attachment'];
-                    unset($post['attachment']);
-                }
-                $post['userId'] = $userId;
-                if(isset($post['ifMicRequired']) && myIsArray($post['ifMicRequired']))
-                {
-                    $post['ifMicRequired'] = $post['ifMicRequired'][0];
-                }
-                if(isset($post['ifProjectorRequired']) && myIsArray($post['ifProjectorRequired']))
-                {
-                    $post['ifProjectorRequired'] = $post['ifProjectorRequired'][0];
-                }
-                $post['startTime'] = date('H:i', strtotime($post['startTime']));
-                $post['endTime'] = date('H:i', strtotime($post['endTime']));
-                $eveSlug = slugify($post['eventName']);
-                $post['eventSlug'] = $eveSlug;
-                $post['eventShareLink'] = base_url().'?page/events/'.$eveSlug;
-                $post['shortUrl'] = null;
-                $eventId = $this->dashboard_model->saveEventRecord($post);
-
-                // Adding event slug to new table
-                $newSlugTab = array(
-                    'eventId' => $eventId,
-                    'eventSlug' => $eveSlug,
-                    'insertedDateTime' => date('Y-m-d H:i:s')
-                );
-                $this->dashboard_model->saveEventSlug($newSlugTab);
-
-                $shortDWName = $this->googleurlapi->shorten(base_url().'?page/events/'.$eveSlug);
-                if($shortDWName !== false)
-                {
-                    $details['shortUrl'] = $shortDWName;
-                    $this->dashboard_model->updateEventRecord($details,$eventId);
-                }
-
-                //Saving attachments
-                $img_names = array();
-                if(isset($attachement))
-                {
-                    $img_names = explode(',',$attachement);
-                    for($i=0;$i<count($img_names);$i++)
-                    {
-                        $attArr = array(
-                            'eventId' => $eventId,
-                            'filename'=> $img_names[$i],
-                            'attachmentType' => '1'
-                        );
-                        $this->dashboard_model->saveEventAttachment($attArr);
-                    }
-                }
-
-                //Sending mail
-                $mailEvent= array(
-                    'creatorName' => $post['creatorName'],
-                    'creatorEmail' => $post['creatorEmail'],
-                    'eventName' => $post['eventName'],
-                    'eventPlace' => $post['eventPlace']
-                );
-                $loc = $this->locations_model->getLocationDetailsById($post['eventPlace']);
-                $mailVerify = $this->dashboard_model->getEventById($eventId);
-                $mailVerify[0]['locData'] = $loc['locData'];
-                $mailVerify[0]['attachment'] = $img_names[0];
-                $mailVerify['isEventExists'] = $isEventExists['status'];
-                $mailVerify['eveNames'] = $existEveNames;
-                $this->sendemail_library->newEventMail($mailEvent);
-                $this->sendemail_library->eventVerifyMail($mailVerify);
-                $data['status'] = true;
-                //creating a session for user
-                $this->login_model->setLastLogin($userId);
-                $this->generalfunction_library->setMobUserSession($userId);
-                echo json_encode($data);
+                $userId = $userStatus['userData']['userId'];
             }
             else
             {
-                $data['status'] = FALSE;
-                $data['errorMsg'] = 'Error in Account Creation';
-                echo json_encode($data);
+                $userName = explode(' ',$post['creatorName']);
+                if(count($userName)< 2)
+                {
+                    $userName[1] = '';
+                }
+
+                $user = array(
+                    'userName' => $post['creatorEmail'],
+                    'firstName' => $userName[0],
+                    'lastName' => $userName[1],
+                    'password' => md5($post['creatorPhone']),
+                    'LoginPin' => null,
+                    'isPinChanged' => null,
+                    'emailId' => $post['creatorEmail'],
+                    'mobNum' => $post['creatorPhone'],
+                    'userType' => '4',
+                    'assignedLoc' => null,
+                    'ifActive' => '1',
+                    'insertedDate' => date('Y-m-d H:i:s'),
+                    'updateDate' => date('Y-m-d H:i:s'),
+                    'updatedBy' => $post['creatorName'],
+                    'lastLogin' => date('Y-m-d H:i:s')
+                );
+
+                $userId = $this->users_model->savePublicUser($user);
+                /*$mailData= array(
+                    'creatorName' => $post['creatorName'],
+                    'creatorEmail' => $post['creatorEmail']
+                );*/
+                $isUserCreated = true;
+                //$this->sendemail_library->memberWelcomeMail($mailData);
             }
+
+            //Save event
+            if(isset($post['attachment']))
+            {
+                $attachement = $post['attachment'];
+                unset($post['attachment']);
+            }
+            $post['userId'] = $userId;
+            if(isset($post['ifMicRequired']) && myIsArray($post['ifMicRequired']))
+            {
+                $post['ifMicRequired'] = $post['ifMicRequired'][0];
+            }
+            if(isset($post['ifProjectorRequired']) && myIsArray($post['ifProjectorRequired']))
+            {
+                $post['ifProjectorRequired'] = $post['ifProjectorRequired'][0];
+            }
+            $post['startTime'] = date('H:i', strtotime($post['startTime']));
+            $post['endTime'] = date('H:i', strtotime($post['endTime']));
+            $eveSlug = slugify($post['eventName']);
+            $post['eventSlug'] = $eveSlug;
+            $post['eventShareLink'] = base_url().'?page/events/'.$eveSlug;
+            $post['shortUrl'] = null;
+            $eventId = $this->dashboard_model->saveEventRecord($post);
+
+            // Adding event slug to new table
+            $newSlugTab = array(
+                'eventId' => $eventId,
+                'eventSlug' => $eveSlug,
+                'insertedDateTime' => date('Y-m-d H:i:s')
+            );
+            $this->dashboard_model->saveEventSlug($newSlugTab);
+
+            $shortDWName = $this->googleurlapi->shorten(base_url().'?page/events/'.$eveSlug);
+            if($shortDWName !== FALSE)
+            {
+                $details['shortUrl'] = $shortDWName;
+                $this->dashboard_model->updateEventRecord($details,$eventId);
+            }
+
+            $img_names = array();
+            if(isset($attachement))
+            {
+                $img_names = explode(',',$attachement);
+                for($i=0;$i<count($img_names);$i++)
+                {
+                    $attArr = array(
+                        'eventId' => $eventId,
+                        'filename'=> $img_names[$i],
+                        'attachmentType' => '1'
+                    );
+                    $this->dashboard_model->saveEventAttachment($attArr);
+                }
+            }
+
+            //Sending mail confirmation
+            $mailEvent= array(
+                'creatorName' => $post['creatorName'],
+                'creatorEmail' => $post['creatorEmail'],
+                'eventName' => $post['eventName'],
+                'eventPlace' => $post['eventPlace']
+            );
+            if($isUserCreated === TRUE)
+            {
+                $mailEvent['creatorPhone'] = $post['creatorPhone'];
+            }
+            $loc = $this->locations_model->getLocationDetailsById($post['eventPlace']);
+            $mailVerify = $this->dashboard_model->getEventById($eventId);
+            $mailVerify[0]['locData'] = $loc['locData'];
+            $mailVerify[0]['attachment'] = $img_names[0];
+            $post['locData'] = $loc['locData'];
+            $mailVerify['isEventExists'] = $isEventExists['status'];
+            $mailVerify['eveNames'] = $existEveNames;
+            $this->sendemail_library->newEventMail($mailEvent);
+            $this->sendemail_library->eventVerifyMail($mailVerify);
+            $data['status'] = TRUE;
+            $this->login_model->setLastLogin($userId);
+            $this->generalfunction_library->setMobUserSession($userId);
+            echo json_encode($data);
+        }
+        //Or user logged in
+        elseif(isSessionVariableSet($this->userMobId))
+        {
+            $userId = $this->userMobId;
+            $userD = $this->users_model->getUserDetailsById($userId);
+            if($userD['status'] === true)
+            {
+                if(isStringSet($userD['userData'][0]['firstName']))
+                {
+                    $post['creatorName'] = $userD['userData'][0]['firstName'] . ' ' . $userD['userData'][0]['lastName'];
+                }
+                $post['creatorEmail'] = $userD['userData'][0]['emailId'];
+                $post['creatorPhone'] = $userD['userData'][0]['mobNum'];
+            }
+            else
+            {
+                $post['creatorName'] = '';
+                $post['creatorEmail'] = '';
+                $post['creatorPhone'] = '';
+            }
+            //Save event
+            if(isset($post['attachment']))
+            {
+                $attachement = $post['attachment'];
+                unset($post['attachment']);
+            }
+            $post['userId'] = $userId;
+            if(isset($post['ifMicRequired']) && myIsArray($post['ifMicRequired']))
+            {
+                $post['ifMicRequired'] = $post['ifMicRequired'][0];
+            }
+            if(isset($post['ifProjectorRequired']) && myIsArray($post['ifProjectorRequired']))
+            {
+                $post['ifProjectorRequired'] = $post['ifProjectorRequired'][0];
+            }
+            $post['startTime'] = date('H:i', strtotime($post['startTime']));
+            $post['endTime'] = date('H:i', strtotime($post['endTime']));
+            $eveSlug = slugify($post['eventName']);
+            $post['eventSlug'] = $eveSlug;
+            $post['eventShareLink'] = base_url().'?page/events/'.$eveSlug;
+            $post['shortUrl'] = null;
+            $eventId = $this->dashboard_model->saveEventRecord($post);
+
+            // Adding event slug to new table
+            $newSlugTab = array(
+                'eventId' => $eventId,
+                'eventSlug' => $eveSlug,
+                'insertedDateTime' => date('Y-m-d H:i:s')
+            );
+            $this->dashboard_model->saveEventSlug($newSlugTab);
+
+            $shortDWName = $this->googleurlapi->shorten(base_url().'?page/events/'.$eveSlug);
+            if($shortDWName !== false)
+            {
+                $details['shortUrl'] = $shortDWName;
+                $this->dashboard_model->updateEventRecord($details,$eventId);
+            }
+
+            //Saving attachments
+            $img_names = array();
+            if(isset($attachement))
+            {
+                $img_names = explode(',',$attachement);
+                for($i=0;$i<count($img_names);$i++)
+                {
+                    $attArr = array(
+                        'eventId' => $eventId,
+                        'filename'=> $img_names[$i],
+                        'attachmentType' => '1'
+                    );
+                    $this->dashboard_model->saveEventAttachment($attArr);
+                }
+            }
+
+            //Sending mail
+            $mailEvent= array(
+                'creatorName' => $post['creatorName'],
+                'creatorEmail' => $post['creatorEmail'],
+                'eventName' => $post['eventName'],
+                'eventPlace' => $post['eventPlace']
+            );
+            $loc = $this->locations_model->getLocationDetailsById($post['eventPlace']);
+            $mailVerify = $this->dashboard_model->getEventById($eventId);
+            $mailVerify[0]['locData'] = $loc['locData'];
+            $mailVerify[0]['attachment'] = $img_names[0];
+            $mailVerify['isEventExists'] = $isEventExists['status'];
+            $mailVerify['eveNames'] = $existEveNames;
+            $this->sendemail_library->newEventMail($mailEvent);
+            $this->sendemail_library->eventVerifyMail($mailVerify);
+            $data['status'] = true;
+            //creating a session for user
+            $this->login_model->setLastLogin($userId);
+            $this->generalfunction_library->setMobUserSession($userId);
+            echo json_encode($data);
+        }
+        else
+        {
+            $data['status'] = FALSE;
+            $data['errorMsg'] = 'Error in Account Creation';
+            echo json_encode($data);
+        }
+        /*//Event space is empty
+        if($eventSpace['status'] === FALSE)
+        {
+
         }
         else // Event already exists
         {
             $data['status'] = FALSE;
             $data['errorMsg'] = 'Sorry, This time slot is already booked!';
             echo json_encode($data);
-        }
+        }*/
 
     }
 

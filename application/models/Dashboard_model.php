@@ -610,6 +610,11 @@ class Dashboard_Model extends CI_Model
 
         return $result;
     }
+    public function saveWaitMailLog($post)
+    {
+        $this->db->insert('pendingmailsmaster', $post);
+        return true;
+    }
     public function ApproveEvent($eventId)
     {
         $data['ifActive'] = 1;
