@@ -1402,6 +1402,14 @@ class Main extends MY_Controller
                 );
                 $this->thankYou1($get['eid'],$ehArray,0);
             }
+            else
+            {
+                $this->saveAPIError('EH Callback status and other details not set','Mobile');
+            }
+        }
+        else
+        {
+            $this->saveAPIError('EH Callback booking and eid not set','Mobile');
         }
     }
 

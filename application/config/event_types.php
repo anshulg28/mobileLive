@@ -52,7 +52,7 @@ $config['eventTc'] = '<div class="page-content">
 
         <br><h5><strong>Charges for utilization of the space:</strong></h5>
         <p><ol><li>If you don\'t charge, we don\'t charge.</li>
-            <li>For paid events, we charge Rs '.NEW_DOOLALLY_FEE.' per attendee which includes  is fully redeemable for F&B 
+            <li>For paid events, we charge Rs '.NEW_DOOLALLY_FEE.' per attendee which is fully redeemable for F&B 
             at any Doolally Taproom in Mumbai. Attendees will receive it as a code in an email from us. 
             The code, however, does not have to be redeemed on that day and can be redeemed at their convenience.</li></ol></p>
             
@@ -73,7 +73,7 @@ $config['eventTc'] = '<div class="page-content">
         <p><ol><li>For paid events, we will collect money from the customer on your behalf. This is to ensure complete refund in case of cancelled events.</li>
         <li>Doolally will bear the 2.24% payment gateway fees except during cancellations by either the organiser or attendee.</li>
         <li>Eventshigh is our payment partner. Please check out their credentials here - www.eventshigh.com</li>
-        <li>For events below 5000, organisers will be reimbursed by cash on the day of the event. For events greater than 5000, we will hand over a cheque in the name of organiser. As an organiser, once you have crossed Rs 30,000 in earnings, Doolally will deduct 10% TDS.</li></ol></p>
+        <li>For payment for events, we will hand over a cheque in the name of organiser. As an organiser, once you have crossed Rs 30,000 in earnings, Doolally will deduct 10% TDS.</li></ol></p>
 
         <br><h5><strong>Contact:</strong></h5>
         <p>Email: events@doolally.in</p>
@@ -86,7 +86,7 @@ $config['eventBookTc'] = '<div class="page-content">
         <h5><strong>General rules:</strong></h5>
         <p><ol>
         <li>Attendees are expected to reach the venue well in time before the scheduled time of the event.</li><br>
-        <li>For paid events, we charge Rs 300 per attendee which is fully redeemable.
+        <li>For paid events, we charge Rs 300 per attendee which is fully redeemable for F&B at any Doolally Taproom in Mumbai.
          You will receive it as a code in an email from us, along with your booking confirmation details.
           The code, however, does not have to be redeemed only on the event day and can be redeemed at your convenience.</li><br>
         <li>You will also be given access to a dashboard. This is where you can contact the organisers or us for more details. 
