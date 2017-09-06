@@ -170,6 +170,10 @@
                                                     <!--<a href="#" data-ignore-cache="true" class="link item-link list-button color-black event-bookNow" disabled>Edit Event</a>-->
                                                     <?php
                                                 }
+                                                elseif(isset($eventCompleted) && $eventCompleted)
+                                                {
+
+                                                }
                                                 elseif(isEventStarted($row['eventDate'], $row['startTime']) || isEventFinished($row['eventDate'], $row['endTime']))
                                                 {
 
@@ -188,7 +192,13 @@
                                         <ul>
                                             <li>
                                                 <?php
-                                                    if(isset($row['isEventCancel']) && $row['isEventCancel'] == EVENT_CANCEL_REVIEW)
+                                                    if(isset($eventCompleted) && $eventCompleted)
+                                                    {
+                                                        ?>
+                                                        <a href="#" class="item-link list-button color-black" disabled>Event Completed</a>
+                                                        <?php
+                                                    }
+                                                    elseif(isset($row['isEventCancel']) && $row['isEventCancel'] == EVENT_CANCEL_REVIEW)
                                                     {
                                                         ?>
                                                         <a href="#" class="item-link list-button color-black" disabled>Cancellation in Review</a>

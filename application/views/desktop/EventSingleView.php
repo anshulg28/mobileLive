@@ -210,7 +210,13 @@
                             ?>
                             <div class="mdl-card__actions mdl-card--border">
                                 <?php
-                                if(isset($row['isEventCancel']) && $row['isEventCancel'] == EVENT_CANCEL_REVIEW)
+                                if(isset($eventCompleted) && $eventCompleted)
+                                {
+                                    ?>
+                                    <i class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event Completed</i>
+                                    <?php
+                                }
+                                elseif(isset($row['isEventCancel']) && $row['isEventCancel'] == EVENT_CANCEL_REVIEW)
                                 {
                                     ?>
                                     <!--<i data-ignore-cache="true" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-bookNow" disabled>Edit Event</i>-->

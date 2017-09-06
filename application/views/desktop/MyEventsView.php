@@ -110,6 +110,11 @@
                                         ?>
                                         <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Cancelled<?php
                                     }
+                                    elseif(isEventFinished($row['eventDate'], $row['endTime']))
+                                    {
+                                        ?>
+                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Completed<?php
+                                    }
                                     elseif($row['ifApproved'] == EVENT_DECLINED)
                                     {
                                         ?>
@@ -206,57 +211,8 @@
                                     </li>
                                 </ul>
                                 <div class="mdl-card__supporting-text">
-                                    <?php
-                                    $isApprov = false;
-
-                                    if($row['isEventCancel'] == EVENT_CANCEL_REVIEW)
-                                    {
-                                        $isApprov = true;
-                                        ?>
-                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Cancellation In Review<?php
-                                    }
-                                    elseif($row['isEventCancel'] == EVENT_CANCEL_FINAL)
-                                    {
-                                        ?>
-                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Cancelled<?php
-                                    }
-                                    elseif($row['ifApproved'] == EVENT_DECLINED)
-                                    {
-                                        ?>
-                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Declined!<?php
-                                    }
-                                    elseif($row['ifApproved'] == EVENT_WAITING)
-                                    {
-                                        ?>
-                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Review In Progress...<?php
-                                    }
-                                    elseif($row['ifApproved'] == EVENT_APPROVED && $row['ifActive'] == ACTIVE)
-                                    {
-                                        $isApprov = true;
-                                        ?>
-                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Approved!<?php
-                                    }
-                                    elseif($row['ifApproved'] == EVENT_APPROVED && $row['ifActive'] == NOT_ACTIVE)
-                                    {
-                                        $isApprov = true;
-                                        ?>
-                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Approved But Not Active<?php
-                                    }
-                                    ?>
-                                    <?php
-                                    if($isApprov === true)
-                                    {
-                                        ?>
-                                        <a href="<?php echo 'event_details/'.$row['eventSlug'];?>" class="event-bookNow dynamic">View&nbsp;Details <i class="ic_back_icon my-display-inline"></i></a>
-                                        <?php
-                                    }
-                                    else
-                                    {
-                                        ?>
-                                        <a href="<?php echo 'event_details/'.$row['eventSlug'];?>" class="event-bookNow dynamic" disabled>View&nbsp;Details <i class="ic_back_icon my-display-inline"></i></a>
-                                        <?php
-                                    }
-                                    ?>
+                                    <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Completed
+                                    <a href="<?php echo 'event_details/'.$row['eventSlug'];?>" class="event-bookNow dynamic">View&nbsp;Details <i class="ic_back_icon my-display-inline"></i></a>
                                 </div>
                             </div>
                             <?php

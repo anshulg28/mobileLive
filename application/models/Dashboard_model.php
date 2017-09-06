@@ -567,6 +567,20 @@ class Dashboard_Model extends CI_Model
 
         return $result;
     }
+    public function getDashboardCompEventDetails($eventSlug)
+    {
+        $query = "SELECT em.eventId, em.eventName,em.eventPlace, em.costType,em.eventPrice,em.eventShareLink,em.shortUrl, em.eventSlug,
+                  em.ifActive, em.ifApproved, em.isEventCancel, SUM(erm.quantity) as 'totalQuant'
+                  FROM eventcompletedmaster em
+                  LEFT JOIN eventregistermaster erm ON erm.eventId = em.eventId
+                  WHERE erm.isUserCancel != 1 AND em.eventId = 
+                  (SELECT eventId FROM eventslugmaster WHERE eventSlug LIKE '".$eventSlug."')";
+
+
+        $result = $this->db->query($query)->result_array();
+
+        return $result;
+    }
     public function getCommDetails($locId)
     {
         $query = "SELECT * "

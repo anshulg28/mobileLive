@@ -1007,6 +1007,11 @@ class Main extends MY_Controller
             /*$decodedS = explode('-',$eventId);
             $eventId = $decodedS[count($decodedS)-1];*/
             $events = $this->dashboard_model->getDashboardEventDetails($eventSlug);
+            if(!isset($events[0]['eventId']))
+            {
+               $events = $this->dashboard_model->getDashboardCompEventDetails($eventSlug);
+               $data['eventCompleted'] = true;
+            }
             $comDetails = $this->dashboard_model->getCommDetails($events[0]['eventPlace']);
             $data['commDetails'] = $comDetails;
             /*$shortDWName = $this->googleurlapi->shorten($events[0]['eventShareLink']);

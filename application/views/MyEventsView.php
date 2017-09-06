@@ -268,61 +268,13 @@
                                                     </div>
                                                     <div class="comment my-event-status clear">
                                                             <span>
-                                                            <?php
-                                                            $isApprov = false;
-                                                            if($row['isEventCancel'] == EVENT_CANCEL_REVIEW)
-                                                            {
-                                                                $isApprov = true;
-                                                                ?>
-                                                                <i class="ic_me_info_icon info-icon"></i>&nbsp;&nbsp;Cancellation In Review<?php
-                                                            }
-                                                            elseif($row['isEventCancel'] == EVENT_CANCEL_FINAL)
-                                                            {
-                                                                ?>
-                                                                <i class="ic_me_info_icon info-icon"></i>&nbsp;&nbsp;Event Cancelled<?php
-                                                            }
-                                                            elseif($row['ifApproved'] == EVENT_DECLINED)
-                                                            {
-                                                                ?>
-                                                                <i class="ic_me_info_icon info-icon"></i>&nbsp;&nbsp;Event Declined!<?php
-                                                            }
-                                                            elseif($row['ifApproved'] == EVENT_WAITING)
-                                                            {
-                                                                ?>
-                                                                <i class="ic_me_info_icon info-icon"></i>&nbsp;&nbsp;Review In Progress...<?php
-                                                            }
-                                                            elseif($row['ifApproved'] == EVENT_APPROVED && $row['ifActive'] == ACTIVE)
-                                                            {
-                                                                $isApprov = true;
-                                                                ?>
-                                                                <i class="ic_me_info_icon info-icon"></i>&nbsp;&nbsp;Event Approved!<?php
-                                                            }
-                                                            elseif($row['ifApproved'] == EVENT_APPROVED && $row['ifActive'] == NOT_ACTIVE)
-                                                            {
-                                                                $isApprov = true;
-                                                                ?>
-                                                                <i class="ic_me_info_icon info-icon"></i>&nbsp;&nbsp;Event Approved But Not Active<?php
-                                                            }
-                                                            ?>
+                                                                <i class="ic_me_info_icon info-icon"></i>&nbsp;&nbsp;Event Completed
                                                             </span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="card-footer event-card-footer">
-                                                <?php
-                                                if($isApprov === true)
-                                                {
-                                                    ?>
-                                                    <a href="<?php echo 'event_details/'.$row['eventSlug'];?>" data-ignore-cache="true" class="link color-black event-bookNow">View&nbsp;Details</a>
-                                                    <?php
-                                                }
-                                                else
-                                                {
-                                                    ?>
-                                                    <a href="<?php echo 'event_details/'.$row['eventSlug'];?>" data-ignore-cache="true" class="link color-black event-bookNow" disabled>View&nbsp;Details</a>
-                                                    <?php
-                                                }
-                                                ?>
+                                                <a href="<?php echo 'event_details/'.$row['eventSlug'];?>" data-ignore-cache="true" class="link color-black event-bookNow">View&nbsp;Details</a>
 
                                             </div>
                                         </div>
