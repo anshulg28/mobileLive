@@ -41,15 +41,17 @@
             <div id="hosting" class="mdl-tabs__panel is-active">
                 <div class="content-block">
                     <?php
+                    $isAnyEvents = false;
                     if(isset($userEvents) && myIsMultiArray($userEvents))
                     {
+                        $isAnyEvents = true;
                         $postImg = 0;
                         foreach($userEvents as $key => $row)
                         {
-                            if(isEventFinished($row['eventDate'], $row['endTime']) || $row['isEventCancel'] == EVENT_CANCEL_FINAL)
+                            /*if(isEventFinished($row['eventDate'], $row['endTime']) || $row['isEventCancel'] == EVENT_CANCEL_FINAL)
                             {
                                 continue;
-                            }
+                            }*/
                             $img_collection = array();
                             ?>
                             <div class="mdl-card mdl-shadow--2dp demo-card-header-pic">
@@ -103,6 +105,11 @@
                                         ?>
                                         <i class="material-icons">info_outline</i>&nbsp;&nbsp;Cancellation In Review<?php
                                     }
+                                    elseif($row['isEventCancel'] == EVENT_CANCEL_FINAL)
+                                    {
+                                        ?>
+                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Cancelled<?php
+                                    }
                                     elseif($row['ifApproved'] == EVENT_DECLINED)
                                     {
                                         ?>
@@ -145,7 +152,117 @@
                             <?php
                         }
                     }
-                    else
+                    if(isset($userCompEvents) && myIsMultiArray($userCompEvents))
+                    {
+                        $isAnyEvents = true;
+                        $postImg = 0;
+                        foreach($userCompEvents as $key => $row)
+                        {
+                            /*if(isEventFinished($row['eventDate'], $row['endTime']) || $row['isEventCancel'] == EVENT_CANCEL_FINAL)
+                            {
+                                continue;
+                            }*/
+                            $img_collection = array();
+                            ?>
+                            <div class="mdl-card mdl-shadow--2dp demo-card-header-pic">
+                                <?php
+                                if($postImg <5)
+                                {
+                                    ?>
+                                    <img src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
+                                    <?php
+                                }
+                                else
+                                {
+                                    ?>
+                                    <img data-src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img lazy"/>
+                                    <?php
+                                }
+                                $postImg++;
+                                ?>
+
+                                <ul class="mdl-list main-avatar-list">
+                                    <li class="mdl-list__item mdl-list__item--two-line">
+                                        <span class="mdl-list__item-primary-content">
+                                            <span class="avatar-title">
+                                            <?php
+                                            $eventName = (strlen($row['eventName']) > 35) ? substr($row['eventName'], 0, 35) . '..' : $row['eventName'];
+                                            echo $eventName;?>
+                                            </span>
+                                        </span>
+                                        <span class="mdl-list__item-secondary-content">
+                                            <span class="mdl-list__item-secondary-info">
+                                                <input type="hidden" data-name="<?php echo $row['eventName'];?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{ echo $row['eventShareLink'];}?>"/>
+                                                <?php
+                                                if($row['ifApproved'] == EVENT_APPROVED && $row['ifActive'] == ACTIVE)
+                                                {
+                                                    ?>
+                                                    <i class="my-pointer-item ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </span>
+                                        </span>
+                                    </li>
+                                </ul>
+                                <div class="mdl-card__supporting-text">
+                                    <?php
+                                    $isApprov = false;
+
+                                    if($row['isEventCancel'] == EVENT_CANCEL_REVIEW)
+                                    {
+                                        $isApprov = true;
+                                        ?>
+                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Cancellation In Review<?php
+                                    }
+                                    elseif($row['isEventCancel'] == EVENT_CANCEL_FINAL)
+                                    {
+                                        ?>
+                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Cancelled<?php
+                                    }
+                                    elseif($row['ifApproved'] == EVENT_DECLINED)
+                                    {
+                                        ?>
+                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Declined!<?php
+                                    }
+                                    elseif($row['ifApproved'] == EVENT_WAITING)
+                                    {
+                                        ?>
+                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Review In Progress...<?php
+                                    }
+                                    elseif($row['ifApproved'] == EVENT_APPROVED && $row['ifActive'] == ACTIVE)
+                                    {
+                                        $isApprov = true;
+                                        ?>
+                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Approved!<?php
+                                    }
+                                    elseif($row['ifApproved'] == EVENT_APPROVED && $row['ifActive'] == NOT_ACTIVE)
+                                    {
+                                        $isApprov = true;
+                                        ?>
+                                        <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Approved But Not Active<?php
+                                    }
+                                    ?>
+                                    <?php
+                                    if($isApprov === true)
+                                    {
+                                        ?>
+                                        <a href="<?php echo 'event_details/'.$row['eventSlug'];?>" class="event-bookNow dynamic">View&nbsp;Details <i class="ic_back_icon my-display-inline"></i></a>
+                                        <?php
+                                    }
+                                    else
+                                    {
+                                        ?>
+                                        <a href="<?php echo 'event_details/'.$row['eventSlug'];?>" class="event-bookNow dynamic" disabled>View&nbsp;Details <i class="ic_back_icon my-display-inline"></i></a>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                    }
+                    if(!$isAnyEvents)
                     {
                         echo 'No Event Created Yet!';
                     }

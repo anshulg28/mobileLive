@@ -82,6 +82,11 @@
                                     ?>
                                     <i class="ic_me_info_icon info-icon"></i>&nbsp;&nbsp;Event Approved But Not Active<?php
                                 }
+                                elseif(isEventFinished($row['eventDate'], $row['endTime']))
+                                {
+                                    ?>
+                                    <i class="ic_me_info_icon info-icon"></i>&nbsp;&nbsp;Event Completed<?php
+                                }
                                 ?>
                                 </span>
                             </div>
@@ -217,6 +222,20 @@
                                     ?>
                                     <!--<i data-ignore-cache="true" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-bookNow" disabled>Edit Event</i>-->
                                     <i class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event Cancelled</i>
+                                    <?php
+                                }
+                                elseif(isEventStarted($row['eventDate'], $row['startTime']))
+                                {
+                                    ?>
+                                    <!--<i data-ignore-cache="true" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-bookNow" disabled>Edit Event</i>-->
+                                    <i class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event In Progress</i>
+                                    <?php
+                                }
+                                elseif(isEventFinished($row['eventDate'], $row['endTime']))
+                                {
+                                    ?>
+                                    <!--<i data-ignore-cache="true" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-bookNow" disabled>Edit Event</i>-->
+                                    <i class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event Completed</i>
                                     <?php
                                 }
                                 else

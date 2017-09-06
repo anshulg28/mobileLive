@@ -62,6 +62,11 @@
                                     ?>
                                     <i class="ic_me_info_icon info-icon"></i>&nbsp;&nbsp;Event Approved But Not Active<?php
                                 }
+                                elseif(isEventFinished($row['eventDate'], $row['endTime']))
+                                {
+                                    ?>
+                                    <i class="ic_me_info_icon info-icon"></i>&nbsp;&nbsp;Event Completed<?php
+                                }
                                 ?>
                                 </span>
                                     </div>
@@ -165,6 +170,10 @@
                                                     <!--<a href="#" data-ignore-cache="true" class="link item-link list-button color-black event-bookNow" disabled>Edit Event</a>-->
                                                     <?php
                                                 }
+                                                elseif(isEventStarted($row['eventDate'], $row['startTime']) || isEventFinished($row['eventDate'], $row['endTime']))
+                                                {
+
+                                                }
                                                 else
                                                 {
                                                     ?>
@@ -189,6 +198,18 @@
                                                     {
                                                         ?>
                                                         <a href="#" class="item-link list-button color-black" disabled>Event Cancelled</a>
+                                                        <?php
+                                                    }
+                                                    elseif(isEventStarted($row['eventDate'], $row['startTime']))
+                                                    {
+                                                        ?>
+                                                        <a href="#" class="item-link list-button color-black" disabled>Event In Progress</a>
+                                                        <?php
+                                                    }
+                                                    elseif(isEventFinished($row['eventDate'], $row['endTime']))
+                                                    {
+                                                        ?>
+                                                        <a href="#" class="item-link list-button color-black" disabled>Event Completed</a>
                                                         <?php
                                                     }
                                                     else

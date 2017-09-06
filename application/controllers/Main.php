@@ -671,17 +671,26 @@ class Main extends MY_Controller
         $data = array();
         if (isSessionVariableSet($this->isMobUserSession) === FALSE) {
             $data['status'] = FALSE;
-        } else {
-            if (isSessionVariableSet($this->isMobUserSession) && isSessionVariableSet($this->userMobId)) {
+        }
+        else
+        {
+            if (isSessionVariableSet($this->isMobUserSession) && isSessionVariableSet($this->userMobId))
+            {
                 $data['status'] = TRUE;
                 $data['registeredEvents'] = $this->dashboard_model->getEventsRegisteredByUser($this->userMobId);
                 $data['userEvents'] = $this->dashboard_model->getEventsByUserId($this->userMobId);
-            } elseif (isSessionVariableSet($this->jukeboxToken) && isSessionVariableSet($this->userMobEmail)) {
+                $data['userCompEvents'] = $this->dashboard_model->getCompEventsByUserId($this->userMobId);
+            }
+            elseif (isSessionVariableSet($this->jukeboxToken) && isSessionVariableSet($this->userMobEmail))
+            {
                 $userId = '';
                 $userExists = $this->users_model->getUserDetailsByEmail($this->userMobEmail);
-                if ($userExists['status'] === TRUE) {
+                if ($userExists['status'] === TRUE)
+                {
                     $userId = $userExists['userData'][0]['userId'];
-                } else {
+                }
+                else
+                {
                     $details = array(
                         'userName' => $this->userMobEmail,
                         'firstName' => '',
@@ -695,18 +704,24 @@ class Main extends MY_Controller
                     );
                     $userId = $this->users_model->saveMobUserRecord($details);
                 }
-                if (isset($userId) && isStringSet($userId)) {
+                if (isset($userId) && isStringSet($userId))
+                {
                     $this->login_model->setLastLogin($userId);
                     $this->generalfunction_library->setMobUserSession($userId);
                     $data['status'] = TRUE;
-                } else {
+                }
+                else
+                {
                     $data['status'] = FALSE;
                     $data['errorMsg'] = 'Error User Creation, Try later';
                 }
                 $data['status'] = TRUE;
                 $data['registeredEvents'] = $this->dashboard_model->getEventsRegisteredByUser($this->userMobId);
                 $data['userEvents'] = $this->dashboard_model->getEventsByUserId($this->userMobId);
-            } else {
+                $data['userCompEvents'] = $this->dashboard_model->getCompEventsByUserId($this->userMobId);
+            }
+            else
+            {
                 $data['status'] = FALSE;
             }
 

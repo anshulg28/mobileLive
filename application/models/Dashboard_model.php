@@ -484,6 +484,20 @@ class Dashboard_Model extends CI_Model
 
         return $result;
     }
+
+    public function getCompEventsByUserId($userId)
+    {
+        $query = "SELECT em.*, ea.filename, l.locName
+                  FROM `eventcompletedmaster` em
+                  LEFT JOIN eventattachment ea ON ea.eventId = em.eventId
+                  LEFT JOIN locationmaster l ON eventPlace = l.id
+                  WHERE userId = ".$userId." GROUP BY em.eventId";
+
+        $result = $this->db->query($query)->result_array();
+
+        return $result;
+    }
+
     public function getEventsRegisteredByUser($userId)
     {
         $query = "SELECT erm.bookerId,erm.bookerUserId,erm.eventId,erm.quantity,erm.createdDT,erm.isUserCancel, em.*, ea.filename, l.locName
