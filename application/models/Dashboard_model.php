@@ -556,7 +556,7 @@ class Dashboard_Model extends CI_Model
     }
     public function getDashboardEventDetails($eventSlug)
     {
-        $query = "SELECT em.eventId, em.eventName,em.eventPlace, em.costType,em.eventPrice,em.eventShareLink,em.shortUrl, em.eventSlug,
+        $query = "SELECT em.eventId, em.eventDate,em.startTime, em.endTime, em.eventName,em.eventPlace, em.costType,em.eventPrice,em.eventShareLink,em.shortUrl, em.eventSlug,
                   em.ifActive, em.ifApproved, em.isEventCancel, SUM(erm.quantity) as 'totalQuant'
                   FROM eventmaster em
                   LEFT JOIN eventregistermaster erm ON erm.eventId = em.eventId
@@ -569,7 +569,7 @@ class Dashboard_Model extends CI_Model
     }
     public function getDashboardCompEventDetails($eventSlug)
     {
-        $query = "SELECT em.eventId, em.eventName,em.eventPlace, em.costType,em.eventPrice,em.eventShareLink,em.shortUrl, em.eventSlug,
+        $query = "SELECT em.eventId, em.eventDate,em.startTime, em.endTime, em.eventName,em.eventPlace, em.costType,em.eventPrice,em.eventShareLink,em.shortUrl, em.eventSlug,
                   em.ifActive, em.ifApproved, em.isEventCancel, SUM(erm.quantity) as 'totalQuant'
                   FROM eventcompletedmaster em
                   LEFT JOIN eventregistermaster erm ON erm.eventId = em.eventId

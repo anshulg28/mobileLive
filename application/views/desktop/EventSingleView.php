@@ -230,18 +230,18 @@
                                     <i class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event Cancelled</i>
                                     <?php
                                 }
-                                elseif(isEventStarted($row['eventDate'], $row['startTime']))
-                                {
-                                    ?>
-                                    <!--<i data-ignore-cache="true" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-bookNow" disabled>Edit Event</i>-->
-                                    <i class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event In Progress</i>
-                                    <?php
-                                }
                                 elseif(isEventFinished($row['eventDate'], $row['endTime']))
                                 {
                                     ?>
                                     <!--<i data-ignore-cache="true" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-bookNow" disabled>Edit Event</i>-->
                                     <i class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event Completed</i>
+                                    <?php
+                                }
+                                elseif(isEventStarted($row['eventDate'], $row['startTime']))
+                                {
+                                    ?>
+                                    <!--<i data-ignore-cache="true" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect event-bookNow" disabled>Edit Event</i>-->
+                                    <i class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event In Progress</i>
                                     <?php
                                 }
                                 else

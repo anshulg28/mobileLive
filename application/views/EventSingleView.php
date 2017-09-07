@@ -210,18 +210,19 @@
                                                         <a href="#" class="item-link list-button color-black" disabled>Event Cancelled</a>
                                                         <?php
                                                     }
-                                                    elseif(isEventStarted($row['eventDate'], $row['startTime']))
-                                                    {
-                                                        ?>
-                                                        <a href="#" class="item-link list-button color-black" disabled>Event In Progress</a>
-                                                        <?php
-                                                    }
                                                     elseif(isEventFinished($row['eventDate'], $row['endTime']))
                                                     {
                                                         ?>
                                                         <a href="#" class="item-link list-button color-black" disabled>Event Completed</a>
                                                         <?php
                                                     }
+                                                    elseif(isEventStarted($row['eventDate'], $row['startTime']))
+                                                    {
+                                                        ?>
+                                                        <a href="#" class="item-link list-button color-black" disabled>Event In Progress</a>
+                                                        <?php
+                                                    }
+
                                                     else
                                                     {
                                                         ?>
