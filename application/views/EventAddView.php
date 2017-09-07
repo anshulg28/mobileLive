@@ -289,7 +289,7 @@
                             <label class="mdl-textfield__label" for="aboutCreator">Something about yourself (Optional)</label>
                         </div>
                         <div class="event-header-name">
-                            All events are reviewed and approved by Doolally. Once approved, we will create an Instamojo payment link and
+                            All events are reviewed and approved by Doolally. Once approved, we will create an Eventshigh payment link and
                             accept payments on your behalf.
                         </div>
                         <hr>
