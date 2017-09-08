@@ -277,7 +277,7 @@
             message: 'Email Id of the attendee: ',
             value:email,
             callback: function (value) {
-                console.log(value)
+                console.log(value);
             }
         });
         setTimeout(function(){
