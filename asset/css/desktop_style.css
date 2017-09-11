@@ -938,6 +938,13 @@ body
     padding: 0 15px;
     margin-top:-10px;
 }
+.mainHome #eventsTab .mdl-card__supporting-text .about-event
+{
+    margin-top:10px;
+    font-size:14px;
+    margin-bottom:10px;
+    line-height:24px;
+}
 .mainHome #eventsTab .mdl-card__supporting-text p
 {
     margin-top:10px;

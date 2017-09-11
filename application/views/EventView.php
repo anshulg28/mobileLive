@@ -32,7 +32,7 @@
                                 <img src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
                             </div>
                             <div class="event-header-name"><?php echo $row['eventName'];?></div>
-                            <p class="content-block event-about"><?php echo strip_tags($row['eventDescription'],'<br>');?></p>
+                            <div class="content-block event-about"><?php echo $row['eventDescription'];?></div>
                             <hr class="card-ptag">
                             <!-- Where section -->
                             <div class="event-descrip-wrapper">

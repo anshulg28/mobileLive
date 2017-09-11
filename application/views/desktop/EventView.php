@@ -36,7 +36,7 @@
                                 </li>
                             </ul>
                             <div class="mdl-card__supporting-text">
-                                <p><?php echo strip_tags($row['eventDescription'],'<br>');?></p>
+                                <div class="about-event"><?php echo $row['eventDescription'];?></div>
                             </div>
                             <hr class="card-ptag">
 
