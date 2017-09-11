@@ -114,7 +114,25 @@ class Sendemail_library
         $subject = 'You are attending '.$userData['eventName'];
         $toEmail = $userData['creatorEmail'];
 
-        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+        //Saving mail
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->dashboard_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
     public function eventRegSuccessMail($userData, $eventPlace)
@@ -179,7 +197,25 @@ class Sendemail_library
         $subject = 'You are attending '.$userData['eventName'];
         $toEmail = $userData['creatorEmail'];
 
-        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+        //Saving mail
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->dashboard_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
     public function eventHostSuccessMail($userData, $eventPlace)
     {
@@ -217,7 +253,25 @@ class Sendemail_library
         $subject = 'You have a sign up for '.$userData['eventName'];
         $toEmail = $userData['hostEmail'];
 
-        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+        //Saving mail
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->dashboard_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
     public function eventVerifyMail($userData)
     {

@@ -1261,26 +1261,31 @@ class Main extends MY_Controller
             $sessionDone = TRUE;
             //redirect(base_url().'mobile');
         }*/
-        if ($sessionDone === TRUE) {
+        if ($sessionDone === TRUE)
+        {
             $this->load->model('login_model');
             $userId = '';
 
             $requiredInfo = array();
             $ehDetails = $this->dashboard_model->getEventInfoByEhId($eventId);
-            if (isset($ehDetails) && myIsMultiArray($ehDetails)) {
+            if (isset($ehDetails) && myIsMultiArray($ehDetails))
+            {
                 $mojoNumber = $this->clearMobNumber($ehArray['userMobile']);
                 $userStatus = $this->checkPublicUser($ehArray['userEmail'], $mojoNumber);
                 $isSavedAlready = false;
-                if ($userStatus['status'] === FALSE) {
+                if ($userStatus['status'] === FALSE)
+                {
                     $userId = $userStatus['userData']['userId'];
                     $checkUserAlreadyReg = $this->dashboard_model->checkUserBookedWithMojo($userId, $ehDetails['eventId'], $ehArray['bookingid']);
                     if ($checkUserAlreadyReg['status'] === false)
                     {
                         $userName = explode(' ', $ehArray['userName']);
-                        if (count($userName) < 2) {
+                        if (count($userName) < 2)
+                        {
                             $userName[1] = '';
                         }
-                        if ($userStatus['userData']['firstName'] == '' && $userStatus['userData']['lastName'] == '') {
+                        if ($userStatus['userData']['firstName'] == '' && $userStatus['userData']['lastName'] == '')
+                        {
                             $detail = array(
                                 'firstName' => $userName[0],
                                 'lastName' => $userName[1],
@@ -1309,13 +1314,16 @@ class Main extends MY_Controller
                         $this->sendemail_library->eventRegSuccessMail($mailData, $eventData[0]['eventPlace']);
                         $this->sendemail_library->eventHostSuccessMail($mailData, $eventData[0]['eventPlace']);
                     }
-                    else {
+                    else
+                    {
                         $isSavedAlready = true;
                     }
                 }
-                else {
+                else
+                {
                     $userName = explode(' ', $ehArray['userName']);
-                    if (count($userName) < 2) {
+                    if (count($userName) < 2)
+                    {
                         $userName[1] = '';
                     }
 
@@ -1339,7 +1347,8 @@ class Main extends MY_Controller
 
                     $userId = $this->users_model->savePublicUser($user);
                     $checkUserAlreadyReg = $this->dashboard_model->checkUserBookedWithMojo($userId, $ehDetails['eventId'], $ehArray['bookingid']);
-                    if ($checkUserAlreadyReg['status'] === false) {
+                    if ($checkUserAlreadyReg['status'] === false)
+                    {
                         $eventData = $this->dashboard_model->getEventById($ehDetails['eventId']);
                         $mailData = array(
                             'creatorName' => $ehArray['userName'],
@@ -1360,14 +1369,17 @@ class Main extends MY_Controller
                         );
                         $this->sendemail_library->memberWelcomeMail($mailData, $eventData[0]['eventPlace']);
                         $this->sendemail_library->eventHostSuccessMail($mailData, $eventData[0]['eventPlace']);
-                    } else {
+                    }
+                    else
+                    {
                         $isSavedAlready = true;
                     }
                 }
 
                 //Save Booking Details
 
-                if (!$isSavedAlready) {
+                if (!$isSavedAlready)
+                {
                     $requiredInfo = array(
                         'bookerUserId' => $userId,
                         'eventId' => $ehDetails['eventId'],
@@ -1378,12 +1390,16 @@ class Main extends MY_Controller
 
                     $this->dashboard_model->saveEventRegis($requiredInfo);
                     //$this->sendemail_library->newEventMail($mailEvent);
-                    if (isSessionVariableSet($this->isMobUserSession) === FALSE) {
+                    if (isSessionVariableSet($this->isMobUserSession) === FALSE)
+                    {
                         $this->login_model->setLastLogin($userId);
                         $this->generalfunction_library->setMobUserSession($userId);
                     }
                 }
-            } else {
+            }
+            else
+            {
+                log_message('error','EventsHigh Id not found! DT: '.date('Y-m-d H:i:s'));
                 $this->generalfunction_library->setSessionVariable('paymentStatus', '2');
                 $this->paymentStatus = '2';
             }
@@ -1413,6 +1429,7 @@ class Main extends MY_Controller
                 && isset($get['userName']) && isset($get['userEmail']) && isset($get['userMobile'])
                 && isset($get['nTickets']))
             {
+                log_message('error','In the Eventshigh Callback: '.$get['bookingid'].' DT: '.date('Y-m-d H:i:s'));
                 $ehArray = array(
                     'bookingid' => $get['bookingid'],
                     'userName' => urldecode($get['userName']),
@@ -1421,6 +1438,7 @@ class Main extends MY_Controller
                     'nTickets' => $get['nTickets']
                 );
                 $this->thankYou1($get['eid'],$ehArray,0);
+                log_message('error','Booking Complete: '.$get['bookingid'].' DT: '.date('Y-m-d H:i:s'));
             }
             else
             {
