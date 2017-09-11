@@ -114,7 +114,7 @@
                                                      data-ev-title="<?php echo $row['eventName'];?>" data-ev-location="Doolally Taproom, <?php echo $row['locName'];?>"
                                                      data-ev-start="<?php echo $row['eventDate'].' '.$row['startTime'];?>"
                                                      data-ev-end="<?php echo $row['eventDate'].' '.$row['endTime'];?>"
-                                                     data-ev-description="<?php echo strip_tags($row['eventDescription'],'<br>');?>">
+                                                     data-ev-description="<?php echo strip_tags($row['eventDescription'],'<br><ul></ul><li></li>');?>">
                                                 </span>
                                             </span>
                                         </span>
