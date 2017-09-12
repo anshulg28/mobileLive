@@ -95,6 +95,23 @@ myApp.onPageInit('event', function (page) {
             });
         }
     });
+    $$(document).on('click','.other-booking-btn', function(e){
+        e.preventDefault();
+        var payLink = $(this).attr('data-href');
+        if(payLink != '')
+        {
+            var d=document.createElement("script");
+            d.src=payLink;
+            window.document.body.insertBefore(d, window.document.body.firstChild);
+        }
+        else
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Payment Gateway Error!'
+            });
+        }
+    });
 
 });
 myApp.onPageInit('eventSingle', function (page) {

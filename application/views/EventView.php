@@ -191,73 +191,91 @@
                                 </ul>
                             </div>-->
                             <div class="row">
-                                <div class="col-5"></div>
-                                <div class="col-90">
-                                    <?php
-                                        if($row['isSpecialEvent'] == '1')
-                                        {
-                                            ?>
-                                            <a href="http://beerolympics.in" target="_blank" class="button button-big button-fill bookNow-event-btn external">Visit Now </a>
+                                <?php
+                                    if(isset($row['otherPaymentLink']) && isStringSet($row['otherPaymentLink']))
+                                    {
+                                        ?>
+                                        <div class="col-50">
+                                            <a href="#" data-href="<?php echo $row['eventPaymentLink'];?>" class="button button-big button-fill bookNow-event-btn other-booking-btn external">Rs. 2000 Bhonu</a>
+                                        </div>
+                                        <div class="col-50">
+                                            <a href="#" data-href="<?php echo $row['otherPaymentLink'];?>" class="button button-big button-fill bookNow-event-btn other-booking-btn external">Rs. 3000 Bhonu & Unlimited Beer</a>
+                                        </div>
+                                        <?php
+                                    }
+                                    else
+                                    {
+                                        ?>
+                                        <div class="col-5"></div>
+                                        <div class="col-90">
                                             <?php
-                                        }
-                                        elseif($row['isEventEverywhere'] == STATUS_YES || (isset($eventCompleted) && $eventCompleted))
-                                        {
+                                            if($row['isSpecialEvent'] == '1')
+                                            {
+                                                ?>
+                                                <a href="http://beerolympics.in" target="_blank" class="button button-big button-fill bookNow-event-btn external">Visit Now </a>
+                                                <?php
+                                            }
+                                            elseif($row['isEventEverywhere'] == STATUS_YES || (isset($eventCompleted) && $eventCompleted))
+                                            {
+                                                ?>
+                                                <!--<a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for creating! </a>-->
+                                                <?php
+                                            }
+                                            elseif(isset($userCreated) && $userCreated === true)
+                                            {
+                                                ?>
+                                                <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for creating! </a>
+                                                <?php
+                                            }
+                                            elseif(isset($userBooked) && $userBooked === true)
+                                            {
+                                                ?>
+                                                <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for registering! </a>
+                                                <?php
+                                            }
+                                            elseif($row['isRegFull'] == '1')
+                                            {
+                                                ?>
+                                                <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Registration Full! </a>
+                                                <?php
+                                            }
+                                            elseif(isset($isUnderReview) && $isUnderReview === true)
+                                            {
+                                                ?>
+                                                <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Under Review </a>
+                                                <?php
+                                            }
+                                            elseif($row['ifActive'] == NOT_ACTIVE || $row['isEventCancel'] == EVENT_CANCEL_REVIEW ||
+                                                $row['isEventCancel'] == EVENT_CANCEL_FINAL)
+                                            {
+                                                ?>
+                                                <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Event Canceled </a>
+                                                <?php
+                                            }
+                                            elseif(isset($row['eventPaymentLink']) && isStringSet($row['eventPaymentLink']) && stripos($row['eventPaymentLink'],'ticketing.eventshigh.com') !== FALSE)
+                                            {
+                                                ?>
+                                                <a href="#" data-href="<?php echo $row['eventPaymentLink'];?>" class="button button-big button-fill bookNow-event-btn final-booking-btn external">Book Now </a>
+                                                <?php
+                                            }
+                                            elseif(isset($row['eventPaymentLink']) && isStringSet($row['eventPaymentLink']))
+                                            {
+                                                ?>
+                                                <a href="<?php echo $row['eventPaymentLink'];?>" class="button button-big button-fill bookNow-event-btn external">Book Now </a>
+                                                <?php
+                                            }
+                                            else
+                                            {
+                                                ?>
+                                                <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Book Now </a>
+                                                <?php
+                                            }
                                             ?>
-                                            <!--<a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for creating! </a>-->
-                                            <?php
-                                        }
-                                        elseif(isset($userCreated) && $userCreated === true)
-                                        {
-                                            ?>
-                                            <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for creating! </a>
-                                            <?php
-                                        }
-                                        elseif(isset($userBooked) && $userBooked === true)
-                                        {
-                                            ?>
-                                            <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for registering! </a>
-                                            <?php
-                                        }
-                                        elseif($row['isRegFull'] == '1')
-                                        {
-                                            ?>
-                                            <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Registration Full! </a>
-                                            <?php
-                                        }
-                                        elseif(isset($isUnderReview) && $isUnderReview === true)
-                                        {
-                                            ?>
-                                            <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Under Review </a>
-                                            <?php
-                                        }
-                                        elseif($row['ifActive'] == NOT_ACTIVE || $row['isEventCancel'] == EVENT_CANCEL_REVIEW ||
-                                            $row['isEventCancel'] == EVENT_CANCEL_FINAL)
-                                        {
-                                            ?>
-                                            <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Event Canceled </a>
-                                            <?php
-                                        }
-                                        elseif(isset($row['eventPaymentLink']) && isStringSet($row['eventPaymentLink']) && stripos($row['eventPaymentLink'],'ticketing.eventshigh.com') !== FALSE)
-                                        {
-                                            ?>
-                                            <a href="#" data-href="<?php echo $row['eventPaymentLink'];?>" class="button button-big button-fill bookNow-event-btn final-booking-btn external">Book Now </a>
-                                            <?php
-                                        }
-                                        elseif(isset($row['eventPaymentLink']) && isStringSet($row['eventPaymentLink']))
-                                        {
-                                            ?>
-                                            <a href="<?php echo $row['eventPaymentLink'];?>" class="button button-big button-fill bookNow-event-btn external">Book Now </a>
-                                            <?php
-                                        }
-                                        else
-                                        {
-                                            ?>
-                                            <a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Book Now </a>
-                                            <?php
-                                        }
-                                    ?>
-                                </div>
-                                <div class="col-5"></div>
+                                        </div>
+                                        <div class="col-5"></div>
+                                        <?php
+                                    }
+                                ?>
                             </div>
                             <br>
                             <div class="bottom-share-panel">

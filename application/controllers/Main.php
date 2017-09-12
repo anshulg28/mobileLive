@@ -1267,6 +1267,7 @@ class Main extends MY_Controller
             $userId = '';
 
             $requiredInfo = array();
+
             $ehDetails = $this->dashboard_model->getEventInfoByEhId($eventId);
             if (isset($ehDetails) && myIsMultiArray($ehDetails))
             {
@@ -1293,7 +1294,14 @@ class Main extends MY_Controller
                             );
                             $this->users_model->updatePublicUser($detail);
                         }
-                        $eventData = $this->dashboard_model->getEventById($ehDetails['eventId']);
+                        if($eventId == SPECIAL_EVENT_EHID)
+                        {
+                            $eventData = $this->dashboard_model->getSpecialEventById($ehDetails['eventId']);
+                        }
+                        else
+                        {
+                            $eventData = $this->dashboard_model->getEventById($ehDetails['eventId']);
+                        }
                         $mailData = array(
                             'creatorName' => $ehArray['userName'],
                             'creatorEmail' => $ehArray['userEmail'],
@@ -1349,7 +1357,14 @@ class Main extends MY_Controller
                     $checkUserAlreadyReg = $this->dashboard_model->checkUserBookedWithMojo($userId, $ehDetails['eventId'], $ehArray['bookingid']);
                     if ($checkUserAlreadyReg['status'] === false)
                     {
-                        $eventData = $this->dashboard_model->getEventById($ehDetails['eventId']);
+                        if($eventId == SPECIAL_EVENT_EHID)
+                        {
+                            $eventData = $this->dashboard_model->getSpecialEventById($ehDetails['eventId']);
+                        }
+                        else
+                        {
+                            $eventData = $this->dashboard_model->getEventById($ehDetails['eventId']);
+                        }
                         $mailData = array(
                             'creatorName' => $ehArray['userName'],
                             'creatorEmail' => $ehArray['userEmail'],

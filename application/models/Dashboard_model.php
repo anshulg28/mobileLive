@@ -520,6 +520,15 @@ class Dashboard_Model extends CI_Model
 
         return $result;
     }
+    public function getSpecialEventById($eventId)
+    {
+        $query = "SELECT *
+                  FROM eventspecialmaster WHERE eventId = ".$eventId;
+
+        $result = $this->db->query($query)->result_array();
+
+        return $result;
+    }
     public function getWeeklyEvents()
     {
         $this->db->simple_query('SET SESSION group_concat_max_len=1000000');

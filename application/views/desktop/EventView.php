@@ -174,74 +174,93 @@
                         </div>
                     </div>
 
-                    <div class="mdl-grid my-fullWidth">
-                        <div class="mdl-cell mdl-cell--2-col"></div>
-                        <div class="mdl-cell mdl-cell--8-col">
-                            <?php
-                                if($row['isSpecialEvent'] == '1')
-                                {
-                                    ?>
-                                    <a href="http://beerolympics.in" target="_blank" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn">Visit Now </a>
+                    <div class="mdl-grid my-fullWidth my-NoPadding">
+                        <?php
+                            if(isset($row['otherPaymentLink']) && isStringSet($row['otherPaymentLink']))
+                            {
+                                ?>
+                                <div class="mdl-cell mdl-cell--6-col">
+                                    <a href="#" data-href="<?php echo $row['eventPaymentLink'];?>" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn other-booking-btn external">Rs. 2000 Bhonu</a>
+                                </div>
+                                <div class="mdl-cell mdl-cell--6-col">
+                                    <a href="#" data-href="<?php echo $row['otherPaymentLink'];?>" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn other-booking-btn external">Rs. 3000 Bhonu & Unlimited Beer</a>
+                                </div>
+                                <?php
+                            }
+                            else
+                            {
+                                ?>
+                                <div class="mdl-cell mdl-cell--2-col"></div>
+                                <div class="mdl-cell mdl-cell--8-col">
                                     <?php
-                                }
-                                elseif($row['isEventEverywhere'] == STATUS_YES || (isset($eventCompleted) && $eventCompleted))
-                                {
+                                    if($row['isSpecialEvent'] == '1')
+                                    {
+                                        ?>
+                                        <a href="http://beerolympics.in" target="_blank" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn">Visit Now </a>
+                                        <?php
+                                    }
+                                    elseif($row['isEventEverywhere'] == STATUS_YES || (isset($eventCompleted) && $eventCompleted))
+                                    {
+                                        ?>
+                                        <!--<a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for creating! </a>-->
+                                        <?php
+                                    }
+                                    elseif(isset($userCreated) && $userCreated === true)
+                                    {
+                                        ?>
+                                        <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Thank you for creating! </a>
+                                        <?php
+                                    }
+                                    elseif(isset($userBooked) && $userBooked === true)
+                                    {
+                                        ?>
+                                        <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Thank you for registering! </a>
+                                        <?php
+                                    }
+                                    elseif($row['isRegFull'] == '1')
+                                    {
+                                        ?>
+                                        <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Registration Full! </a>
+                                        <?php
+                                    }
+                                    elseif(isset($isUnderReview) && $isUnderReview === true)
+                                    {
+                                        ?>
+                                        <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Under Review </a>
+                                        <?php
+                                    }
+                                    elseif($row['ifActive'] == NOT_ACTIVE || $row['isEventCancel'] == EVENT_CANCEL_REVIEW ||
+                                        $row['isEventCancel'] == EVENT_CANCEL_FINAL)
+                                    {
+                                        ?>
+                                        <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Event Canceled </a>
+                                        <?php
+                                    }
+                                    elseif(isset($row['eventPaymentLink']) && isStringSet($row['eventPaymentLink']) && stripos($row['eventPaymentLink'],'ticketing.eventshigh.com') !== FALSE)
+                                    {
+                                        ?>
+                                        <a href="#" data-href="<?php echo $row['eventPaymentLink'];?>" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn final-booking-btn external">Book Now </a>
+                                        <?php
+                                    }
+                                    elseif(isset($row['eventPaymentLink']) && isStringSet($row['eventPaymentLink']))
+                                    {
+                                        ?>
+                                        <a href="<?php echo $row['eventPaymentLink'];?>" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn external">Book Now </a>
+                                        <?php
+                                    }
+                                    else
+                                    {
+                                        ?>
+                                        <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Book Now </a>
+                                        <?php
+                                    }
                                     ?>
-                                    <!--<a href="#" class="button button-big button-fill bookNow-event-btn" disabled>Thank you for creating! </a>-->
-                                    <?php
-                                }
-                                elseif(isset($userCreated) && $userCreated === true)
-                                {
-                                    ?>
-                                    <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Thank you for creating! </a>
-                                    <?php
-                                }
-                                elseif(isset($userBooked) && $userBooked === true)
-                                {
-                                    ?>
-                                    <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Thank you for registering! </a>
-                                    <?php
-                                }
-                                elseif($row['isRegFull'] == '1')
-                                {
-                                    ?>
-                                    <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Registration Full! </a>
-                                    <?php
-                                }
-                                elseif(isset($isUnderReview) && $isUnderReview === true)
-                                {
-                                    ?>
-                                    <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Under Review </a>
-                                    <?php
-                                }
-                                elseif($row['ifActive'] == NOT_ACTIVE || $row['isEventCancel'] == EVENT_CANCEL_REVIEW ||
-                                    $row['isEventCancel'] == EVENT_CANCEL_FINAL)
-                                {
-                                    ?>
-                                    <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Event Canceled </a>
-                                    <?php
-                                }
-                                elseif(isset($row['eventPaymentLink']) && isStringSet($row['eventPaymentLink']) && stripos($row['eventPaymentLink'],'ticketing.eventshigh.com') !== FALSE)
-                                {
-                                    ?>
-                                    <a href="#" data-href="<?php echo $row['eventPaymentLink'];?>" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn final-booking-btn external">Book Now </a>
-                                    <?php
-                                }
-                                elseif(isset($row['eventPaymentLink']) && isStringSet($row['eventPaymentLink']))
-                                {
-                                    ?>
-                                    <a href="<?php echo $row['eventPaymentLink'];?>" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn external">Book Now </a>
-                                    <?php
-                                }
-                                else
-                                {
-                                    ?>
-                                    <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Book Now </a>
-                                    <?php
-                                }
-                            ?>
-                        </div>
-                        <div class="mdl-cell mdl-cell--2-col"></div>
+                                </div>
+                                <div class="mdl-cell mdl-cell--2-col"></div>
+                                <?php
+                            }
+                        ?>
+
                     </div>
                     <br>
                     <div class="mdl-grid my-fullWidth my-NoPadding">
