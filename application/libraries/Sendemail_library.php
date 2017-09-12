@@ -93,7 +93,14 @@ class Sendemail_library
             '&details='. urlencode($userData["eventDescrip"]).
             '&sprop=&sprop=name:';
 
-        $content = $this->CI->load->view('emailtemplates/memberWelcomeMailView', $data, true);
+        if($userData['eventId'] == SPECIAL_EVENT_DOOLALLYID)
+        {
+            $content = $this->CI->load->view('emailtemplates/memberWelcomeSpecialMailView', $data, true);
+        }
+        else
+        {
+            $content = $this->CI->load->view('emailtemplates/memberWelcomeMailView', $data, true);
+        }
 
         $fromEmail = DEFAULT_SENDER_EMAIL;
         $fromPass = DEFAULT_SENDER_PASS;
@@ -176,7 +183,14 @@ class Sendemail_library
             '&details='. urlencode($userData["eventDescrip"]).
             '&sprop=&sprop=name:';
 
-        $content = $this->CI->load->view('emailtemplates/eventRegSuccessMailView', $data, true);
+        if($userData['eventId'] == SPECIAL_EVENT_DOOLALLYID)
+        {
+            $content = $this->CI->load->view('emailtemplates/eventRegSuccessSpecialMailView', $data, true);
+        }
+        else
+        {
+            $content = $this->CI->load->view('emailtemplates/eventRegSuccessMailView', $data, true);
+        }
 
         $fromEmail = DEFAULT_SENDER_EMAIL;
         $fromPass = DEFAULT_SENDER_PASS;
