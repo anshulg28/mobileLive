@@ -821,6 +821,7 @@
 
                                                     <div class="comment clear" itemprop="description">
                                                         <?php
+                                                        $row['eventDescription'] = str_replace('nbsp;',' ',$row['eventDescription']);
                                                         $eventDescrip = (strlen($row['eventDescription']) > 100) ? substr(strip_tags($row['eventDescription']), 0, 100) . '..' : strip_tags($row['eventDescription']);
                                                         ?>
                                                         <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment">

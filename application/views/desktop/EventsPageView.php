@@ -98,6 +98,7 @@
                         <meta class="hide" itemprop="endDate" content="<?php echo $row['eventDate'].'T'.$row['endTime'];?>" />
                         <div class="mdl-card__supporting-text">
                             <?php
+                            $row['eventDescription'] = str_replace('nbsp;',' ',$row['eventDescription']);
                             $eventDescrip = (strlen($row['eventDescription']) > 100) ? substr(strip_tags($row['eventDescription']), 0, 100) . '..' : strip_tags($row['eventDescription']);
                             ?>
                             <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment dynamic" itemprop="description">
