@@ -10,7 +10,7 @@
     <p>Rumour has it that you have signed up for <b><?php echo $mailData['eventName'];?></b> happening on
         <a href="<?php echo $calendar_url;?>" target="_blank"><?php $d = date_create($mailData['eventDate']); echo date_format($d,DATE_MAIL_FORMAT_UI);?></a>,
     <?php echo date('h:i a',strtotime($mailData['startTime'])).'-'.date('h:i a',strtotime($mailData['endTime']));?>
-        at <a href="<?php echo $locInfo['mapLink'];?>" target="_blank">Doolally Taproom, <?php echo $locInfo['locName'];?>.</a>
+        at <a href="<?php echo $locInfo['mapLink'];?>" target="_blank">Doolally Taproom, <?php echo $locInfo['locName'];?></a>
         <?php
         if(isset($mailData['buyQuantity']))
         {
@@ -19,12 +19,17 @@
             {
                 if($remaining == 1)
                 {
-                    echo ' along with a friend';
+                    echo ', along with a friend';
                 }
                 else
                 {
-                    echo ' along with '.$remaining.' friends';
+                    echo ', along with '.$remaining.' friends';
                 }
+            }
+            else
+            {
+
+                echo '.';
             }
         }
         ?>
