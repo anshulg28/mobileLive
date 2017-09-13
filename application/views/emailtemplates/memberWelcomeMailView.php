@@ -7,10 +7,27 @@
 
 <body>
     <p>Hi <?php echo trim(ucfirst($mailData['creatorName']));?>,</p>
-    <p>Rumour has it that you <?php if(isset($mailData['buyQuantity'])){$remaining = ((int)$mailData['buyQuantity']-1); if($remaining>0){if($remaining == 1){echo 'and a friend';}else{echo 'and friends'.$remaining;}}} ?> have signed up for <b><?php echo $mailData['eventName'];?></b> happening on
+    <p>Rumour has it that you have signed up for <b><?php echo $mailData['eventName'];?></b> happening on
         <a href="<?php echo $calendar_url;?>" target="_blank"><?php $d = date_create($mailData['eventDate']); echo date_format($d,DATE_MAIL_FORMAT_UI);?></a>,
     <?php echo date('h:i a',strtotime($mailData['startTime'])).'-'.date('h:i a',strtotime($mailData['endTime']));?>
-        at <a href="<?php echo $locInfo['mapLink'];?>" target="_blank">Doolally Taproom, <?php echo $locInfo['locName'].'.';?></a></p>
+        <?php
+        if(isset($mailData['buyQuantity']))
+        {
+            $remaining = ((int)$mailData['buyQuantity']-1);
+            if($remaining>0)
+            {
+                if($remaining == 1)
+                {
+                    echo 'along with a friend';
+                }
+                else
+                {
+                    echo 'along with '.$remaining.' friends';
+                }
+            }
+        }
+        ?>
+         at <a href="<?php echo $locInfo['mapLink'];?>" target="_blank">Doolally Taproom, <?php echo $locInfo['locName'].'.';?></a></p>
 
     <p>This mail is to let you know what your <?php echo date('l',strtotime($mailData['eventDate']));?>
         is going to look like. The event will run from <?php echo date('h:i a',strtotime($mailData['startTime'])).'-'.date('h:i a',strtotime($mailData['endTime']));?>.<br><br>
