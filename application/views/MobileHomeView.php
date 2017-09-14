@@ -912,6 +912,12 @@
                                                                     ?>
                                                                     <?php
                                                                 }
+                                                                if($row['eventId'] == SPECIAL_EVENT_DOOLALLYID)
+                                                                {
+                                                                    ?>
+                                                                    &nbsp;&nbsp;<i class="ic_me_rupee_icon main-rupee-icon"></i> Rs 3000
+                                                                    <?php
+                                                                }
                                                             ?>
                                                         </p>
                                                     </div>
