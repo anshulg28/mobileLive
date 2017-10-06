@@ -40,9 +40,12 @@ $config['ccList'] = array(
 $config['eventTc'] = '<div class="page-content">
     <div class="content-block">
         <h5><strong>General rules:</strong></h5>
-        <p><ol><li>All events have to be open for all.</li>
+        <p><ol><li>All events have to be open for all. (Participants below 21 will have to be accompanied by a parent/guardian)</li>
             <li>Events with corporate sponsorship are not allowed.</li>
-            <li>Sale of any material is not permitted in the premises. Only the works of the performer(s)/artist(s) who are at the event can be sold.</li></ol></p>
+            <li>Sale of any material is not permitted in the premises. Only the works of the performer(s)/artist(s) who are at the event can be sold during the event duration. 
+            Please consult with the venue\'s Community Manager.</li>
+            <li>As an event organizer, you cannot promote other brands by way of distributing samples, freebies, or promotional material. 
+            You can, however, promote your own brand during the course of the workshop/event. </li></ol></p>
 
         <br><h5><strong>Organizers are expected:</strong></h5>
         <p><ol><li>To set up and manage the ticket counter for any ticketed events.</li>
@@ -52,7 +55,8 @@ $config['eventTc'] = '<div class="page-content">
 
         <br><h5><strong>Charges for utilization of the space:</strong></h5>
         <p><ol><li>If you don\'t charge, we don\'t charge.</li>
-            <li>For paid events, we charge Rs '.NEW_DOOLALLY_FEE.' per attendee which is fully redeemable for F&B 
+            <li>For paid events/workshops, we charge a venue fee of Rs. 118</li>
+            <li>Additionally for paid events, we charge Rs '.NEW_DOOLALLY_FEE.' per attendee which is fully redeemable for F&B 
             at any Doolally Taproom in Mumbai. Attendees will receive it as a code in an email from us. 
             The code, however, does not have to be redeemed on that day and can be redeemed at their convenience.</li></ol></p>
             
@@ -64,7 +68,7 @@ $config['eventTc'] = '<div class="page-content">
              meetup, and Doolally social media profiles. </li></ol></p>
 
         <br><h5><strong>Cancellation Policy:</strong></h5>
-        <p><ol><li>If you need to cancel an event, you will need to get in touch with the venue\'s community manager.</li>
+        <p><ol><li>If you need to cancel an event, you will need to get in touch with the venue\'s Community Manager.</li>
         <li>If you cancel your event, we will refund the full amount to the attendees. 
         However, the payment fee of 2.24% per attendee will be borne by you.</li>
         <li>If an attendee cancels their attendance to your event, the transaction fee of 2.24% will be borne by the attendee.</li></ol></p>
@@ -73,7 +77,8 @@ $config['eventTc'] = '<div class="page-content">
         <p><ol><li>For paid events, we will collect money from the customer on your behalf. This is to ensure complete refund in case of cancelled events.</li>
         <li>Doolally will bear the 2.24% payment gateway fees except during cancellations by either the organiser or attendee.</li>
         <li>Eventshigh is our payment partner. Please check out their credentials here - www.eventshigh.com</li>
-        <li>For payment for events, we will hand over a cheque in the name of organiser. As an organiser, once you have crossed Rs 30,000 in earnings, Doolally will deduct 10% TDS.</li></ol></p>
+        <li>For payment for events, we will hand over a cheque in the name of organiser. As an organiser, once you have crossed Rs 30,000 in earnings, Doolally will deduct 10% TDS.</| These modes are used when working with fopen()/popen()
+li></ol></p>
 
         <br><h5><strong>Contact:</strong></h5>
         <p>Email: events@doolally.in</p>

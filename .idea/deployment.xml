@@ -2,6 +2,13 @@
 <project version="4">
   <component name="PublishConfigData" serverName="live mobile" persistUploadOnCheckin="false">
     <serverData>
+      <paths name="demo mobile">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/var/www/html/mobile" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="live dash">
         <serverdata>
           <mappings>

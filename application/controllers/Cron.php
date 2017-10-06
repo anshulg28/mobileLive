@@ -610,4 +610,94 @@ class Cron extends MY_Controller
 
     }
 
+    function sendActiveEmpReport()
+    {
+        $colKeys = array('Employee Id', 'Name', 'Wallet Balance','Mobile Num');
+        $allFeedbacks = $this->cron_model->getAllActiveEmps();
+
+
+        if( isset($allFeedbacks) && myIsArray($allFeedbacks))
+        {
+            $file1 = fopen("./uploads/active_employees_".date('d_M_Y').".csv","w");
+            $firstRow = true;
+            foreach($allFeedbacks as $key => $row)
+            {
+                if($firstRow)
+                {
+                    $firstRow = false;
+                    $textToWrite = $colKeys;
+                    fputcsv($file1,$textToWrite);
+                }
+                $d = date_create($row['insertedDT']);
+                $ehRow = array(
+                    $row['empId'],
+                    $row['firstName'].' '.$row['middleName'].' '.$row['lastName'],
+                    $row['walletBalance'],
+                    $row['mobNum']
+                );
+                $textToWrite = $ehRow;
+                fputcsv($file1,$textToWrite);
+            }
+            fclose($file1);
+            $content = '<html><body><p>Daily Employee Active List<br>PFA</p></body></html>';
+
+            $this->sendemail_library->sendEmail(array('purva@brewcraftsindia.com','hasti@brewcraftsindia.com','saha@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+                ,'admin@brewcraftsindia.com','Employee Active List '.date('d_M_Y'),$content,array("./uploads/active_employees_".date('d_M_Y').".csv"));
+            try
+            {
+                unlink("./uploads/active_employees_".date('d_M_Y').".csv");
+            }
+            catch(Exception $ex)
+            {
+
+            }
+        }
+    }
+    function sendFeedbackReport()
+    {
+        $colKeys = array('Date', 'Overall', 'Bandra','Andheri','Kemps','Colaba','Khar');
+        $allFeedbacks = $this->cron_model->getWeeklyFeedbacks();
+
+
+        if( isset($allFeedbacks) && myIsArray($allFeedbacks))
+        {
+            $file1 = fopen("./uploads/NPS_weekly_sorted.csv","w");
+            $firstRow = true;
+            foreach($allFeedbacks as $key => $row)
+            {
+                if($firstRow)
+                {
+                    $firstRow = false;
+                    $textToWrite = $colKeys;
+                    fputcsv($file1,$textToWrite);
+                }
+                $d = date_create($row['insertedDate']);
+                $locs = explode(',',$row['locs']);
+                $ehRow = array(
+                    date_format($d,DATE_FORMAT_UI),
+                    $locs[0],
+                    $locs[1],
+                    $locs[2],
+                    $locs[3],
+                    $locs[4],
+                    $locs[5]
+                );
+                $textToWrite = $ehRow;
+                fputcsv($file1,$textToWrite);
+            }
+            fclose($file1);
+            $content = '<html><body><p>NPS Average score weekly sorted for each location.<br>PFA</p></body></html>';
+
+            $this->sendemail_library->sendEmail(array('anshul@brewcraftsindia.com'),'','admin@brewcraftsindia.com','ngks2009','Doolally'
+                ,'admin@brewcraftsindia.com','NPS Weekly result Location Filtered',$content,array("./uploads/NPS_weekly_sorted.csv"));
+            try
+            {
+                unlink("./uploads/NPS_weekly_sorted.csv");
+            }
+            catch(Exception $ex)
+            {
+
+            }
+        }
+    }
 }

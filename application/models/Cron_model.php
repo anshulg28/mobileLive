@@ -222,6 +222,12 @@ class Cron_Model extends CI_Model
 
     }
 
+    public function getWeeklyFeedbacks()
+    {
+        $query = "SELECT * FROM feedbackweekscore";
+        $result  = $this->db->query($query)->result_array();
+        return $result;
+    }
     public function getTomorrowEvents()
     {
         $query = "SELECT em.eventId, em.eventName, em.startTime, l.locName
@@ -251,6 +257,14 @@ class Cron_Model extends CI_Model
                     FROM musicsearchmaster ms LEFT JOIN locationmaster l ON ms.taproomId = l.jukeboxId 
                     WHERE DATE(ms.insertedDateTime) >= (CURRENT_DATE() - INTERVAL 1 WEEK) AND DATE(ms.insertedDateTime) <= CURRENT_DATE()
                      ORDER BY l.locName";
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    public function getAllActiveEmps()
+    {
+        $query = "SELECT empId,firstName,middleName,lastName,walletBalance, mobNum, insertedDT,
+                    CASE ifActive WHEN 1 THEN 'Active' ELSE 'Not Active' END AS 'status'
+                    FROM `staffmaster` WHERE ifActive = 1 AND (NOT empId LIKE '%GUEST%') ";
         $result = $this->db->query($query)->result_array();
         return $result;
     }

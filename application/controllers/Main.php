@@ -626,9 +626,15 @@ class Main extends MY_Controller
             //{
             /* $decodedS = explode('-',$eventId);
              $eventId = $decodedS[count($decodedS)-1];*/
-            $data['eventDetails'] = $this->dashboard_model->getFullEventInfoBySlug($eventSlug);
+            $eveDetails = $this->dashboard_model->getFullEventInfoBySlug($eventSlug);
+            $data['eventDetails'] = $eveDetails;
             $data['eventTc'] = $this->config->item('eventTc');
             $data['locData'] = $this->locations_model->getAllLocations();
+
+            if($eveDetails[0]['ifActive'] == ACTIVE && $eveDetails[0]['ifApproved'] == EVENT_APPROVED)
+            {
+                $data['isValidEvent'] = 1;
+            }
 
             //}
             /*else
