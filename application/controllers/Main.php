@@ -2295,6 +2295,9 @@ class Main extends MY_Controller
                 $mailVerify = $changesMade;
                 $mailVerify['eventId'] = $post['eventId'];
                 $commPlace = $eventOldInfo['eventPlace'];
+                $mailVerify['oldEventName'] = $eventOldInfo['eventName'];
+                $mailVerify['orgName'] = $eventOldInfo['creatorName'];
+                $mailVerify['orgEmail'] = $eventOldInfo['creatorEmail'];
                 $this->sendemail_library->eventEditMail($mailVerify,$commPlace);
 
                 $changesRecord['eventId'] = $post['eventId'];

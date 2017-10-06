@@ -369,9 +369,9 @@ class Sendemail_library
         }
         $fromName  = 'Doolally';
 
-        if(isset($userData['eventName']))
+        if(isset($userData['oldEventName']))
         {
-            $subject = $userData['eventName'].' Event Data Modified';
+            $subject = $userData['oldEventName'].' Event Data Modified';
         }
         else
         {
@@ -384,7 +384,93 @@ class Sendemail_library
             $toEmail = $mailRecord['userData']['emailId'];
         }
 
-        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+
+        //Saving mail
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->dashboard_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+    }
+
+    public function eventEditToOrganiserMail($userData,$commPlace)
+    {
+        $mailRecord = $this->CI->users_model->searchUserByLoc($commPlace);
+        $senderUser = 'U-0';
+
+        if($mailRecord['status'] === true)
+        {
+            $senderUser = 'U-'.$mailRecord['userData']['userId'];
+        }
+        $userData['senderUser'] = $senderUser;
+
+        $data['mailData'] = $userData;
+
+        $content = $this->CI->load->view('emailtemplates/eventEditOrganiserMailView', $data, true);
+
+        $fromEmail = DEFAULT_SENDER_EMAIL;
+        $fromPass = DEFAULT_SENDER_PASS;
+        $replyTo = $mailRecord['userData']['emailId'];
+
+        $cc        = implode(',',$this->CI->config->item('ccList'));
+        $extraCc = getExtraCCEmail($replyTo);
+        if(isStringSet($extraCc))
+        {
+            $cc = $cc.','.$extraCc;
+        }
+        $fromName  = 'Doolally';
+        if(isset($mailRecord['userData']['firstName']))
+        {
+            $fromName = $mailRecord['userData']['firstName'];
+        }
+
+        if(isset($userData['oldEventName']))
+        {
+            $subject = $userData['oldEventName'].' Event Modification Request';
+        }
+        else
+        {
+            $subject = 'Event Modification Request';
+        }
+        $toEmail = 'events@brewcraftsindia.com';
+
+        if(isset($userData['orgEmail']))
+        {
+            $toEmail = $userData['orgEmail'];
+        }
+
+        //Saving mail
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->dashboard_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
     public function eventCancelMail($userData)
