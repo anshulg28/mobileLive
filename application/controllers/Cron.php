@@ -526,7 +526,7 @@ class Cron extends MY_Controller
         {
             foreach($eveRecords as $key => $row)
             {
-                $eventName = (strlen($row['eventName']) > 58) ? substr($row['eventName'], 0, 58) . '..' : $row['eventName'];
+                $eventName = (mb_strlen($row['eventName']) > 58) ? substr($row['eventName'], 0, 58) . '..' : $row['eventName'];
                 $signups = $this->cron_model->getEventSignups($row['eventId']);
 
                 if(isset($signups) && myIsArray($signups))

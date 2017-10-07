@@ -2310,7 +2310,7 @@ class Main extends MY_Controller
                 $mailVerify['orgName'] = $eventOldInfo['creatorName'];
                 $mailVerify['orgEmail'] = $eventOldInfo['creatorEmail'];
                 $this->sendemail_library->eventEditMail($mailVerify,$commPlace);
-
+                $this->sendemail_library->eventEditToOrganiserMail($mailVerify,$commPlace);
                 $changesRecord['eventId'] = $post['eventId'];
                 $changesRecord['fromWhere'] = 'Host';
                 $changesRecord['insertedDT'] = date('Y-m-d H:i:s');

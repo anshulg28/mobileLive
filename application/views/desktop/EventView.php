@@ -27,7 +27,7 @@
                                     <span class="mdl-list__item-primary-content">
                                         <span class="avatar-title">
                                             <?php
-                                            $eventName = (strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
+                                            $eventName = (mb_strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
                                             echo $eventName;
                                             ?>
                                         </span>

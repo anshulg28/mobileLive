@@ -80,7 +80,7 @@
                                                             <h1 class="hide" itemprop="name"> <?php echo $row['eventName'];?></h1>
                                                             <span class="avatar-title">
                                                                 <?php
-                                                                $eventName = (strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
+                                                                $eventName = (mb_strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
                                                                 echo $eventName;
                                                                 ?>
                                                             </span>
@@ -99,7 +99,7 @@
                         <div class="mdl-card__supporting-text">
                             <?php
                             $row['eventDescription'] = str_replace('nbsp;',' ',$row['eventDescription']);
-                            $eventDescrip = (strlen($row['eventDescription']) > 100) ? substr(strip_tags($row['eventDescription']), 0, 100) . '..' : strip_tags($row['eventDescription']);
+                            $eventDescrip = (mb_strlen($row['eventDescription']) > 100) ? substr(strip_tags($row['eventDescription']), 0, 100) . '..' : strip_tags($row['eventDescription']);
                             ?>
                             <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment dynamic" itemprop="description">
                                 <?php echo $eventDescrip;?>

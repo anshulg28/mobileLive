@@ -655,7 +655,7 @@
                                                             <h1 class="hide" itemprop="name"> <?php echo $row['eventName'];?></h1>
                                                             <span class="avatar-title">
                                                                 <?php
-                                                                $eventName = (strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
+                                                                $eventName = (mb_strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
                                                                 echo $eventName;
                                                                 ?>
                                                             </span>
@@ -673,7 +673,7 @@
                                                 <meta class="hide" itemprop="endDate" content="<?php echo $row['eventDate'].'T'.$row['endTime'];?>" />
                                                 <div class="mdl-card__supporting-text">
                                                     <?php
-                                                    $eventDescrip = (strlen($row['eventDescription']) > 100) ? substr($row['eventDescription'], 0, 100) . '..' : $row['eventDescription'];
+                                                    $eventDescrip = (mb_strlen($row['eventDescription']) > 100) ? substr($row['eventDescription'], 0, 100) . '..' : $row['eventDescription'];
                                                     ?>
                                                     <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment dynamic" itemprop="description">
                                                         <?php echo $eventDescrip;?>

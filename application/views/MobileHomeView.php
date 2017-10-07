@@ -810,7 +810,7 @@
                                                     <div class="event-info-wrapper">
                                                         <p class="pull-left card-ptag event-date-tag" itemprop="name">
                                                             <?php
-                                                            $eventName = (strlen($row['eventName']) > 35) ? substr($row['eventName'], 0, 35) . '..' : $row['eventName'];
+                                                            $eventName = (mb_strlen($row['eventName']) > 35) ? substr($row['eventName'], 0, 35) . '..' : $row['eventName'];
                                                             echo $eventName;
                                                             ?><br>
                                                             <span class="sub-card-bytag">By <?php echo $row['creatorName'];?></span>
@@ -822,7 +822,7 @@
                                                     <div class="comment clear" itemprop="description">
                                                         <?php
                                                         $row['eventDescription'] = str_replace('nbsp;',' ',$row['eventDescription']);
-                                                        $eventDescrip = (strlen($row['eventDescription']) > 100) ? substr(strip_tags($row['eventDescription']), 0, 100) . '..' : strip_tags($row['eventDescription']);
+                                                        $eventDescrip = (mb_strlen($row['eventDescription']) > 100) ? substr(strip_tags($row['eventDescription']), 0, 100) . '..' : strip_tags($row['eventDescription']);
                                                         ?>
                                                         <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment">
                                                             <?php echo $eventDescrip;?>
