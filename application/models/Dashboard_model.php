@@ -1001,6 +1001,19 @@ class Dashboard_Model extends CI_Model
         return $result;
     }
 
+    function checkForRecentEvent($eveDetails)
+    {
+        $query = "SELECT * FROM eventmaster WHERE eventName = '".$eveDetails['eventName']."' AND eventDescription = '".addslashes($eveDetails['eventDescription'])."'
+         AND eventDate = '".$eveDetails['eventDate']."' AND startTime = '".$eveDetails['startTime']."' AND endTime = '".$eveDetails['endTime']."' AND 
+         costType = ".$eveDetails['costType']." AND eventPrice = ".$eveDetails['eventPrice']." AND 
+         eventPlace = ".$eveDetails['eventPlace']." AND eventCapacity = ".$eveDetails['eventCapacity']." AND creatorName = '".$eveDetails['creatorName']."' 
+         AND creatorPhone = '".$eveDetails['creatorPhone']."' AND creatorEmail = '".$eveDetails['creatorEmail']."' AND aboutCreator = '".$eveDetails['aboutCreator']."' 
+         AND createdDateTime >= DATE_SUB(NOW(), INTERVAL 5 MINUTE)";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+
     public function getRecentMeta()
     {
         $query = "SELECT *"

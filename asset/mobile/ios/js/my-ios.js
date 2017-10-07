@@ -347,7 +347,7 @@ myApp.onPageInit('eventsDash', function(page){
     });
 
 });
-var eventAddStatus = false;
+//var eventAddStatus = false;
 myApp.onPageInit('eventAdd', function (page) {
     // Do something here for "about" page
     appendScript(base_url+'asset/mobile/js/jquery.timepicker.min.js');
@@ -576,10 +576,245 @@ myApp.onPageInit('eventAdd', function (page) {
             });
         }
     });
-    $$('.event-add form.ajax-submit').on('beforeSubmit', function (e) {
+
+    $(document).on('submit','.event-add #eventSave', function(e){
+        e.preventDefault();
+
+        var eventAddStatus = false;
+        var formObj = this;
+
+        if($$('.event-add #eventName').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Event Name Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-add #eventDesc').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Event Description Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-add #eventPlace').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Event Place Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-add #eventDate').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Event Date Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-add #creatorName').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Organiser Name Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-add #creatorPhone').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Organiser Phone Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-add #creatorEmail').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Organiser Email Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if(!$$('.event-add #tnc').is(':checked'))
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Please Agree To T&C!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-add input[name="startTime"]').val() == '' || $$('.event-add input[name="endTime"]').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Start and End Time Required!',
+                hold:10*1000
+            });
+            return false;
+        }
+
+        $('.event-add #eventSave input[type="submit"]').attr('disabled','disabled');
+
+        if(typeof cropData['imgUrl'] != 'undefined' && eventAddStatus === false)
+        {
+            //xhr.abort();
+            myApp.showIndicator();
+            cropData['imgData'] = $('#img-container').cropper('getCroppedCanvas').toDataURL();
+            var errUrl = base_url+'dashboard/cropEventImage';
+            $.ajax({
+                type:'POST',
+                dataType:'json',
+                url:base_url+'dashboard/cropEventImage',
+                data:{data: cropData},
+                success: function(data)
+                {
+                    myApp.hideIndicator();
+                    if(data.status == 'error')
+                    {
+                        myApp.addNotification({
+                            title: 'Error!',
+                            message: data.message,
+                            hold:10*1000
+                        });
+                        //xhr.abort();
+                        return false;
+                    }
+                    else
+                    {
+                        filesArr = [];
+                        var uri = data.url.split('/');
+                        filesArr.push(uri[uri.length-1]);
+                        fillEventImgs();
+                        eventAddStatus = true;
+                        addEvent(formObj);
+                        //$$('.event-add .submit-event-btn').click();
+                        //xhr.open();
+                        //xhr.send();
+                    }
+                },
+                error: function(xhr, status, error)
+                {
+                    myApp.hideIndicator();
+                    myApp.addNotification({
+                        title: 'Error!',
+                        message: 'Some Error Occurred!',
+                        hold:10*1000
+                    });
+                    //xhr.abort();
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                    saveErrorLog(err);
+                    return false;
+                }
+            });
+        }
+        else if(eventAddStatus === false)
+        {
+            if($('.event-add input[name="attachment"]').val() != '')
+            {
+                addEvent(formObj);
+            }
+            else
+            {
+                fillEventImgs();
+            }
+        }
+        else if($('.event-add input[name="attachment"]').val() == '')
+        {
+            eventAddStatus = false;
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Cover Image Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        else if(eventAddStatus === true)
+        {
+            addEvent(formObj);
+        }
+
+    });
+
+    var isReqPending = false;
+    function addEvent(ele)
+    {
+        if(!isReqPending)
+        {
+            isReqPending = true;
+            var errUrl = $(ele).attr('action');
+            myApp.showIndicator();
+            $.ajax({
+                type:'POST',
+                dataType:'json',
+                url:$(ele).attr('action'),
+                data:$(ele).serialize(),
+                success: function(data){
+                    isReqPending = false;
+                    myApp.hideIndicator();
+                    if(data.status == true)
+                    {
+                        vex.dialog.buttons.YES.text = 'Close';
+                        vex.dialog.alert({
+                            unsafeMessage: '<label class="head-title">Success</label><br><br>'+'Thank you for creating an event, ' +
+                            'We have sent you a confirmation email, please check for event status in My Events section.',
+                            callback: function(){
+                                setTimeout(function(){
+                                    mainView.router.load({
+                                        url:'event_dash',
+                                        ignoreCache: true
+                                    });
+                                    myApp.showTab('#tab2');
+                                },500);
+                            }
+                        });
+                    }
+                    else
+                    {
+                        vex.dialog.buttons.YES.text = 'Close';
+                        vex.dialog.alert({
+                            unsafeMessage: '<label class="head-title">Error!</label><br><br>'+objJSON.errorMsg
+                        });
+                    }
+                },
+                error: function(xhr, status, error){
+                    isReqPending= false;
+                    myApp.hideIndicator();
+                    vex.dialog.buttons.YES.text = 'Close';
+                    vex.dialog.alert({
+                        unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
+                    });
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                    saveErrorLog(err);
+                }
+            });
+        }
+    }
+
+    /*$$('.event-add form.ajax-submit').on('beforeSubmit', function (e) {
         e.preventDefault();
         var xhr = e.detail.xhr; // actual XHR object
-        /*if($('.event-add input[name="attachment"]').val() == '')
+        /!*if($('.event-add input[name="attachment"]').val() == '')
         {
             myApp.addNotification({
                 title: 'Error!',
@@ -588,7 +823,7 @@ myApp.onPageInit('eventAdd', function (page) {
             });
             xhr.abort();
             return false;
-        }*/
+        }*!/
         if($$('.event-add #eventName').val() == '')
         {
             myApp.addNotification({
@@ -680,10 +915,10 @@ myApp.onPageInit('eventAdd', function (page) {
             return false;
         }
 
-        /*var d = new Date($$('.event-add #eventDate').val());
+        /!*var d = new Date($$('.event-add #eventDate').val());
         var startT = ConvertTimeformat('24',$$('.event-add input[name="startTime"]').val());
-        var endT = ConvertTimeformat('24',$$('.event-add input[name="endTime"]').val());*/
-        /*if(d.getDay() == 6 || d.getDay() == 0)
+        var endT = ConvertTimeformat('24',$$('.event-add input[name="endTime"]').val());*!/
+        /!*if(d.getDay() == 6 || d.getDay() == 0)
         {
             if(startT < "07:00")
             {
@@ -728,9 +963,9 @@ myApp.onPageInit('eventAdd', function (page) {
                 xhr.abort();
                 return false;
             }
-        }*/
+        }*!/
 
-        /*if(startT >= endT)
+        /!*if(startT >= endT)
         {
             myApp.addNotification({
                 title: 'Error!',
@@ -739,7 +974,7 @@ myApp.onPageInit('eventAdd', function (page) {
             });
             xhr.abort();
             return false;
-        }*/
+        }*!/
         if(typeof cropData['imgUrl'] != 'undefined' && eventAddStatus === false)
         {
             xhr.abort();
@@ -827,9 +1062,9 @@ myApp.onPageInit('eventAdd', function (page) {
                             ignoreCache: true
                         });
                         myApp.showTab('#tab2');
-                        /*mainView.router.back({
+                        /!*mainView.router.back({
                             ignoreCache: true
-                        });*/
+                        });*!/
                     },500);
                 }
             });
@@ -845,14 +1080,14 @@ myApp.onPageInit('eventAdd', function (page) {
             });
             //alertDialog('Error!',objJSON.errorMsg, false);
         }
-    });
+    });*/
 });
 $$(window).on('popstate', function(e){
     $('.pixabay-pop').each(function(i,val){
        myApp.closeModal(val);
     });
 });
-var eventEditStatus = false;
+//var eventEditStatus = false;
 myApp.onPageInit('eventEdit', function (page) {
     // Do something here for "about" page
     appendScript(base_url+'asset/mobile/js/jquery.timepicker.min.js');
@@ -887,53 +1122,304 @@ myApp.onPageInit('eventEdit', function (page) {
         minDate: new Date(),
         closeOnSelect: true
     });
-    $$('.event-img-add-btn').touchend(function(){
+    $$('.event-edit-mobile .event-img-add-btn').touchend(function(){
         $('#event-img-upload').click();
     });
-    $$(document).on('click','.event-img-remove', function(){
+    $$(document).on('click','.event-edit-mobile .event-img-remove', function(){
         filesArr = [];
-        $$('.event-add .event-img-after .progressbar').removeClass('hide');
-        $$('.event-add .event-img-after .event-img-remove').addClass('hide');
-        $('.event-add .event-img-after').addClass('hide');
-        $('.event-add .event-img-before').removeClass('hide');
-        $$('.event-add #event-img-upload').val('');
-        $$('.event-add .event-img-space').css({
+        $$('.event-edit-mobile .event-img-after .progressbar').removeClass('hide');
+        $$('.event-edit-mobile .event-img-after .event-img-remove').addClass('hide');
+        $('.event-edit-mobile .event-img-after').addClass('hide');
+        $('.event-edit-mobile .event-img-before').removeClass('hide');
+        $$('.event-edit-mobile #event-img-upload').val('');
+        $$('.event-edit-mobile .event-img-space').css({
             'background': '#EDEDEC'
         });
     });
-    $$(document).on('keyup','#eventPrice', function(){
+    $$(document).on('keyup','.event-edit-mobile #eventPrice', function(){
         var basic = 300;
-        var feeVal = Number($('.event-add input[name="eventPrice"]').val());
+        var feeVal = Number($('.event-edit-mobile input[name="eventPrice"]').val());
         var inputVal = Number($(this).val());
         if(inputVal > 0)
         {
             var total = basic+inputVal;
-            $$('.event-add .total-event-price').html(total);
-            $$('.event-add input[name="eventPrice"]').val(total);
+            $$('.event-edit-mobile .total-event-price').html(total);
+            $$('.event-edit-mobile input[name="eventPrice"]').val(total);
         }
         else
         {
-            $$('.event-add .total-event-price').html(0);
-            $$('.event-add input[name="eventPrice"]').val(feeVal);
+            $$('.event-edit-mobile .total-event-price').html(0);
+            $$('.event-edit-mobile input[name="eventPrice"]').val(feeVal);
         }
     });
-    $$(document).on('change','.event-add input[name="costType"]', function(){
+    $$(document).on('change','.event-edit-mobile input[name="costType"]', function(){
         if($(this).val() == '1')
         {
-            $('.event-add input[name="eventPrice"]').val(0);
-            $('.event-add .total-event-price').html(0);
-            $('.event-add #eventPrice').val(0).attr('disabled', 'disabled');
+            $('.event-edit-mobile input[name="eventPrice"]').val(0);
+            $('.event-edit-mobile .total-event-price').html(0);
+            $('.event-edit-mobile #eventPrice').val(0).attr('disabled', 'disabled');
         }
         else
         {
-            $('.event-add #eventPrice').removeAttr('disabled');
+            $('.event-edit-mobile #eventPrice').removeAttr('disabled');
         }
     });
 
-    $$('.event-add form.ajax-submit').on('beforeSubmit', function (e) {
+    var eventEditStatus = false;
+    var isReqEditPending = false;
+    $(document).on('submit','.event-edit-mobile #eventSave', function(e){
+        e.preventDefault();
+        var formObj = this;
+
+        if($$('.event-edit-mobile #eventName').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Event Name Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-edit-mobile #eventDesc').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Event Description Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-edit-mobile #eventDate').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Event Date Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        /*if($('.event-add #paidType').is(':checked') && $('.event-add #eventPrice').val() == '0')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Paid Event Price Required!',
+                hold:10*1000
+            });
+            xhr.abort();
+            return false;
+        }*/
+        if($$('.event-edit-mobile #creatorName').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Organiser Name Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-edit-mobile #creatorPhone').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Organiser Phone Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-edit-mobile #creatorEmail').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Organiser Email Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if(!$$('.event-edit-mobile #tnc').is(':checked'))
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Please Agree To T&C!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        if($$('.event-edit-mobile input[name="startTime"]').val() == '' || $$('.event-edit-mobile input[name="endTime"]').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Start and End Time Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+
+        $('.event-edit-mobile #eventSave input[type="submit"]').attr('disabled','disabled');
+
+        if(typeof cropData['imgUrl'] != 'undefined' && eventEditStatus === false)
+        {
+            //xhr.abort();
+            myApp.showIndicator();
+            cropData['imgData'] = $('#img-container').cropper('getCroppedCanvas').toDataURL();
+            var errUrl = base_url+'dashboard/cropEventImage';
+            $.ajax({
+                type:'POST',
+                dataType:'json',
+                url:base_url+'dashboard/cropEventImage',
+                data:{data: cropData},
+                success: function(data)
+                {
+                    myApp.hideIndicator();
+                    if(data.status == 'error')
+                    {
+                        myApp.addNotification({
+                            title: 'Error!',
+                            message: data.message,
+                            hold:10*1000
+                        });
+                        //xhr.abort();
+                        return false;
+                    }
+                    else
+                    {
+                        filesArr = [];
+                        var uri = data.url.split('/');
+                        filesArr.push(uri[uri.length-1]);
+                        fillEventImgs();
+                        eventEditStatus = true;
+                        editEvent(formObj);
+                        //$$('.event-add .submit-event-btn').click();
+                        //xhr.open();
+                        //xhr.send();
+                    }
+                },
+                error: function(xhr, status, error)
+                {
+                    myApp.hideIndicator();
+                    myApp.addNotification({
+                        title: 'Error!',
+                        message: 'Some Error Occurred!',
+                        hold:10*1000
+                    });
+                    //xhr.abort();
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                    saveErrorLog(err);
+                    return false;
+                }
+            });
+        }
+        else if($('.event-edit-mobile input[name="attachment"]').val() == '')
+        {
+            myApp.addNotification({
+                title: 'Error!',
+                message: 'Cover Image Required!',
+                hold:10*1000
+            });
+            //xhr.abort();
+            return false;
+        }
+        else if(eventEditStatus === false)
+        {
+            if($('.event-edit-mobile input[name="attachment"]').val() != '')
+            {
+                editEvent(formObj);
+            }
+            else
+            {
+                fillEventImgs();
+            }
+        }
+        else if(eventEditStatus === false)
+        {
+            fillEventImgs();
+        }
+
+    });
+
+    function editEvent(ele)
+    {
+        if(!isReqEditPending)
+        {
+            isReqEditPending = true;
+            var errUrl = $(ele).attr('action');
+            myApp.showIndicator();
+            $.ajax({
+                type:'POST',
+                dataType:'json',
+                url:$(ele).attr('action'),
+                data:$(ele).serialize(),
+                success: function(data){
+                    isReqEditPending = false;
+                    myApp.hideIndicator();
+                    if(data.status == true)
+                    {
+                        if(data.noChange === true)
+                        {
+                            mainView.router.refreshPreviousPage();
+                            vex.dialog.buttons.YES.text = 'Close';
+                            vex.dialog.alert({
+                                unsafeMessage: '<label class="head-title">Information</label><br><br>'+'No Changes Found!',
+                                callback: function(){
+                                    setTimeout(function(){
+                                        mainView.router.back({
+                                            ignoreCache: true
+                                        });
+                                    },500);
+                                }
+                            });
+                        }
+                        else
+                        {
+                            mainView.router.refreshPreviousPage();
+                            vex.dialog.buttons.YES.text = 'Close';
+                            vex.dialog.alert({
+                                unsafeMessage: '<label class="head-title">Success</label><br><br>'+'Your event is now in review state, ' +
+                                'We will sent you mail once review is done, you can check for event status in My Events section.',
+                                callback: function(){
+                                    setTimeout(function(){
+                                        mainView.router.back({
+                                            ignoreCache: true
+                                        });
+                                    },500);
+                                }
+                            });
+                        }
+                    }
+                    else
+                    {
+                        vex.dialog.buttons.YES.text = 'Close';
+                        vex.dialog.alert({
+                            unsafeMessage: '<label class="head-title">Error!</label><br><br>'+data.errorMsg
+                        });
+                    }
+                },
+                error: function(xhr, status, error){
+                    isReqEditPending = false;
+                    myApp.hideIndicator();
+                    vex.dialog.buttons.YES.text = 'Close';
+                    vex.dialog.alert({
+                        unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
+                    });
+                    var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                    saveErrorLog(err);
+                }
+            });
+        }
+
+    }
+
+    /*$$('.event-add form.ajax-submit').on('beforeSubmit', function (e) {
         e.preventDefault();
         var xhr = e.detail.xhr; // actual XHR object
-        /*if($('.event-add input[name="attachment"]').val() == '')
+        /!*if($('.event-add input[name="attachment"]').val() == '')
         {
             myApp.addNotification({
                 title: 'Error!',
@@ -941,7 +1427,7 @@ myApp.onPageInit('eventEdit', function (page) {
             });
             xhr.abort();
             return false;
-        }*/
+        }*!/
         if($$('.event-add #eventName').val() == '')
         {
             myApp.addNotification({
@@ -962,7 +1448,7 @@ myApp.onPageInit('eventEdit', function (page) {
             xhr.abort();
             return false;
         }
-        /*if($$('.event-add #eventPlace').val() == '')
+        /!*if($$('.event-add #eventPlace').val() == '')
         {
             myApp.addNotification({
                 title: 'Error!',
@@ -971,7 +1457,7 @@ myApp.onPageInit('eventEdit', function (page) {
             });
             xhr.abort();
             return false;
-        }*/
+        }*!/
         if($$('.event-add #eventDate').val() == '')
         {
             myApp.addNotification({
@@ -982,7 +1468,7 @@ myApp.onPageInit('eventEdit', function (page) {
             xhr.abort();
             return false;
         }
-        /*if($('.event-add #paidType').is(':checked') && $('.event-add #eventPrice').val() == '0')
+        /!*if($('.event-add #paidType').is(':checked') && $('.event-add #eventPrice').val() == '0')
         {
             myApp.addNotification({
                 title: 'Error!',
@@ -991,7 +1477,7 @@ myApp.onPageInit('eventEdit', function (page) {
             });
             xhr.abort();
             return false;
-        }*/
+        }*!/
         if($$('.event-add #creatorName').val() == '')
         {
             myApp.addNotification({
@@ -1043,10 +1529,10 @@ myApp.onPageInit('eventEdit', function (page) {
             return false;
         }
 
-        /*var d = new Date($$('.event-add #eventDate').val());
+        /!*var d = new Date($$('.event-add #eventDate').val());
         var startT = ConvertTimeformat('24',$$('.event-add input[name="startTime"]').val());
-        var endT = ConvertTimeformat('24',$$('.event-add input[name="endTime"]').val());*/
-        /*if(d.getDay() == 6 || d.getDay() == 0)
+        var endT = ConvertTimeformat('24',$$('.event-add input[name="endTime"]').val());*!/
+        /!*if(d.getDay() == 6 || d.getDay() == 0)
         {
             if(startT < "07:00")
             {
@@ -1091,9 +1577,9 @@ myApp.onPageInit('eventEdit', function (page) {
                 xhr.abort();
                 return false;
             }
-        }*/
+        }*!/
 
-        /*if(startT > endT)
+        /!*if(startT > endT)
         {
             myApp.addNotification({
                 title: 'Error!',
@@ -1102,7 +1588,7 @@ myApp.onPageInit('eventEdit', function (page) {
             });
             xhr.abort();
             return false;
-        }*/
+        }*!/
         if(typeof cropData['imgUrl'] != 'undefined' && eventEditStatus === false)
         {
             xhr.abort();
@@ -1221,7 +1707,7 @@ myApp.onPageInit('eventEdit', function (page) {
             });
             //alertDialog('Error!',objJSON.errorMsg, false);
         }
-    });
+    });*/
 });
 myApp.onPageInit('contactPage', function(page){
     setTimeout(function(){

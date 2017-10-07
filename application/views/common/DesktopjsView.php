@@ -1806,6 +1806,18 @@
                 resetTabs();
                 $('#mainContent-view section.mdl-layout__tab-panel').removeClass('is-active');
                 $('section#jukeboxTab').html(data).addClass('is-active');
+                if(typeof $('#offlineTaps').val() != 'undefined')
+                {
+                    var taps = $('#offlineTaps').val();
+                    if(taps != '')
+                    {
+                        if(localStorageUtil.getLocal('jukeboxNotify') == null || localStorageUtil.getLocal('jukeboxNotify') == '0')
+                        {
+                            localStorageUtil.setLocal('jukeboxNotify','1');
+                            mySnackTime(taps+' Taproom(s) Jukebox is currently offline!');
+                        }
+                    }
+                }
                 break;
             case 'contact_us':
                 resetTabs();
@@ -2641,6 +2653,7 @@
             mySnackTime('Event Time is not proper!');
             return false;
         }*/
+        $('.event-add-page #eventSave button[type="submit"]').attr('disabled','disabled');
         if(typeof cropData['imgUrl'] != 'undefined' && eventAddStatus === false)
         {
             showProgressLoader();
@@ -2715,6 +2728,7 @@
                 data:$(ele).serialize(),
                 success: function(data){
                     isReqPending = false;
+                    hideProgressLoader();
                     if(data.status == true)
                     {
                         vex.dialog.buttons.YES.text = 'Close';
@@ -2738,6 +2752,7 @@
                 },
                 error: function(xhr, status, error){
                     isReqPending= false;
+                    hideProgressLoader();
                     vex.dialog.buttons.YES.text = 'Close';
                     vex.dialog.alert({
                         unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
@@ -2833,6 +2848,7 @@
             mySnackTime('Event Time is not proper!');
             return false;
         }*/
+        $('.event-add-page #eventEditSave button[type="submit"]').attr('disabled','disabled');
         if(typeof cropData['imgUrl'] != 'undefined' && eventEditStatus === false)
         {
             showProgressLoader();
@@ -2907,6 +2923,7 @@
                 data:$(ele).serialize(),
                 success: function(data){
                     isReqEditPending = false;
+                    hideProgressLoader();
                     if(data.status == true)
                     {
                         if(data.noChange === true)
@@ -2945,6 +2962,7 @@
                 },
                 error: function(xhr, status, error){
                     isReqEditPending = false;
+                    hideProgressLoader();
                     vex.dialog.buttons.YES.text = 'Close';
                     vex.dialog.alert({
                         unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'

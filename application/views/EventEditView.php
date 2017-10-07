@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="pages">
-                <div data-page="eventEdit" class="page event-add">
+                <div data-page="eventEdit" class="page event-add event-edit-mobile">
                     <div class="page-content">
                         <?php
                             if(isset($status) && $status === false)
@@ -38,7 +38,7 @@
                             {
                                 ?>
                                 <div class="content-block event-wrapper">
-                                    <form action="<?php echo base_url().'updateEvent';?>" id="eventSave" method="post" class="ajax-submit">
+                                    <form action="<?php echo base_url().'updateEvent';?>" id="eventSave" method="post" class="">
                                         <input type="hidden" name="eventId" value="<?php echo $row['eventId'];?>"/>
                                         <input type="hidden" name="attachment" value="<?php echo $row['filename']; ?>"/>
                                         <div class="event-img-space"

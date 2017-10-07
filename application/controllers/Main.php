@@ -1834,9 +1834,20 @@ class Main extends MY_Controller
     public function saveEvent()
     {
         $isUserCreated = FALSE;
+        $data = array();
         $this->load->model('login_model');
         $post = $this->input->post();
         $userId = '';
+
+        /*$recentEvent = $this->dashboard_model->checkForRecentEvent($post);
+
+        if( isset($recentEvent) && myIsArray($recentEvent))
+        {
+            log_message('error','Got Event Request twice');
+            $data['status'] = true;
+            echo json_encode($data);
+            return true;
+        }*/
 
         //Check if space is available for event to save
         $Edetails = array(

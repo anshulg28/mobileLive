@@ -21,7 +21,7 @@
     <div data-page="eventAdd" class="page event-add">
         <div class="page-content">
             <div class="content-block event-wrapper">
-                <form action="<?php echo base_url().'saveEvent';?>" id="eventSave" method="post" class="ajax-submit">
+                <form action="<?php echo base_url().'saveEvent';?>" id="eventSave" method="post" class="">
                     <input type="hidden" name="attachment"/>
                     <div class="event-img-space" id="event-img-space">
                         <div class="event-img-before">
