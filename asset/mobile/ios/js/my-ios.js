@@ -2089,7 +2089,7 @@ function checkForUrl()
                     {
                         var OrgName = data.orgName;
                         $('#tab2 .event-section .demo-card-header-pic').each(function(i,val){
-                            if($(val).attr('data-orgName') != OrgName)
+                            if($(val).attr('data-orgName').trim().toLowerCase() != OrgName)
                             {
                                 $(val).remove();
                             }
