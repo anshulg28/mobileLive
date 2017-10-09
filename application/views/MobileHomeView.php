@@ -1013,48 +1013,55 @@
                                                     <?php
                                                 }
                                                 ?>
-                                                    <div class=" col-50">
-                                                        <div class="card demo-card-header-pic show-full-beer-card <?php
-                                                        if($freecard === false)
-                                                        {
-                                                            if(myIsArray($locClass))
+                                                <?php
+                                                    if(!$freecard)
+                                                    {
+                                                        ?>
+                                                        <div class=" col-50">
+                                                            <div class="card demo-card-header-pic show-full-beer-card <?php
+                                                            if($freecard === false)
                                                             {
-                                                                foreach($locClass as $key)
+                                                                if(myIsArray($locClass))
                                                                 {
-                                                                    $cat = $key;
-                                                                    echo ' category-'.$key;
+                                                                    foreach($locClass as $key)
+                                                                    {
+                                                                        $cat = $key;
+                                                                        echo ' category-'.$key;
+                                                                    }
                                                                 }
                                                             }
-                                                        }
-                                                        ?>"  data-img="<?php echo base_url().BEVERAGE_PATH_NORMAL.$row['filename'];?>"
-                                                             data-title="<?php echo $row['itemName'];?>"
-                                                             data-descrip="<?php if(isset($row['itemHeadline'])){echo $row['itemHeadline'];} else{echo strip_tags($row['itemDescription'],'<br>');} ?>"
-                                                             data-fullprice="<?php echo $row['priceFull'];?>"
-                                                             data-halfprice="<?php echo $row['priceHalf'];?>"
-                                                             data-fnbId = "<?php echo $row['fnbId']; ?>"
-                                                             data-shareLink="<?php if(isset($row['shortUrl'])) {echo $row['shortUrl'];}else{echo $row['fnbShareLink'];} ?>">
-                                                            <?php
-                                                            if($postImg <=5)
-                                                            {
-                                                                ?>
-                                                                <img src="<?php echo base_url().BEVERAGE_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
+                                                            ?>"  data-img="<?php echo base_url().BEVERAGE_PATH_NORMAL.$row['filename'];?>"
+                                                                 data-title="<?php echo $row['itemName'];?>"
+                                                                 data-descrip="<?php if(isset($row['itemHeadline'])){echo $row['itemHeadline'];} else{echo strip_tags($row['itemDescription'],'<br>');} ?>"
+                                                                 data-fullprice="<?php echo $row['priceFull'];?>"
+                                                                 data-halfprice="<?php echo $row['priceHalf'];?>"
+                                                                 data-fnbId = "<?php echo $row['fnbId']; ?>"
+                                                                 data-shareLink="<?php if(isset($row['shortUrl'])) {echo $row['shortUrl'];}else{echo $row['fnbShareLink'];} ?>">
                                                                 <?php
-                                                            }
-                                                            else
-                                                            {
+                                                                if($postImg <=5)
+                                                                {
+                                                                    ?>
+                                                                    <img src="<?php echo base_url().BEVERAGE_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
+                                                                    <?php
+                                                                }
+                                                                else
+                                                                {
+                                                                    ?>
+                                                                    <img data-src="<?php echo base_url().BEVERAGE_PATH_THUMB.$row['filename'];?>" class="mainFeed-img lazy lazy-fadein"/>
+                                                                    <?php
+                                                                }
+                                                                $postImg++;
                                                                 ?>
-                                                                <img data-src="<?php echo base_url().BEVERAGE_PATH_THUMB.$row['filename'];?>" class="mainFeed-img lazy lazy-fadein"/>
-                                                                <?php
-                                                            }
-                                                            $postImg++;
-                                                            ?>
-                                                            <div class="card-content custom-beer-card">
-                                                                <div class="card-content-inner">
-                                                                    <p class="pull-left card-ptag"><?php echo $row['itemName'];?></p>
+                                                                <div class="card-content custom-beer-card">
+                                                                    <div class="card-content-inner">
+                                                                        <p class="pull-left card-ptag"><?php echo $row['itemName'];?></p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                        <?php
+                                                    }
+                                                ?>
                                                 <?php
                                                 if($beerCount['2'] == $postImg)
                                                 {

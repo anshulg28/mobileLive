@@ -334,7 +334,7 @@ class Main extends MY_Controller
                         {
                             $data['meta1']['title'] = 'Events By '.$orgData['creatorName'];
                             $data['meta1']['description'] = "Browse through upcoming events by ".$orgData['creatorName'];
-                            $data['meta1']['img'] = base_url() . 'asset/images/thumb/doolally-app-icon.png';
+                            $data['meta1']['img'] = base_url() .EVENT_PATH_THUMB .'doolally-app-icon.png';
                         }
                     }
                 }
@@ -526,7 +526,7 @@ class Main extends MY_Controller
                             {
                                 $data['meta1']['title'] = 'Events By '.$orgData['creatorName'];
                                 $data['meta1']['description'] = "Browse through upcoming events by ".$orgData['creatorName'];
-                                $data['meta1']['img'] = base_url() . 'asset/images/thumb/doolally-app-icon.png';
+                                $data['meta1']['img'] = base_url() . EVENT_PATH_THUMB.'doolally-app-icon.png';
                             }
                         }
                     }
