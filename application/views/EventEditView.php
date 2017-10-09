@@ -7,6 +7,18 @@
 <?php
     if(isset($eventDetails) && myIsMultiArray($eventDetails))
     {
+        if(isset($isValidEvent))
+        {
+            ?>
+            <input type="hidden" id="isValidEvent" value="<?php echo $isValidEvent;?>"/>
+            <?php
+        }
+        else
+        {
+            ?>
+            <input type="hidden" id="isValidEvent" value="0"/>
+            <?php
+        }
         foreach($eventDetails as $key => $row)
         {
             ?>

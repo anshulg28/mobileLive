@@ -45,7 +45,7 @@ if(isset($fnbItems) && myIsMultiArray($fnbItems))
             case ITEM_BEVERAGE:
                 $freecard = true;
                 $locClass = array();
-                if($row['itemType'] == ITEM_BEVERAGE && isset($row['taggedLoc']))
+                if($row['itemType'] == ITEM_BEVERAGE && isset($row['taggedLoc']) && isStringSet(trim($row['taggedLoc'])))
                 {
                     $freecard = false;
                     $locClass = explode(',',$row['taggedLoc']);

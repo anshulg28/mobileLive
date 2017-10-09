@@ -1096,6 +1096,14 @@ myApp.onPageInit('eventEdit', function (page) {
     setTimeout(function(){
         myApp.hideIndicator();
     },500);
+    if(typeof $('#isValidEvent').val() !== 'undefined' && $('#isValidEvent').val() == '0')
+    {
+        mainView.router.load({
+            url:'event_dash',
+            ignoreCache: true
+        });
+        //pushHistory('Doolally','event_dash',true);
+    }
     $('.event-fab-btn').addClass('hide');
     if($('#isLoggedIn').val() == '0')
     {

@@ -1893,6 +1893,32 @@ class Main extends MY_Controller
         $post = $this->input->post();
         $userId = '';
 
+        if(isset($post['eventName']) && isStringSet($post['eventName']) &&
+            isset($post['eventDescription']) && isStringSet($post['eventDescription']) &&
+            isset($post['eventDate']) && isStringSet($post['eventDate']) &&
+            isset($post['startTime']) && isStringSet($post['startTime']) &&
+            isset($post['costType']) && isStringSet($post['costType']) &&
+            isset($post['eventPrice']) && isStringSet($post['eventPrice']) &&
+            isset($post['eventPlace']) && isStringSet($post['eventPlace']))
+        {
+            $remoteIp = '';
+            if(isset($_SERVER['REMOTE_ADDR']))
+            {
+                $remoteIp = $_SERVER['REMOTE_ADDR'];
+            }
+            $details = array(
+                'errorMsg' => 'Error: Important event fields are missing!',
+                'errorTrace' => 'function saveEvent, line No: 1911, IP: '.$remoteIp,
+                'fromWhere' => 'Mobile',
+                'insertedDT' => date('Y-m-d H:i:s')
+            );
+            $this->dashboard_model->saveMyLog($details);
+            $data['status'] = FALSE;
+            $data['errorMsg'] = 'Error: Important event fields are missing!';
+            echo json_encode($data);
+            return false;
+        }
+
         /*$recentEvent = $this->dashboard_model->checkForRecentEvent($post);
 
         if( isset($recentEvent) && myIsArray($recentEvent))
