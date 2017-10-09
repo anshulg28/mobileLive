@@ -780,7 +780,7 @@
                                                     echo 'eve-'.$row['eventPlace'];
                                                 }
                                             }
-                                            ?>" data-eveTitle="<?php echo $row['eventName'];?>" itemscope itemtype="http://schema.org/Event">
+                                            ?>" data-eveTitle="<?php echo $row['eventName'];?>" data-orgName="<?php echo $row['creatorName'];?>" itemscope itemtype="http://schema.org/Event">
                                             <div class="row no-gutter">
                                                 <div class="col-100"> <!--more-photos-wrapper-->
                                                     <?php

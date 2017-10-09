@@ -1925,6 +1925,16 @@
                                 var locId = data.locId;
                                 $('#even-'+locId).click();
                             }
+                            else if(typeof data.isOrgFilter !== 'undefined' && data.isOrgFilter === true)
+                            {
+                                var OrgName = data.orgName;
+                                $('#eventsTab .event-section .demo-card-header-pic').each(function(i,val){
+                                    if($(val).attr('data-orgName') != OrgName)
+                                    {
+                                        $(val).remove();
+                                    }
+                                });
+                            }
                         }
                     },
                     error: function()

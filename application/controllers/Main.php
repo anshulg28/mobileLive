@@ -1420,7 +1420,14 @@ class Main extends MY_Controller
             }
             else
             {
-                log_message('error','EventsHigh Id not found! DT: '.date('Y-m-d H:i:s'));
+                $details = array(
+                    'errorMsg' => 'EventsHigh Id not found!',
+                    'errorTrace' => 'function thankYou1, line No: 1425',
+                    'fromWhere' => 'Mobile',
+                    'insertedDT' => date('Y-m-d H:i:s')
+                );
+                $this->dashboard_model->saveMyLog($details);
+                //log_message('error','EventsHigh Id not found! DT: '.date('Y-m-d H:i:s'));
                 $this->generalfunction_library->setSessionVariable('paymentStatus', '2');
                 $this->paymentStatus = '2';
             }
@@ -1463,12 +1470,26 @@ class Main extends MY_Controller
             }
             else
             {
-                $this->saveAPIError('EH Callback status and other details not set','Mobile');
+                $details = array(
+                    'errorMsg' => 'EH Callback status and other details not set',
+                    'errorTrace' => 'function eventsHighCallback, line No: 1468',
+                    'fromWhere' => 'Mobile',
+                    'insertedDT' => date('Y-m-d H:i:s')
+                );
+                $this->dashboard_model->saveMyLog($details);
+                //$this->saveAPIError('EH Callback status and other details not set','Mobile');
             }
         }
         else
         {
-            $this->saveAPIError('EH Callback booking and eid not set','Mobile');
+            $details = array(
+                'errorMsg' => 'EH Callback booking and eid not set',
+                'errorTrace' => 'function eventsHighCallback, line No: 1480',
+                'fromWhere' => 'Mobile',
+                'insertedDT' => date('Y-m-d H:i:s')
+            );
+            $this->dashboard_model->saveMyLog($details);
+            //$this->saveAPIError('','Mobile');
         }
     }
 
@@ -2849,7 +2870,17 @@ class Main extends MY_Controller
         }
         else
         {
-            $data['status'] = false;
+            $orgData = $this->dashboard_model->filterByOrgName(urldecode(strtolower($locName)));
+            if(isset($orgData) && myIsArray($orgData))
+            {
+                $data['status'] = true;
+                $data['orgName'] = $orgData['creatorName'];
+                $data['isOrgFilter'] = true;
+            }
+            else
+            {
+                $data['status'] = false;
+            }
         }
 
         echo json_encode($data);

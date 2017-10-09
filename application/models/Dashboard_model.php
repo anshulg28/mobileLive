@@ -1115,4 +1115,16 @@ class Dashboard_Model extends CI_Model
         $this->db->insert('ehrefundmaster',$details);
         return true;
     }
+    function saveMyLog($details)
+    {
+        $this->db->insert('logmaster', $details);
+    }
+    function filterByOrgName($orgName)
+    {
+        $query = "SELECT creatorName FROM eventmaster WHERE LOWER(creatorName) LIKE '%".$orgName."%'";
+
+        $result = $this->db->query($query)->row_array();
+
+        return $result;
+    }
 }

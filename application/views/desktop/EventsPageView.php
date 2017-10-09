@@ -51,7 +51,7 @@
                     echo 'eve-'.$row['eventPlace'];
                 }
             }
-            ?>" data-eveTitle="<?php echo $row['eventName'];?>">
+            ?>" data-eveTitle="<?php echo $row['eventName'];?>" data-orgName="<?php echo $row['creatorName'];?>">
                 <?php
                 if($postImg <=2)
                 {
