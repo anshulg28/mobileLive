@@ -301,7 +301,9 @@ class Main extends MY_Controller
                         }
                         $data['meta1']['link'] = base_url();
                     }
-                } elseif (isset($query[1]) && $query[1] == 'fnbshare') {
+                }
+                elseif (isset($query[1]) && $query[1] == 'fnbshare')
+                {
                     if (isset($query[2])) {
                         $fnb = explode('-', $query[2]);
                         $fnbData = $this->dashboard_model->getFnBById($fnb[1]);
@@ -321,6 +323,19 @@ class Main extends MY_Controller
                             $data['meta']['img'] = base_url() . BEVERAGE_PATH_NORMAL . $fnbAtt[0]['filename'];
                         }
 
+                    }
+                }
+                elseif($query[1] == 'filter_events')
+                {
+                    if(isset($query[2]) && isStringSet(trim($query[2])))
+                    {
+                        $orgData = $this->dashboard_model->filterByOrgName(urldecode(strtolower($query[2])));
+                        if(isset($orgData) && myIsArray($orgData))
+                        {
+                            $data['meta1']['title'] = 'Events By '.$orgData['creatorName'];
+                            $data['meta1']['description'] = "Browse through upcoming events by ".$orgData['creatorName'];
+                            $data['meta1']['img'] = base_url() . 'asset/images/thumb/doolally-app-icon.png';
+                        }
                     }
                 }
             }
@@ -396,7 +411,8 @@ class Main extends MY_Controller
                     $data['pageName'] = $query[1];
                     $data['pageUrl'] = explode('?page/', $_SERVER['REQUEST_URI'])[1];
                     if ($query[1] == 'events') {
-                        if (isset($query[2]) && isStringSet($query[2])) {
+                        if (isset($query[2]) && isStringSet($query[2]))
+                        {
                             if (strpos($query[2], 'EV-') != -1 && isset($query[3]))
                             {
                                 $event = explode('-', $query[2]);
@@ -458,7 +474,9 @@ class Main extends MY_Controller
                                 }
                                 $data['meta']['img'] = $imgLink;
                             }
-                        } else {
+                        }
+                        else
+                        {
                             $metaTags = $this->dashboard_model->getRecentMeta();
                             if (isset($metaTags) && myIsArray($metaTags)) {
                                 $data['meta1']['title'] = $metaTags['metaTitle'];
@@ -471,7 +489,9 @@ class Main extends MY_Controller
                             }
                             $data['meta1']['link'] = base_url();
                         }
-                    } elseif ($query[1] == 'fnbshare') {
+                    }
+                    elseif ($query[1] == 'fnbshare')
+                    {
                         if (isset($query[2])) {
                             $fnb = explode('-', $query[2]);
                             $fnbData = $this->dashboard_model->getFnBById($fnb[1]);
@@ -494,6 +514,19 @@ class Main extends MY_Controller
                                 } else {
                                     $data['meta']['img'] = '';
                                 }
+                            }
+                        }
+                    }
+                    elseif($query[1] == 'filter_events')
+                    {
+                        if(isset($query[2]) && isStringSet(trim($query[2])))
+                        {
+                            $orgData = $this->dashboard_model->filterByOrgName(urldecode(strtolower($query[2])));
+                            if(isset($orgData) && myIsArray($orgData))
+                            {
+                                $data['meta1']['title'] = 'Events By '.$orgData['creatorName'];
+                                $data['meta1']['description'] = "Browse through upcoming events by ".$orgData['creatorName'];
+                                $data['meta1']['img'] = base_url() . 'asset/images/thumb/doolally-app-icon.png';
                             }
                         }
                     }
@@ -2874,7 +2907,7 @@ class Main extends MY_Controller
             if(isset($orgData) && myIsArray($orgData))
             {
                 $data['status'] = true;
-                $data['orgName'] = $orgData['creatorName'];
+                $data['orgName'] = trim(strtolower($orgData['creatorName']));
                 $data['isOrgFilter'] = true;
             }
             else
