@@ -19,7 +19,7 @@ if(isset($weekEvents) && myIsMultiArray($weekEvents))
             {
                 ?>
                 <li data-evenDate="<?php echo $row['eventDate'];?>"
-                    data-evenNames="<?php echo $row['eventNames'];?>"
+                    data-evenNames="<?php echo htmlspecialchars($row['eventNames']);?>"
                     data-evenPlaces="<?php echo $row['eventPlaces'];?>"
                     data-evenUrls="<?php
                         $ids = explode(',',$row['eventSlugs']);

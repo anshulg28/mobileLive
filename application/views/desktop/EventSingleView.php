@@ -34,7 +34,7 @@
         foreach($eventDetails as $key => $row)
         {
             ?>
-            <input type="hidden" value="<?php echo $row['eventName'];?>" id="docTitle"/>
+            <input type="hidden" value="<?php echo htmlspecialchars($row['eventName']);?>" id="docTitle"/>
             <div class="page-content event-details-page">
                 <div class="mdl-card mdl-shadow--2dp demo-card-header-pic">
                     <img src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
@@ -47,13 +47,13 @@
                                         <span class="avatar-title">
                                             <?php
                                             $eventName = (mb_strlen($row['eventName']) > 35) ? substr($row['eventName'], 0, 35) . '..' : $row['eventName'];
-                                            echo $eventName;
+                                            echo htmlspecialchars($eventName);
                                             ?>
                                         </span>
                                     </span>
                                     <span class="mdl-list__item-secondary-content">
                                         <span class="mdl-list__item-secondary-info">
-                                            <input type="hidden" data-name="<?php echo $row['eventName'];?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
+                                            <input type="hidden" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
                                             <i class="my-pointer-item ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
                                         </span>
                                     </span>

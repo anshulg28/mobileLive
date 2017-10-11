@@ -1893,13 +1893,9 @@ class Main extends MY_Controller
         $post = $this->input->post();
         $userId = '';
 
-        if(isset($post['eventName']) && isStringSet($post['eventName']) &&
-            isset($post['eventDescription']) && isStringSet($post['eventDescription']) &&
-            isset($post['eventDate']) && isStringSet($post['eventDate']) &&
-            isset($post['startTime']) && isStringSet($post['startTime']) &&
-            isset($post['costType']) && isStringSet($post['costType']) &&
-            isset($post['eventPrice']) && isStringSet($post['eventPrice']) &&
-            isset($post['eventPlace']) && isStringSet($post['eventPlace']))
+
+        $check_array = array('eventName', 'eventDescription', 'eventDate','startTime','endTime','costType','eventPlace');
+        if (array_diff($check_array, array_keys($post)))
         {
             $remoteIp = '';
             if(isset($_SERVER['REMOTE_ADDR']))
@@ -1907,8 +1903,8 @@ class Main extends MY_Controller
                 $remoteIp = $_SERVER['REMOTE_ADDR'];
             }
             $details = array(
-                'errorMsg' => 'Error: Important event fields are missing!',
-                'errorTrace' => 'function saveEvent, line No: 1911, IP: '.$remoteIp,
+                'errorMsg' => 'Error: Important event fields are not set!',
+                'errorTrace' => 'function saveEvent, line No: 1907, IP: '.$remoteIp,
                 'fromWhere' => 'Mobile',
                 'insertedDT' => date('Y-m-d H:i:s')
             );
@@ -1918,6 +1914,30 @@ class Main extends MY_Controller
             echo json_encode($data);
             return false;
         }
+
+        if( empty($post['eventName']) || empty($post['eventDescription']) ||
+            empty($post['eventPlace']) || empty($post['startTime']) ||
+            empty($post['endTime']) || empty($post['eventDate']) || empty($post['costType']))
+
+        {
+            $remoteIp = '';
+            if(isset($_SERVER['REMOTE_ADDR']))
+            {
+                $remoteIp = $_SERVER['REMOTE_ADDR'];
+            }
+            $details = array(
+                'errorMsg' => 'Error: Important event fields are missing!',
+                'errorTrace' => 'function saveEvent, line No: 1930, IP: '.$remoteIp,
+                'fromWhere' => 'Mobile',
+                'insertedDT' => date('Y-m-d H:i:s')
+            );
+            $this->dashboard_model->saveMyLog($details);
+            $data['status'] = FALSE;
+            $data['errorMsg'] = 'Error: Important event fields are missing!';
+            echo json_encode($data);
+            return false;
+        }
+
 
         /*$recentEvent = $this->dashboard_model->checkForRecentEvent($post);
 
@@ -3020,5 +3040,28 @@ class Main extends MY_Controller
             );
             $this->dashboard_model->saveMusicSearch($musicData);
         }
+    }
+
+    public function mailText($eventId)
+    {
+        $eventData = $this->dashboard_model->getEventById($eventId);
+        $mailData = array(
+            'creatorName' => 'abc',
+            'creatorEmail' => 'abc@gmail.com',
+            'creatorPhone' => '9871234567',
+            'eventName' => $eventData[0]['eventName'],
+            'eventDate' => $eventData[0]['eventDate'],
+            'startTime' => $eventData[0]['startTime'],
+            'endTime' => $eventData[0]['endTime'],
+            'hostEmail' => $eventData[0]['creatorEmail'],
+            'hostName' => $eventData[0]['creatorName'],
+            'eventDescrip' => $eventData[0]['eventDescription'],
+            'eventCost' => $eventData[0]['costType'],
+            'eventId' => $eventData[0]['eventId'],
+            'buyQuantity' => '2',
+            'doolallyFee' => $eventData[0]['doolallyFee'],
+            'bookerId' => 'MOJO1234565'
+        );
+        $this->sendemail_library->eventRegSuccessMail($mailData, $eventData[0]['eventPlace']);
     }
 }

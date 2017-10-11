@@ -17,7 +17,7 @@
                             <i class="ic_back_icon point-item"></i>
                         </a>
                     </div>
-                    <div class="center sliding"><?php echo $row['eventName'];?></div>
+                    <div class="center sliding"><?php echo htmlspecialchars($row['eventName']);?></div>
                     <!--<div class="right">
 
                     </div>-->
@@ -31,8 +31,8 @@
                             <div class="col-100 more-photos-wrapper">
                                 <img src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
                             </div>
-                            <div class="event-header-name"><?php echo $row['eventName'];?></div>
-                            <div class="content-block event-about"><?php echo $row['eventDescription'];?></div>
+                            <div class="event-header-name"><?php echo htmlspecialchars($row['eventName']);?></div>
+                            <div class="content-block event-about"><?php echo htmlspecialchars($row['eventDescription']);?></div>
                             <hr class="card-ptag">
                             <!-- Where section -->
                             <div class="event-descrip-wrapper">
@@ -73,10 +73,10 @@
                                     {
                                         ?>
                                         <span class="fa-15x ic_events_icon point-item my-right-event-icon"
-                                              data-ev-title="<?php echo $row['eventName'];?>" data-ev-location="Doolally Taproom, <?php echo $row['locName'];?>"
+                                              data-ev-title="<?php echo htmlspecialchars($row['eventName']);?>" data-ev-location="Doolally Taproom, <?php echo $row['locName'];?>"
                                               data-ev-start="<?php echo $row['eventDate'].' '.$row['startTime'];?>"
                                               data-ev-end="<?php echo $row['eventDate'].' '.$row['endTime'];?>"
-                                              data-ev-description="<?php echo strip_tags($row['eventDescription'],'<br><ul></ul><li></li>');?>">
+                                              data-ev-description="<?php echo htmlspecialchars(strip_tags($row['eventDescription'],'<br><ul></ul><li></li>'));?>">
                                         </span>
                                         <div class="event-header-name">When</div>
                                         <?php
@@ -297,7 +297,7 @@
                                 }
                                 ?>
                                 <p class="event-share-text">
-                                    Share "<?php echo $row['eventName']; ?>"
+                                    Share "<?php echo htmlspecialchars($row['eventName']); ?>"
                                 </p>
                                 <input type="hidden" id="shareLink" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];}?>"/>
                                 <div id="share" class="my-social-share"></div>

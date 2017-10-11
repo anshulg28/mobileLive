@@ -737,7 +737,7 @@
                                         {
                                             ?>
                                                 <li data-evenDate="<?php echo $row['eventDate'];?>"
-                                                    data-evenNames="<?php echo $row['eventNames'];?>"
+                                                    data-evenNames="<?php echo htmlspecialchars($row['eventNames']);?>"
                                                     data-evenEndTimes="<?php echo $row['eventEndTimes'];?>"
                                                     data-evenPlaces="<?php echo $row['eventPlaces'];?>">
                                                 </li>
@@ -780,7 +780,7 @@
                                                     echo 'eve-'.$row['eventPlace'];
                                                 }
                                             }
-                                            ?>" data-eveTitle="<?php echo addslashes($row['eventName']);?>" data-orgName="<?php echo addslashes($row['creatorName']);?>" itemscope itemtype="http://schema.org/Event">
+                                            ?>" data-eveTitle="<?php echo htmlspecialchars($row['eventName']);?>" data-orgName="<?php echo addslashes($row['creatorName']);?>" itemscope itemtype="http://schema.org/Event">
                                             <div class="row no-gutter">
                                                 <div class="col-100"> <!--more-photos-wrapper-->
                                                     <?php
@@ -811,11 +811,11 @@
                                                         <p class="pull-left card-ptag event-date-tag" itemprop="name">
                                                             <?php
                                                             $eventName = (mb_strlen($row['eventName']) > 35) ? substr($row['eventName'], 0, 35) . '..' : $row['eventName'];
-                                                            echo $eventName;
+                                                            echo htmlspecialchars($eventName);
                                                             ?><br>
                                                             <span class="sub-card-bytag">By <?php echo $row['creatorName'];?></span>
                                                         </p>
-                                                        <input type="hidden" data-shareTxt="This looks pretty cool, shall we?" data-name="<?php echo $row['eventName'];?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
+                                                        <input type="hidden" data-shareTxt="This looks pretty cool, shall we?" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
                                                         <i class="ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
                                                     </div>
 
@@ -825,7 +825,7 @@
                                                         $eventDescrip = (mb_strlen($row['eventDescription']) > 100) ? substr(strip_tags($row['eventDescription']), 0, 100) . '..' : strip_tags($row['eventDescription']);
                                                         ?>
                                                         <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment">
-                                                            <?php echo $eventDescrip;?>
+                                                            <?php echo htmlspecialchars($eventDescrip);?>
                                                         </a>
                                                         <p>
                                                             <?php
@@ -1006,6 +1006,10 @@
                                                     $freecard = false;
                                                     $locClass = explode(',',$row['taggedLoc']);
                                                 }
+                                                if(!$freecard)
+                                                {
+
+                                                }
                                                 if($postImg == 0)
                                                 {
                                                     ?>
@@ -1025,6 +1029,10 @@
                                                                 echo ' category-'.$key;
                                                             }
                                                         }
+                                                    }
+                                                    else
+                                                    {
+                                                        echo 'hide';
                                                     }
                                                     ?>"  data-img="<?php echo base_url().BEVERAGE_PATH_NORMAL.$row['filename'];?>"
                                                          data-title="<?php echo $row['itemName'];?>"

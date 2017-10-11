@@ -102,6 +102,7 @@ class Sendemail_library
             $content = $this->CI->load->view('emailtemplates/memberWelcomeMailView', $data, true);
         }
 
+
         $fromEmail = DEFAULT_SENDER_EMAIL;
         $fromPass = DEFAULT_SENDER_PASS;
         $replyTo = $mailRecord['userData']['emailId'];
@@ -191,6 +192,7 @@ class Sendemail_library
         {
             $content = $this->CI->load->view('emailtemplates/eventRegSuccessMailView', $data, true);
         }
+
 
         $fromEmail = DEFAULT_SENDER_EMAIL;
         $fromPass = DEFAULT_SENDER_PASS;
@@ -314,7 +316,8 @@ class Sendemail_library
         }
         $fromName  = 'Doolally';
 
-        $subject = $userData[0]['eventName'].' On '.$userData[0]['eventDate'].' Review Details';
+        $d = date_create($userData[0]['eventDate']);
+        $subject = $userData[0]['eventName'].' On '.date_format($d,'l, jS F').' Review Details';
         $toEmail = 'events@brewcraftsindia.com';
 
         if($mailRecord['status'] === true)

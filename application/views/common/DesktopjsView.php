@@ -291,6 +291,8 @@
                     if(eveName.indexOf(';') != -1)
                     {
                         var res = eveName.split(';');
+                        console.log(eveName);
+                        console.log(res);
                         var places = $(val).attr('data-evenPlaces').split(',');
                         var urls = $(val).attr('data-evenUrls').split(',');
                         for(var i=0;i<res.length;i++)

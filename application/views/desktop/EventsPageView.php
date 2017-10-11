@@ -51,7 +51,7 @@
                     echo 'eve-'.$row['eventPlace'];
                 }
             }
-            ?>" data-eveTitle="<?php echo addslashes($row['eventName']);?>" data-orgName="<?php echo addslashes($row['creatorName']);?>">
+            ?>" data-eveTitle="<?php echo htmlspecialchars($row['eventName']);?>" data-orgName="<?php echo addslashes($row['creatorName']);?>">
                 <?php
                 if($postImg <=2)
                 {
@@ -77,18 +77,18 @@
                         <ul class="mdl-list main-avatar-list">
                             <li class="mdl-list__item mdl-list__item--two-line">
                                                         <span class="mdl-list__item-primary-content">
-                                                            <h1 class="hide" itemprop="name"> <?php echo $row['eventName'];?></h1>
+                                                            <h1 class="hide" itemprop="name"> <?php echo htmlspecialchars($row['eventName']);?></h1>
                                                             <span class="avatar-title">
                                                                 <?php
                                                                 $eventName = (mb_strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
-                                                                echo $eventName;
+                                                                echo htmlspecialchars($eventName);
                                                                 ?>
                                                             </span>
                                                             <span class="mdl-list__item-sub-title">By <?php echo $row['creatorName'];?></span>
                                                         </span>
                                 <span class="mdl-list__item-secondary-content">
                                                             <span class="mdl-list__item-secondary-info">
-                                                                <input type="hidden" data-name="<?php echo $row['eventName'];?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
+                                                                <input type="hidden" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
                                                                 <i class="my-pointer-item ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
                                                             </span>
                                                         </span>
@@ -102,7 +102,7 @@
                             $eventDescrip = (mb_strlen($row['eventDescription']) > 100) ? substr(strip_tags($row['eventDescription']), 0, 100) . '..' : strip_tags($row['eventDescription']);
                             ?>
                             <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment dynamic" itemprop="description">
-                                <?php echo $eventDescrip;?>
+                                <?php echo htmlspecialchars($eventDescrip);?>
                             </a>
                             <p>
                                 <?php
@@ -164,7 +164,7 @@
                                 <?php
                             }
                             ?>
-                            <a itemprop="url" href="<?php echo base_url().'?page/events/'.$row['eventSlug'];?>" class="color-black hide"><?php echo $row['eventName'];?></a>
+                            <a itemprop="url" href="<?php echo base_url().'?page/events/'.$row['eventSlug'];?>" class="color-black hide"><?php echo htmlspecialchars($row['eventName']);?></a>
                             </p>
                         </div>
                     </div>

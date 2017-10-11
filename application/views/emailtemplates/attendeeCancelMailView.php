@@ -9,7 +9,7 @@
     <p>
         Dear <?php echo trim($mailData['firstName']); ?>,<br><br>
 
-        You have withdrawn from <?php echo $mailData['eventName']; ?>.
+        You have withdrawn from <?php echo htmlspecialchars($mailData['eventName']); ?>.
         We will inform the organiser that you will not be attending the event.
 
         <?php
@@ -25,7 +25,7 @@
                         ?>
                         Refund details: We have initiated partial refund for Rs. <?php echo $mailData['refundAmt'];?> (Rs. <?php echo $mailData['couponAmt'];?>
                          deducted against event code(s) redemption at the Taproom) against your booking
-                        for <?php echo $mailData['quantity'];?> for <?php echo $mailData['eventName'];?>.
+                        for <?php echo $mailData['quantity'];?> for <?php echo htmlspecialchars($mailData['eventName']);?>.
                         It should be transferred into your account within 7 bank working days.
                         <br><br>
                         <?php
@@ -34,7 +34,7 @@
                     {
                         ?>
                         Refund details: We have initiated the refund for Rs. <?php echo $mailData['refundAmt'];?> against your booking
-                        for <?php echo $mailData['quantity'];?> for <?php echo $mailData['eventName'];?>.
+                        for <?php echo $mailData['quantity'];?> for <?php echo htmlspecialchars($mailData['eventName']);?>.
                         It should be transferred into your account within 7 bank working days.
                         <br><br>
                         <?php

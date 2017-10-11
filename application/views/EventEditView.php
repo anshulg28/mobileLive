@@ -103,11 +103,11 @@
                                         <div class="event-header-name">
                                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                                                 <input class="mdl-textfield__input" type="text" id="eventName" name="eventName"
-                                                       value="<?php echo $row['eventName'];?>">
+                                                       value="<?php echo htmlspecialchars($row['eventName']);?>">
                                                 <label class="mdl-textfield__label" for="eventName">Name of event</label>
                                             </div>
                                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                                <textarea class="mdl-textfield__input" type="text" rows= "3" id="eventDesc" name="eventDescription"><?php echo $row['eventDescription'];?></textarea>
+                                                <textarea class="mdl-textfield__input" type="text" rows= "3" id="eventDesc" name="eventDescription"><?php echo htmlspecialchars($row['eventDescription']);?></textarea>
                                                 <label class="mdl-textfield__label" for="eventDesc">Describe your event</label>
                                             </div>
                                             <input class="mdl-textfield__input" type="text" id="eventDate" name="eventDate" placeholder="Date of Event" readonly

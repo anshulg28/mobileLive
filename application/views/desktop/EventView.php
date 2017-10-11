@@ -28,7 +28,7 @@
                                         <span class="avatar-title">
                                             <?php
                                             $eventName = (mb_strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
-                                            echo $eventName;
+                                            echo htmlspecialchars($eventName);
                                             ?>
                                         </span>
                                         <span class="mdl-list__item-sub-title">By <?php echo $row['creatorName'];?></span>
@@ -36,7 +36,7 @@
                                 </li>
                             </ul>
                             <div class="mdl-card__supporting-text">
-                                <div class="about-event"><?php echo $row['eventDescription'];?></div>
+                                <div class="about-event"><?php echo htmlspecialchars($row['eventDescription']);?></div>
                             </div>
                             <hr class="card-ptag">
 
@@ -111,10 +111,10 @@
                                         <span class="mdl-list__item-secondary-content">
                                             <span class="mdl-list__item-secondary-info">
                                                <span class="fa-15x ic_events_icon point-item my-right-event-icon custom-addToCal"
-                                                     data-ev-title="<?php echo $row['eventName'];?>" data-ev-location="Doolally Taproom, <?php echo $row['locName'];?>"
+                                                     data-ev-title="<?php echo htmlspecialchars($row['eventName']);?>" data-ev-location="Doolally Taproom, <?php echo $row['locName'];?>"
                                                      data-ev-start="<?php echo $row['eventDate'].' '.$row['startTime'];?>"
                                                      data-ev-end="<?php echo $row['eventDate'].' '.$row['endTime'];?>"
-                                                     data-ev-description="<?php echo strip_tags($row['eventDescription'],'<br><ul></ul><li></li>');?>">
+                                                     data-ev-description="<?php echo htmlspecialchars(strip_tags($row['eventDescription'],'<br><ul></ul><li></li>'));?>">
                                                 </span>
                                             </span>
                                         </span>
@@ -274,9 +274,9 @@
                             }
                             ?>
                             <p class="event-share-text text-center">
-                                Share "<?php echo $row['eventName']; ?>"
+                                Share "<?php echo htmlspecialchars($row['eventName']); ?>"
                             </p>
-                            <input type="hidden" data-name="<?php echo $row['eventName'];?>" id="shareLink" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];}?>"/>
+                            <input type="hidden" data-name="<?php echo htmlspecialchars($row['eventName']);?>" id="shareLink" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];}?>"/>
                             <div id="share" class="my-social-share"></div>
                         </div>
                     </div>

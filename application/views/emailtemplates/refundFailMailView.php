@@ -8,7 +8,7 @@
 <body>
     <p>
         Refund Fail Details:<br><br>
-        <?php echo 'Event name: '.$mailData['eventName'];?><br>
+        <?php echo 'Event name: '.htmlspecialchars($mailData['eventName']);?><br>
         <?php echo 'Booking Id: '.$mailData['bookingId'];?><br>
         <?php echo 'Failure Reason: '.$mailData['errorTxt'];?><br>
         <?php echo 'Refund Date Time: '.$mailData['refundDateTime'];?><br>
