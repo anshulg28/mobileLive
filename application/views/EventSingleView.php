@@ -17,7 +17,7 @@
                             <i class="ic_back_icon point-item"></i>
                         </a>
                     </div>
-                    <div class="center sliding"><?php echo htmlspecialchars($row['eventName']);?></div>
+                    <div class="center sliding"><?php echo $row['eventName'];?></div>
                     <div class="right">
                         <i class="ic_me_refresh_icon point-item page-refresh-btn"></i>
                     </div>
@@ -248,7 +248,7 @@
                                         }
                                         ?>
                                         <p class="event-share-text">
-                                            Share "<?php echo htmlspecialchars($row['eventName']); ?>"
+                                            Share "<?php echo $row['eventName']; ?>"
                                         </p>
                                         <input type="hidden" id="shareLink" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{ echo $row['eventShareLink'];}?>"/>
                                         <div id="share" class="my-social-share"></div>

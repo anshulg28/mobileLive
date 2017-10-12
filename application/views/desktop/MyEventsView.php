@@ -77,7 +77,7 @@
                                             <span class="avatar-title">
                                             <?php
                                             $eventName = (mb_strlen($row['eventName']) > 35) ? substr($row['eventName'], 0, 35) . '..' : $row['eventName'];
-                                            echo htmlspecialchars($eventName);?>
+                                            echo $eventName;?>
                                             </span>
                                         </span>
                                         <span class="mdl-list__item-secondary-content">
@@ -192,7 +192,7 @@
                                             <span class="avatar-title">
                                             <?php
                                             $eventName = (mb_strlen($row['eventName']) > 35) ? substr($row['eventName'], 0, 35) . '..' : $row['eventName'];
-                                            echo htmlspecialchars($eventName);?>
+                                            echo $eventName;?>
                                             </span>
                                         </span>
                                         <span class="mdl-list__item-secondary-content">
@@ -264,7 +264,7 @@
                                                             <span class="avatar-title">
                                                                 <?php
                                                                 $eventName = (mb_strlen($row['eventName']) > 35) ? substr($row['eventName'], 0, 35) . '..' : $row['eventName'];
-                                                                echo htmlspecialchars($eventName);
+                                                                echo $eventName;
                                                                 ?>
                                                             </span>
                                                             <span class="mdl-list__item-sub-title">By <?php echo $row['creatorName'];?></span>
@@ -283,7 +283,7 @@
                                                     $eventDescrip = (mb_strlen($row['eventDescription']) > 100) ? substr($row['eventDescription'], 0, 100) . '..' : $row['eventDescription'];
                                                     ?>
                                                     <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment dynamic">
-                                                        <?php echo htmlspecialchars($eventDescrip);?>
+                                                        <?php echo $eventDescrip;?>
                                                     </a>
                                                     <p>
                                                         <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<?php echo $row['locName']; ?>

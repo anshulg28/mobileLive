@@ -9,7 +9,7 @@
 <p>
     Dear <?php echo trim($mailData['firstName']); ?>,<br><br>
 
-    You have withdrawn from <?php echo htmlspecialchars($mailData['eventName']); ?>.
+    You have withdrawn from <?php echo $mailData['eventName']; ?>.
     We will inform the organiser that you will not be attending the event.
 
     <?php

@@ -652,11 +652,11 @@
                                                 <ul class="mdl-list main-avatar-list">
                                                     <li class="mdl-list__item mdl-list__item--two-line">
                                                         <span class="mdl-list__item-primary-content">
-                                                            <h1 class="hide" itemprop="name"> <?php echo htmlspecialchars($row['eventName']);?></h1>
+                                                            <h1 class="hide" itemprop="name"> <?php echo $row['eventName'];?></h1>
                                                             <span class="avatar-title">
                                                                 <?php
                                                                 $eventName = (mb_strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
-                                                                echo htmlspecialchars($eventName);
+                                                                echo $eventName;
                                                                 ?>
                                                             </span>
                                                             <span class="mdl-list__item-sub-title">By <?php echo $row['creatorName'];?></span>
@@ -676,7 +676,7 @@
                                                     $eventDescrip = (mb_strlen($row['eventDescription']) > 100) ? substr($row['eventDescription'], 0, 100) . '..' : $row['eventDescription'];
                                                     ?>
                                                     <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment dynamic" itemprop="description">
-                                                        <?php echo htmlspecialchars($eventDescrip);?>
+                                                        <?php echo $eventDescrip;?>
                                                     </a>
                                                     <p>
                                                         <?php
@@ -762,7 +762,7 @@
                                                             <?php
                                                         }
                                                         ?>
-                                                        <a itemprop="url" href="<?php echo base_url().'?page/events/'.$row['eventSlug'];?>" class="color-black hide"><?php echo htmlspecialchars($row['eventName']);?></a>
+                                                        <a itemprop="url" href="<?php echo base_url().'?page/events/'.$row['eventSlug'];?>" class="color-black hide"><?php echo $row['eventName'];?></a>
                                                     </p>
                                                 </div>
                                             </div>

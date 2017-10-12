@@ -17,7 +17,7 @@
                             <i class="ic_back_icon point-item"></i>
                         </a>
                     </div>
-                    <div class="center sliding"><?php echo htmlspecialchars($row['eventName']);?></div>
+                    <div class="center sliding"><?php echo $row['eventName'];?></div>
                     <!--<div class="right">
 
                     </div>-->
@@ -31,8 +31,8 @@
                             <div class="col-100 more-photos-wrapper">
                                 <img src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
                             </div>
-                            <div class="event-header-name"><?php echo htmlspecialchars($row['eventName']);?></div>
-                            <div class="content-block event-about"><?php echo htmlspecialchars($row['eventDescription']);?></div>
+                            <div class="event-header-name"><?php echo $row['eventName'];?></div>
+                            <div class="content-block event-about"><?php echo $row['eventDescription'];?></div>
                             <hr class="card-ptag">
                             <!-- Where section -->
                             <div class="event-descrip-wrapper">

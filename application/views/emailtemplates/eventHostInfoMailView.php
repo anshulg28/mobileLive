@@ -7,7 +7,7 @@
 
 <body>
     <p>Dear <?php echo trim(ucfirst($mailData['hostName']));?>,</p>
-    <p><?php echo trim(ucfirst($mailData['creatorName']));?> has signed up for <?php echo htmlspecialchars($mailData['eventName']);?> happening on
+    <p><?php echo trim(ucfirst($mailData['creatorName']));?> has signed up for <?php echo $mailData['eventName'];?> happening on
     <?php $d = date_create($mailData['eventDate']); echo date_format($d,DATE_MAIL_FORMAT_UI);?></p>
 
     <p>Here are their contact details.<br><br>

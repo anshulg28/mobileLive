@@ -140,7 +140,7 @@
                                                         <p class="pull-left card-ptag event-date-tag">
                                                             <?php
                                                             $eventName = (mb_strlen($row['eventName']) > 25) ? substr($row['eventName'], 0, 25) . '..' : $row['eventName'];
-                                                            echo htmlspecialchars($eventName);?>
+                                                            echo $eventName;?>
                                                         </p>
                                                         <input type="hidden" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{ echo $row['eventShareLink'];}?>"/>
                                                         <?php
@@ -254,7 +254,7 @@
                                                         <p class="pull-left card-ptag event-date-tag">
                                                             <?php
                                                             $eventName = (mb_strlen($row['eventName']) > 25) ? substr($row['eventName'], 0, 25) . '..' : $row['eventName'];
-                                                            echo htmlspecialchars($eventName);?>
+                                                            echo $eventName;?>
                                                         </p>
                                                         <input type="hidden" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{ echo $row['eventShareLink'];}?>"/>
                                                         <?php
@@ -330,14 +330,14 @@
                                                             <p class="pull-left card-ptag event-date-tag">
                                                                 <?php
                                                                 $eventName = (mb_strlen($row['eventName']) > 25) ? substr($row['eventName'], 0, 25) . '..' : $row['eventName'];
-                                                                echo htmlspecialchars($eventName);?>
+                                                                echo $eventName;?>
                                                             </p>
                                                             <input type="hidden" data-shareTxt="Finally! I have signed myself up, why don't you check it out?" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{ echo $row['eventShareLink'];}?>"/>
                                                             <i class="ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
                                                         </div>
 
                                                         <div class="comment my-event-status clear">
-                                                            <?php echo htmlspecialchars($row['eventDescription']);?>
+                                                            <?php echo $row['eventDescription'];?>
                                                             <p>
                                                                 <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<?php echo $row['locName']; ?>
                                                                 &nbsp;&nbsp;<i class="ic_me_rupee_icon main-rupee-icon"></i>

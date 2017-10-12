@@ -811,7 +811,7 @@
                                                         <p class="pull-left card-ptag event-date-tag" itemprop="name">
                                                             <?php
                                                             $eventName = (mb_strlen($row['eventName']) > 35) ? substr($row['eventName'], 0, 35) . '..' : $row['eventName'];
-                                                            echo htmlspecialchars($eventName);
+                                                            echo $eventName;
                                                             ?><br>
                                                             <span class="sub-card-bytag">By <?php echo $row['creatorName'];?></span>
                                                         </p>
@@ -825,7 +825,7 @@
                                                         $eventDescrip = (mb_strlen($row['eventDescription']) > 100) ? substr(strip_tags($row['eventDescription']), 0, 100) . '..' : strip_tags($row['eventDescription']);
                                                         ?>
                                                         <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment">
-                                                            <?php echo htmlspecialchars($eventDescrip);?>
+                                                            <?php echo $eventDescrip;?>
                                                         </a>
                                                         <p>
                                                             <?php

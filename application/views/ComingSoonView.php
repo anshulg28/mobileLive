@@ -170,7 +170,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             ?>
             <div class="event-wrapper" itemscope itemtype="http://schema.org/Event" style="opacity:0 !important;position:absolute">
                 <h1 itemprop="name"> <?php echo htmlspecialchars($row['eventName']);?></h1>
-                <p itemprop="description"><?php echo htmlspecialchars($row['eventDescription']);?></p>
+                <p itemprop="description"><?php echo $row['eventDescription'];?></p>
                 <a itemprop="url" href="<?php echo base_url().'?page/events/'.$row['eventSlug'];?>" class="color-black"><?php echo htmlspecialchars($row['eventName']);?></a>
                 <img itemprop="image" src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>"/>
                 <meta itemprop="startDate" content="<?php echo $row['eventDate'].'T'.$row['startTime'];?>" />

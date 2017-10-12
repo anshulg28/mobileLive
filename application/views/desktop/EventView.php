@@ -28,7 +28,7 @@
                                         <span class="avatar-title">
                                             <?php
                                             $eventName = (mb_strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
-                                            echo htmlspecialchars($eventName);
+                                            echo $eventName;
                                             ?>
                                         </span>
                                         <span class="mdl-list__item-sub-title">By <?php echo $row['creatorName'];?></span>
@@ -36,7 +36,7 @@
                                 </li>
                             </ul>
                             <div class="mdl-card__supporting-text">
-                                <div class="about-event"><?php echo htmlspecialchars($row['eventDescription']);?></div>
+                                <div class="about-event"><?php echo $row['eventDescription'];?></div>
                             </div>
                             <hr class="card-ptag">
 

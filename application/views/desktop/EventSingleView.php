@@ -47,7 +47,7 @@
                                         <span class="avatar-title">
                                             <?php
                                             $eventName = (mb_strlen($row['eventName']) > 35) ? substr($row['eventName'], 0, 35) . '..' : $row['eventName'];
-                                            echo htmlspecialchars($eventName);
+                                            echo $eventName;
                                             ?>
                                         </span>
                                     </span>
