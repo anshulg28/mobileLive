@@ -506,37 +506,48 @@ class Sendemail_library
             $toEmail = $mailRecord['userData']['emailId'];
         }
 
-        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+        //Saving mail
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->dashboard_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
     //Will Do after I get Email Text
     public function eventCancelUserMail($userData)
     {
-        $phons = $this->CI->config->item('phons');
         $mailRecord = $this->CI->users_model->searchUserByLoc($userData[0]['eventPlace']);
-        if($mailRecord['status'] === true)
-        {
-            $senderName = $mailRecord['userData']['firstName'];
-        }
-        else
-        {
-            $senderName = 'Doolally';
-        }
-        $userData['senderName'] = $senderName;
-        $userData['senderPhone'] = $phons[ucfirst($senderName)];
 
+        $data['commName'] = 'Doolally';
+        if(isset($mailRecord['userData']['firstName']))
+        {
+            $data['commName'] = $mailRecord['userData']['firstName'];
+        }
         $data['mailData'] = $userData;
 
         $content = $this->CI->load->view('emailtemplates/eventCancelUserMailView', $data, true);
 
         $fromEmail = DEFAULT_SENDER_EMAIL;
         $fromPass = DEFAULT_SENDER_PASS;
-        $replyTo = $fromEmail;
-
-        if(isset($mailRecord['userData']['emailId']) && isStringSet($mailRecord['userData']['emailId']))
+        $replyTo = $mailRecord['userData']['emailId'];
+        /*if(isset($userData[0]['creatorEmail']))
         {
-            $replyTo = $mailRecord['userData']['emailId'];
-        }
+            $fromEmail = $userData[0]['creatorEmail'];
+        }*/
         $cc        = implode(',',$this->CI->config->item('ccList'));
         $extraCc = getExtraCCEmail($replyTo);
         if(isStringSet($extraCc))
@@ -544,15 +555,30 @@ class Sendemail_library
             $cc = $cc.','.$extraCc;
         }
         $fromName  = 'Doolally';
-        if(isset($senderName) && isStringSet($senderName))
-        {
-            $fromName = ucfirst($senderName);
-        }
 
-        $subject = 'Event Cancel';
+        $subject = $userData[0]['eventName'].' Event Cancel';
         $toEmail = $userData[0]['creatorEmail'];
 
-        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+
+        //Saving mail
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->dashboard_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
     //Not in Use
@@ -579,7 +605,7 @@ class Sendemail_library
             $fromName = ucfirst($userData['senderName']);
         }
 
-        $subject = 'Event Approved';
+        $subject = 'Event approved';
         $toEmail = $userData[0]['creatorEmail'];
 
         $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
@@ -703,6 +729,33 @@ class Sendemail_library
         $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
+    public function eventReminderSendMail($userData, $eventPlace)
+    {
+        $locData = $this->CI->locations_model->getLocationDetailsById($eventPlace);
+        $mailRecord = $this->CI->users_model->searchUserByLoc($eventPlace);
+        $data['mailData'] = $userData;
+
+        $data['commName'] = 'Doolally';
+        if(isset($mailRecord['userData']['firstName']))
+        {
+            $data['commName'] = $mailRecord['userData']['firstName'];
+        }
+        $data['locInfo'] = $locData['locData'][0];
+
+        $content = $this->CI->load->view('emailtemplates/eventReminderMailView', $data, true);
+
+        $fromEmail = DEFAULT_SENDER_EMAIL;
+        $fromPass = DEFAULT_SENDER_PASS;
+        $replyTo = $fromEmail;
+
+        $cc        = implode(',',$this->CI->config->item('ccList'));
+        $fromName  = 'Doolally';
+        $subject = $userData['eventName'].' Event Reminder';
+        $toEmail = $userData['emailId'];
+
+        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+    }
+
     public function generateBreakfastCode($mugId)
     {
         $allCodes = $this->CI->offers_model->getAllCodes();
@@ -814,6 +867,10 @@ class Sendemail_library
             $errorMsg = $ex->getMessage();
         }
 
+        if(is_array($to))
+        {
+            $to = implode(',',$to);
+        }
 
         $logDetails = array(
             'messageId' => $message->getId(),

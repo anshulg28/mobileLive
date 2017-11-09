@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    <p>Hi <?php if(isset($mailData['orgName'])){echo $mailData['orgName'];}else{echo 'Organizer';}; ?></p>
+    <p>Hi <?php if(isset($mailData['orgName'])){echo trim($mailData['orgName']);}else{echo 'Organizer';}; ?>,</p>
     <p>
         Your request for event modifications below:<br><br>
         <?php

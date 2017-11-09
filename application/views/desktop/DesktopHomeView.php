@@ -24,7 +24,7 @@
 
         <!-- Open Graph data -->
         <meta property="og:title" content="<?php echo $meta['title'];?>" />
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="article" />
         <meta property="og:url" content="<?php echo $meta['link'];?>" />
         <meta property="og:image" content="<?php echo $meta['img'];?>" />
         <meta property="og:description" content="<?php echo $meta['description'];?>" />
@@ -92,7 +92,7 @@
         }
         ?>
         <div class="mdl-grid page-content">
-            <div class="mdl-cell mdl-cell--3-col">
+            <div class="mdl-cell mdl-cell--3-col strip-sides-on-mobile">
                 <?php echo $leftSideCal; ?>
             </div>
             <div class="mdl-cell mdl-cell--my-6-col my-vanish" id="mainContent-view">
@@ -597,7 +597,8 @@
                         </div>
                         <input type="hidden" id="MojoStatus" value="<?php echo $MojoStatus;?>"/>
                         <input type="hidden" id="eventsHigh" value="<?php echo $PaymentStatus;?>"/>
-                        <div class="event-section">
+                        <div class="content-for-mobile"></div>
+                        <div class="event-section" id="desk-event-section">
                             <?php
                             if(isset($eventDetails) && myIsMultiArray($eventDetails))
                             {
@@ -627,43 +628,43 @@
                                         }
                                     }
                                     ?>" data-eveTitle="<?php echo htmlspecialchars($row['eventName']);?>" data-orgName="<?php echo addslashes($row['creatorName']);?>">
-                                        <?php
-                                        if($postImg <=2)
-                                        {
-                                            ?>
-                                            <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
-                                                <img itemprop="image" src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
-                                            </a>
-                                            <?php
-                                        }
-                                        else
-                                        {
-                                            ?>
-                                            <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
-                                                <img itemprop="image" data-src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img lazy"/>
-                                            </a>
-                                            <?php
-                                        }
-                                        $postImg++;
-                                        ?>
                                         <!--<div style="background-image:url()" valign="bottom" class="card-header color-white no-border">Journey To Mountains</div>-->
                                         <div class="card-content">
                                             <div class="card-content-inner">
+                                                <?php
+                                                if($postImg <=2)
+                                                {
+                                                    ?>
+                                                    <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
+                                                        <img itemprop="image" src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
+                                                    </a>
+                                                    <?php
+                                                }
+                                                else
+                                                {
+                                                    ?>
+                                                    <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
+                                                        <img itemprop="image" data-src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img lazy"/>
+                                                    </a>
+                                                    <?php
+                                                }
+                                                $postImg++;
+                                                ?>
                                                 <ul class="mdl-list main-avatar-list">
                                                     <li class="mdl-list__item mdl-list__item--two-line">
                                                         <span class="mdl-list__item-primary-content">
                                                             <h1 class="hide" itemprop="name"> <?php echo $row['eventName'];?></h1>
-                                                            <span class="avatar-title">
+                                                            <span class="avatar-title eve-search-title">
                                                                 <?php
                                                                 $eventName = (mb_strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
                                                                 echo $eventName;
                                                                 ?>
                                                             </span>
-                                                            <span class="mdl-list__item-sub-title">By <?php echo $row['creatorName'];?></span>
+                                                            <span class="mdl-list__item-sub-title eve-search-orgName">By <?php echo $row['creatorName'];?></span>
                                                         </span>
                                                         <span class="mdl-list__item-secondary-content">
                                                             <span class="mdl-list__item-secondary-info">
-                                                                <input type="hidden" data-shareTxt="This looks pretty cool, shall we?" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
+                                                                <input type="hidden" data-shareTxt="This looks pretty cool, shall we?" data-img="<?php if(isset($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
                                                                 <i class="my-pointer-item ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
                                                             </span>
                                                         </span>
@@ -725,14 +726,14 @@
                                                             }
                                                         }
                                                         ?>
-                                                        <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<?php if($row['isSpecialEvent'] == STATUS_YES){echo 'Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo 'All Taprooms';}else{ echo $row['locName'];} ?>
+                                                    <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<span class="eve-locName"><?php if($row['isSpecialEvent'] == STATUS_YES){echo 'Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo 'All Taprooms';}else{ echo $row['locName'];} ?></span>
                                                         <?php
                                                         if($row['showEventDate'] == STATUS_YES)
                                                         {
                                                             ?>
                                                             &nbsp;&nbsp;<span class="ic_events_icon event-date-main my-display-inline"></span>&nbsp;
-                                                            <?php $d = date_create($row['eventDate']);
-                                                            echo date_format($d,EVENT_DATE_FORMAT); ?>
+                                                            <span class="eve-eventDate"><?php $d = date_create($row['eventDate']);
+                                                            echo date_format($d,EVENT_DATE_FORMAT); ?></span>
                                                             <?php
                                                         }
                                                         if($row['showEventPrice'] == STATUS_YES)
@@ -792,6 +793,70 @@
                             {
                                 switch($row['itemType'])
                                 {
+                                    case ITEM_BEVERAGE:
+                                        $freecard = true;
+                                        $locClass = array();
+                                        if($row['itemType'] == ITEM_BEVERAGE && isset($row['taggedLoc']))
+                                        {
+                                            $freecard = false;
+                                            $locClass = explode(',',$row['taggedLoc']);
+                                        }
+                                        if($postImg == 0)
+                                        {
+                                            ?>
+                                            <div class="mdl-grid sideFnbWrapper my-NoPadding mobile-extra-beers">
+                                            <?php
+                                        }
+                                        ?>
+                                        <div class="mdl-cell mdl-cell--6-col fnb-div-wrapper">
+                                            <div class="mdl-card mdl-shadow--2dp demo-card-header-pic show-full-beer-card <?php
+                                            if($freecard === false)
+                                            {
+                                                if(myIsArray($locClass))
+                                                {
+                                                    foreach($locClass as $key)
+                                                    {
+                                                        $cat = $key;
+                                                        echo ' category-'.$key;
+                                                    }
+                                                }
+                                            }
+                                            ?>"  data-img="<?php echo base_url().BEVERAGE_PATH_NORMAL.$row['filename'];?>"
+                                                 data-title="<?php echo $row['itemName'];?>"
+                                                 data-descrip="<?php if(isset($row['itemHeadline'])){echo $row['itemHeadline'];} else{echo strip_tags($row['itemDescription'],'<br>');} ?>"
+                                                 data-fullprice="<?php echo $row['priceFull'];?>"
+                                                 data-halfprice="<?php echo $row['priceHalf'];?>"
+                                                 data-fnbId = "<?php echo $row['fnbId']; ?>"
+                                                 data-shareLink="<?php if(isset($row['shortUrl'])) {echo $row['shortUrl'];}else{echo $row['fnbShareLink'];} ?>">
+                                                <?php
+                                                if($postImg <=5)
+                                                {
+                                                    ?>
+                                                    <img src="<?php echo base_url().BEVERAGE_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
+                                                    <?php
+                                                }
+                                                else
+                                                {
+                                                    ?>
+                                                    <img data-src="<?php echo base_url().BEVERAGE_PATH_THUMB.$row['filename'];?>" class="mainFeed-img lazy lazy-fadein"/>
+                                                    <?php
+                                                }
+                                                $postImg++;
+                                                ?>
+                                                <div class="mdl-card__supporting-text custom-beer-card">
+                                                    <p class="pull-left card-ptag"><?php echo $row['itemName'];?></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php
+                                        if($beerCount['2'] == $postImg)
+                                        {
+                                            ?>
+                                            </div>
+                                            <?php
+                                        }
+                                        break;
+
                                     case ITEM_FOOD:
                                         ?>
                                         <?php
@@ -828,7 +893,7 @@
                                                     </span>
                                                     <span class="mdl-list__item-secondary-content">
                                                         <span class="mdl-list__item-secondary-info">
-                                                            <input type="hidden" data-name="<?php echo $row['itemName'];?>" value="<?php if(isset($row['shortUrl'])){ echo $row['shortUrl'];}else{echo $row['fnbShareLink'];}?>"/>
+                                                            <input type="hidden" data-img="<?php echo base_url().FOOD_PATH_THUMB.$row['filename'];?>"" data-name="<?php echo $row['itemName'];?>" value="<?php if(isset($row['shortUrl'])){ echo $row['shortUrl'];}else{echo $row['fnbShareLink'];}?>"/>
                                                             <i class="my-pointer-item ic_me_share_icon pull-right event-share-icn fnb-card-share-btn"></i>
                                                         </span>
                                                     </span>
@@ -853,7 +918,7 @@
                 <section class="mdl-layout__tab-panel" id="jukeboxTab"></section>
                 <section class="mdl-layout__tab-panel" id="contactTab"></section>
             </div>
-            <div class="mdl-cell mdl-cell--3-col">
+            <div class="mdl-cell mdl-cell--3-col strip-sides-on-mobile">
                 <?php echo $rightSideFnb; ?>
             </div>
         </div>
@@ -946,6 +1011,7 @@
             <i class="fa fa-caret-up fa-2x"></i>
         </div>
     </main>
+    <?php echo $deskFooter; ?>
 </div>
 <section id="doolally-age-gate" class="hide">
     <div class="demo-card-wide mdl-card mdl-shadow--2dp">
@@ -998,5 +1064,42 @@
     }
     ?>
 
+</script>
+<script>
+    $(document).ready(function(){
+        if($(window).width() < mobileSize)
+        {
+            var mobHtm = '<br><div class="content-block-title weekly-cal">What\'s happening this week</div>' +
+                '<div id="calendar-mobile-glance"></div><br><div class="content-block-title weekly-cal">All Events</div>';
+            var eventAdd = '<a href="create_event" data-title="Create Event" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mobile-event-create dynamic">\n' +
+                '    <i class="ic_add"></i>\n' +
+                '</a>';
+            $('.event-creator-box').addClass('hide');
+            $('.content-for-mobile').html(mobHtm);
+            $('.content-for-mobile').append(eventAdd);
+            renderCalendarMobile();
+        }
+        $('#eventSearch').fastLiveFilter('#desk-event-section .demo-card-header-pic',{
+            selector:'.eve-search-title,.eve-search-orgName,.eve-locName,.eve-eventDate',
+            callback: function(total){
+                if(total == 0)
+                {
+                    $('#desk-event-section .no-search-result').removeClass('hide');
+                }
+                else
+                {
+                    $('#desk-event-section .no-search-result').addClass('hide');
+                }
+            }
+        });
+        if($(window).width() < mobileSize)
+        {
+            //$('#filter-fnb-menu-mobile').removeClass('hide');
+        }
+        else
+        {
+            $('.mobile-extra-beers').remove();
+        }
+    });
 </script>
 </html>

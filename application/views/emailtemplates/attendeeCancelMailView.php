@@ -16,7 +16,7 @@
             if(isset($mailData['refundId']))
             {
                 ?>
-                For paid events, the money will be refunded to you after deducting 2.24% as payment gateway fees.<br><br>
+                For paid events, the money will be refunded to you after deducting <?php if($mailData['isDirectlyRegistered'] == "1"){echo DOOLALLY_GATEWAY_CHARGE.'%';}else{echo EH_GATEWAY_CHARGE.'%';} ?> as payment gateway fees.<br><br>
                 Refund Id: <?php echo $mailData['refundId'];?><br><br>
 
                 <?php

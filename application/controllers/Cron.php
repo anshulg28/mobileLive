@@ -149,7 +149,9 @@ class Cron extends MY_Controller
         $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallyandheri', $params);
         $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallybandra', $params);
         //kemps
-        $fbFeeds[] = $this->curl_library->getFacebookPosts('1741740822733140', $params);
+        $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallykemps', $params);
+        $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallyColaba', $params);
+        $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolallykhar', $params);
         $fbFeeds[] = $this->curl_library->getFacebookPosts('godoolally', $params);
 
         return array_merge($fbFeeds[0]['data'], $fbFeeds[1]['data'], $fbFeeds[2]['data']);
@@ -697,6 +699,32 @@ class Cron extends MY_Controller
             catch(Exception $ex)
             {
 
+            }
+        }
+    }
+    public function sendEventReminders()
+    {
+        $reminders = $this->cron_model->getAllReminders();
+
+        if(isset($reminders) && myIsArray($reminders))
+        {
+            foreach($reminders as $key => $row)
+            {
+                $eventInfo = $this->dashboard_model->getEventById($row['eventId']);
+                $eventInfo = $eventInfo[0];
+                if(isset($eventInfo) && myIsArray($eventInfo))
+                {
+                    $date1 = date($eventInfo['eventDate'].' '.$eventInfo['startTime']);
+                    if(strtotime($date1) <= strtotime('24 hours'))
+                    {
+                        $eventInfo['emailId'] = $row['emailId'];
+                        $this->sendemail_library->eventReminderSendMail($eventInfo,$eventInfo['eventPlace']);
+                        $details = array(
+                            'hasSent' => 1
+                        );
+                        $this->dashboard_model->updateReminder($details,$row['id']);
+                    }
+                }
             }
         }
     }

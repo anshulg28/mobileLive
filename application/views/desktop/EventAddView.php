@@ -3,12 +3,13 @@
     <div class="content-block event-wrapper">
         <form action="<?php echo base_url().'saveEvent';?>" id="eventSave" method="post" class="ajax-submit">
             <input type="hidden" name="attachment"/>
+            <input type="hidden" name="verticalImg"/>
             <div class="event-img-space" id="event-img-space">
                 <div class="event-img-before">
                     <button type="button" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect event-img-add-btn">
                         <i class="material-icons">add</i>
                     </button>
-                    <p class="add-img-caption">Add a cover photo<!--<br> The image must be at least 1080 x 540 pixels--></p>
+                    <p class="add-img-caption">Add a cover photo<br> Max Image Dimensions 1200x677 pixels</p>
                     <input type="file" id="event-img-upload" onchange="uploadChange(this)" class="my-vanish"/>
                 </div>
                 <div class="event-img-after hide">
@@ -18,7 +19,7 @@
                     <div id="eventProgress" class="mdl-progress mdl-js-progress"></div>
                 </div>
             </div>
-            <div class="mdl-shadow--2dp my-whiteBack">
+            <div class="mdl-shadow--2dp my-whiteBack no-shadow-mobile">
                 <div id="cropContainerModal" class="hide">
                     <div class="done-overlay hide">
                         <button type="button" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect event-overlay-remove">
@@ -28,6 +29,17 @@
                     <i class="fa fa-check upload-done-icon"></i>
                     <i class="fa fa-times upload-img-close"></i>
                     <img id="img-container" src="" style="max-width:100%"/>
+                </div>
+                <br>
+                <div id="cropContainerVertical" class="hide">
+                    <p>For Pinterest Sharing (Vertical image)</p>
+                    <div class="done-overlay-ver hide">
+                        <button type="button" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect event-overlay-remove-ver">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    <i class="fa fa-check upload-done-icon-ver"></i>
+                    <img id="img-container_vertical" src="" style="max-width:100%"/>
                 </div>
                 <br>
                 <div class="mdl-grid">
@@ -48,30 +60,30 @@
                 <div class="event-header-name mdl-grid">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                         <!--onfocus="scrollToField(this)"-->
-                        <input class="mdl-textfield__input" type="text" id="eventName" name="eventName">
+                        <input class="mdl-textfield__input" tabindex="1" type="text" id="eventName" name="eventName">
                         <label class="mdl-textfield__label" for="eventName">Name of event</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                        <textarea class="mdl-textfield__input" type="text" rows= "3" id="eventDesc" name="eventDescription"></textarea>
+                        <textarea class="mdl-textfield__input" tabindex="2" type="text" rows= "3" id="eventDesc" name="eventDescription"></textarea>
                         <label class="mdl-textfield__label" for="eventDesc">Describe your event</label>
                     </div>
                     <div class="mdl-cell mdl-cell--6-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="eventDate" name="eventDate"
+                            <input class="mdl-textfield__input" type="text" id="eventDate" name="eventDate" tabindex="3"
                                    placeholder="Date of Event" data-format="Y-m-d" data-default-date="new Date()" data-lock="from"
                                    data-large-default="true" data-large-mode="true" data-modal="true" data-max-year="2018" data-min-year="2016">
                             <label class="mdl-textfield__label" for="eventDate">Event Date</label>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                             <!--onfocus="scrollToField(this)"-->
-                            <input class="mdl-textfield__input" type="text" id="endTime" name="endTime">
+                            <input class="mdl-textfield__input" tabindex="5" type="text" id="endTime" name="endTime">
                             <label class="mdl-textfield__label" for="endTime">End Time</label>
                         </div>
                     </div>
                     <div class="mdl-cell mdl-cell--6-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                             <!--onfocus="scrollToField(this)"-->
-                            <input class="mdl-textfield__input" type="text" id="startTime" name="startTime">
+                            <input class="mdl-textfield__input" type="text" tabindex="4" id="startTime" name="startTime">
                             <label class="mdl-textfield__label" for="startTime">Start Time</label>
                         </div>
                         <!--<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -92,7 +104,7 @@
                 <div class="event-header-name mdl-grid">
                     <div class="mdl-cell mdl-cell--6-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="location-div">
-                            <select id="eventPlace" name="eventPlace" class="mdl-textfield__input">
+                            <select id="eventPlace" tabindex="6" name="eventPlace" class="mdl-textfield__input">
                                 <option value="">Select</option>
                                 <?php
                                 if(isset($locData))
@@ -114,7 +126,7 @@
                     </div>
                     <div class="mdl-cell mdl-cell--6-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <select name="eventCapacity" id="eventCapacity" class="mdl-textfield__input">
+                            <select name="eventCapacity" tabindex="7" id="eventCapacity" class="mdl-textfield__input">
                                 <?php
                                 for($i=1;$i<=20;$i++)
                                 {
@@ -134,7 +146,7 @@
                     </div>
                     <div class="mdl-cell mdl-cell--6-col">
                         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="paidType">
-                            <input type="radio" id="paidType" class="mdl-radio__button" name="costType" value="2" checked>
+                            <input type="radio" id="paidType" tabindex="8" class="mdl-radio__button" name="costType" value="2" checked>
                             <span class="mdl-radio__label">Paid</span>
                         </label>
                         <p class="event-sub-text">For paid events, we charge an additional Rs <?php echo NEW_DOOLALLY_FEE;?> per attendee which includes a pint or house fries.</p>
@@ -150,7 +162,7 @@
                     </div>
                     <div class="mdl-cell mdl-cell--6-col">
                         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="freeType">
-                            <input type="radio" id="freeType" class="mdl-radio__button" name="costType" value="1">
+                            <input type="radio" id="freeType" tabindex="9" class="mdl-radio__button" name="costType" value="1">
                             <span class="mdl-radio__label">Free</span>
                         </label>
                         <p class="event-sub-text">If you don't charge, we don't charge</p>
@@ -160,7 +172,7 @@
                     </div>
                     <div class="mdl-cell mdl-cell--6-col text-right projSection">
                         <div class="projDiv">
-                            <input type="checkbox" name="ifProjectorRequired" onchange="toggleAccess(this)" id="ifProjectorRequired" value="1" />
+                            <input type="checkbox" tabindex="10" name="ifProjectorRequired" onchange="toggleAccess(this)" id="ifProjectorRequired" value="1" />
                             <label for="ifProjectorRequired">
                                 <i class="ic_projector_icon"></i>
                                 <span>Projector</span>
@@ -169,7 +181,7 @@
                     </div>
                     <div class="mdl-cell mdl-cell--6-col micSection">
                         <div class="micDiv">
-                            <input type="checkbox" name="ifMicRequired" onchange="toggleAccess(this)" id="ifMicRequired" value="1" />
+                            <input type="checkbox" tabindex="11" name="ifMicRequired" onchange="toggleAccess(this)" id="ifMicRequired" value="1" />
                             <label for="ifMicRequired">
                                 <i class="ic_mic_icon"></i>
                                 <span>Microphone</span>
@@ -185,16 +197,16 @@
                         <div class="mdl-cell mdl-cell--12-col">Your details</div>
                         <!--<p class="event-sub-text">We'll contact you while we curate your event.</p>-->
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                            <input class="mdl-textfield__input" type="text" name="creatorName" id="creatorName">
+                            <input tabindex="12" class="mdl-textfield__input" type="text" name="creatorName" id="creatorName">
                             <label class="mdl-textfield__label" for="creatorName">Name</label>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                            <input class="mdl-textfield__input" type="number" name="creatorPhone" id="creatorPhone" maxlength="10"
+                            <input tabindex="13" class="mdl-textfield__input" type="number" name="creatorPhone" id="creatorPhone" maxlength="10"
                                    oninput="maxLengthCheck(this)">
                             <label class="mdl-textfield__label" for="creatorPhone">Phone Number</label>
                         </div>
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                            <input class="mdl-textfield__input" type="email" name="creatorEmail" id="creatorEmail">
+                            <input tabindex="14" class="mdl-textfield__input" type="email" name="creatorEmail" id="creatorEmail">
                             <label class="mdl-textfield__label" for="creatorEmail">Email ID</label>
                         </div>
                         <?php
@@ -231,18 +243,18 @@
                     ?>
                     <div class="mdl-cell mdl-cell--12-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                            <textarea class="mdl-textfield__input kbdfix" type="text" rows= "3" id="aboutCreator" name="aboutCreator"></textarea>
+                            <textarea tabindex="15" class="mdl-textfield__input kbdfix" type="text" rows= "3" id="aboutCreator" name="aboutCreator"></textarea>
                             <label class="mdl-textfield__label" for="aboutCreator">Something about yourself (Optional)</label>
                         </div>
                         <div class="event-header-name">
-                            All events are reviewed and approved by Doolally. Once approved, we will create an Eventhigh payment link and
+                            All events are reviewed and approved by Doolally. Once approved, we will create an Eventshigh payment link and
                             accept payments on your behalf.
                         </div>
                         <hr>
                         <label class="mdl-checkbox mdl-js-checkbox" for="tnc">
-                            <input type="checkbox" id="tnc" value="1" class="mdl-checkbox__input">
+                            <input tabindex="16" type="checkbox" id="tnc" value="1" class="mdl-checkbox__input">
                             <span class="mdl-checkbox__label">I have read and agree to the
-                                <a href="#" class="dynamic">Terms and Conditions.</a>
+                                <a href="#" id="event-guide-link" class="dynamic">Event Guidelines.</a>
                             </span>
                         </label>
                         <br>

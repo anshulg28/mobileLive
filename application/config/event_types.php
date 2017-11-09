@@ -54,11 +54,19 @@ $config['eventTc'] = '<div class="page-content">
             <li>To arrive at the venue at least 45 minutes before the scheduled time of the event.</li></ol></p>
 
         <br><h5><strong>Charges for utilization of the space:</strong></h5>
-        <p><ol><li>If you don\'t charge, we don\'t charge.</li>
-            <li>For paid events/workshops, we charge a venue fee of Rs. 118</li>
+        <p><ol>
+            <li>For paid events/workshops, we charge a venue fee of Rs. 118.</li>
             <li>Additionally for paid events, we charge Rs '.NEW_DOOLALLY_FEE.' per attendee which is fully redeemable for F&B 
             at any Doolally Taproom in Mumbai. Attendees will receive it as a code in an email from us. 
             The code, however, does not have to be redeemed on that day and can be redeemed at their convenience.</li></ol></p>
+            
+        <br><h5><strong>Organiser F&B:</strong></h5>
+        <p><ol>
+            <li>As an Organizer of an event/workshop, you will be provided Food & Beverage worth Rs. 500 which will be redeemable in the form of a code,
+             sent to you in the event approval mail.</li>
+            <li>This code will be active from the start time of an event and will be valid for the next 12 hours from then. 
+            Post that, the code will be invalid.
+            If the event is cancelled by you, the F&B code will become invalid.</li></ol></p>
             
         <br><h5><strong>Event Dashboard:</strong></h5>
         <p><ol><li>Once your event is approved, we will create an Event link. Please use this link to accept payments.</li>
@@ -77,8 +85,7 @@ $config['eventTc'] = '<div class="page-content">
         <p><ol><li>For paid events, we will collect money from the customer on your behalf. This is to ensure complete refund in case of cancelled events.</li>
         <li>Doolally will bear the 2.24% payment gateway fees except during cancellations by either the organiser or attendee.</li>
         <li>Eventshigh is our payment partner. Please check out their credentials here - www.eventshigh.com</li>
-        <li>For payment for events, we will hand over a cheque in the name of organiser. As an organiser, once you have crossed Rs 30,000 in earnings, Doolally will deduct 10% TDS.</| These modes are used when working with fopen()/popen()
-li></ol></p>
+        <li>For payment for events, we will hand over a cheque in the name of organiser. As an organiser, once you have crossed Rs 30,000 in earnings, Doolally will deduct 10% TDS.</li></ol></p>
 
         <br><h5><strong>Contact:</strong></h5>
         <p>Email: events@doolally.in</p>
@@ -91,9 +98,11 @@ $config['eventBookTc'] = '<div class="page-content">
         <h5><strong>General rules:</strong></h5>
         <p><ol>
         <li>Attendees are expected to reach the venue well in time before the scheduled time of the event.</li><br>
-        <li>For paid events, we charge Rs 300 per attendee which is fully redeemable for F&B at any Doolally Taproom in Mumbai.
-         You will receive it as a code in an email from us, along with your booking confirmation details.
-          The code, however, does not have to be redeemed only on the event day and can be redeemed at your convenience.</li><br>
+        <li>For paid events, the fee includes Rs 300, that you can redeem for F&B at any Doolally Taproom in Mumbai. 
+        You will receive it as a code in an email from us, along with your booking confirmation details. 
+        The code, however, does not have to be redeemed only on the event day and can be redeemed at your convenience.<br>
+        For free events, we don\'t levy a cover charge. You can place an F&B order and settle your bill at the end of the event. 
+        </li><br>
         <li>You will also be given access to a dashboard. This is where you can contact the organisers or us for more details. 
         You can also cancel your attendance here.</li><br>
 

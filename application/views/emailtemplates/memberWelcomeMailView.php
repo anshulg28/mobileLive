@@ -34,10 +34,7 @@
         ?>
     </p>
 
-    <p>This mail is to let you know what your <?php echo date('l',strtotime($mailData['eventDate']));?>
-        is going to look like. The event will run from <?php echo date('h:i a',strtotime($mailData['startTime'])).'-'.date('h:i a',strtotime($mailData['endTime']));?>.<br><br>
-
-        All material will be provided by the organisers for the workshop, all you need to do is show up.
+    <p>All material will be provided by the organisers for the workshop, all you need to do is show up.
         <?php
             if(isset($mailData['eveOfferCode']) && $mailData['eveOfferCode'] != '')
             {

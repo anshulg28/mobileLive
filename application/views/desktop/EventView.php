@@ -276,7 +276,7 @@
                             <p class="event-share-text text-center">
                                 Share "<?php echo htmlspecialchars($row['eventName']); ?>"
                             </p>
-                            <input type="hidden" data-name="<?php echo htmlspecialchars($row['eventName']);?>" id="shareLink" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];}?>"/>
+                            <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" id="shareLink" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];}?>"/>
                             <div id="share" class="my-social-share"></div>
                         </div>
                     </div>
@@ -301,19 +301,45 @@
     $(document).ready(function(){
         if(typeof $('#shareLink').val() != 'undefined')
         {
-            $('#share.my-social-share').jsSocials({
-                showLabel: true,
-                shareIn: "blank",
-                showCount: false,
-                text:$('#shareLink').attr('data-name'),
-                url: $('#shareLink').val(),
-                shares: [
-                    { share: "twitter", label: "Twitter" },
-                    { share: "facebook", label: "Facebook" }
-                ]
+            jsSocials.setDefaults("pinterest", {
+                media: $('#shareLink').attr('data-img'),
+                url: $('#shareLink').attr('data-pin-url')
             });
-            var shUrl = $('#shareLink').val();
-            $('#share.my-social-share .jssocials-shares').append('<i class="fa fa-link fa-15x copyToClip" data-url="'+shUrl+'"><span>Copy Link</span></i>');
+            if($(window).width() < mobileSize)
+            {
+                $('#share.my-social-share').jsSocials({
+                    showLabel: true,
+                    shareIn: "blank",
+                    showCount: false,
+                    text:$('#shareLink').attr('data-name'),
+                    url: $('#shareLink').val(),
+                    shares: [
+                        { share: "twitter", label: "Twitter" },
+                        { share: "facebook", label: "Facebook" },
+                        { share: "whatsapp", label: "Whatsapp" },
+                        { share: "pinterest", label: "Pin it"}
+                    ]
+                });
+                //var shUrl = $('#shareLink').val();
+                //$('#share.my-social-share .jssocials-shares').append('<i class="fa fa-link fa-15x copyToClip" data-url="'+shUrl+'"><span>Copy Link</span></i>');
+            }
+            else
+            {
+                $('#share.my-social-share').jsSocials({
+                    showLabel: true,
+                    shareIn: "blank",
+                    showCount: false,
+                    text:$('#shareLink').attr('data-name'),
+                    url: $('#shareLink').val(),
+                    shares: [
+                        { share: "twitter", label: "Twitter" },
+                        { share: "facebook", label: "Facebook" },
+                        { share: "pinterest", label: "Pin it"}
+                    ]
+                });
+                var shUrl = $('#shareLink').val();
+                $('#share.my-social-share .jssocials-shares').append('<i class="fa fa-link fa-15x copyToClip" data-url="'+shUrl+'"><span>Copy Link</span></i>');
+            }
         }
     });
 </script>

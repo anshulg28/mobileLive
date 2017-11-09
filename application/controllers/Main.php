@@ -147,227 +147,19 @@ class Main extends MY_Controller
                 }
             }
             $this->load->view('ForTwitterView', $data);
-        } //checking if device is mobile
-        elseif ($this->mobile_detect->isMobile()) {
-            $get = $this->input->get();
-
-            //EventsHigh Payment handle
-            if (isset($get['bookingid']) && isset($get['eid'])) {
-                if (isset($get['status']) && $get['status'] == 'success'
-                    && isset($get['userName']) && isset($get['userEmail']) && isset($get['userMobile'])
-                    && isset($get['nTickets'])
-                ) {
-                    $ehArray = array(
-                        'bookingid' => $get['bookingid'],
-                        'userName' => urldecode($get['userName']),
-                        'userEmail' => $get['userEmail'],
-                        'userMobile' => $get['userMobile'],
-                        'nTickets' => $get['nTickets']
-                    );
-                    $this->thankYou1($get['eid'], $ehArray);
-                }
-            }
-
-            if(isset($get['event']) && isStringSet($get['event']) && isset($get['hash']) && isStringSet($get['hash']))
-            {
-                if(hash_compare(encrypt_data('EV-'.$get['event']),$get['hash']))
-                {
-                    if(isset($get['status']) && $get['status'] == 'success' && isset($get['payment_id']))
-                    {
-                        $this->thankYou($get['event'],$get['payment_id']);
-                    }
-                }
-            }
-            if(isSessionVariableSet($this->instaMojoStatus) && $this->instaMojoStatus == '1')
-            {
-                $this->generalfunction_library->setSessionVariable('instaMojoStatus','0');
-                $this->instaMojoStatus = '0';
-                $data['MojoStatus'] = 1;
-            }
-            elseif(isSessionVariableSet($this->instaMojoStatus) && $this->instaMojoStatus == '2')
-            {
-                $this->generalfunction_library->setSessionVariable('instaMojoStatus','0');
-                $this->instaMojoStatus = '0';
-                $data['MojoStatus'] = 2;
-            }
-            else
-            {
-                $data['MojoStatus'] = 0;
-            }
-
-            //EventsHigh payment session
-            if (isSessionVariableSet($this->paymentStatus) && $this->paymentStatus == '1') {
-                $this->generalfunction_library->setSessionVariable('paymentStatus', '0');
-                $this->paymentStatus = '0';
-                $data['PaymentStatus'] = 1;
-            } elseif (isSessionVariableSet($this->paymentStatus) && $this->paymentStatus == '2') {
-                $this->generalfunction_library->setSessionVariable('paymentStatus', '0');
-                $this->paymentStatus = '0';
-                $data['PaymentStatus'] = 2;
-            } else {
-                $data['PaymentStatus'] = 0;
-            }
-
-            $data['mobileStyle'] = $this->dataformatinghtml_library->getMobileStyleHtml($data);
-            $data['mobileJs'] = $this->dataformatinghtml_library->getMobileJsHtml($data);
-
-            $myFeeds = $this->cron_model->getAllSortedFeeds();
-
-            if (isset($myFeeds) && myIsMultiArray($myFeeds)) {
-                $data['myFeeds'] = $myFeeds;// json_decode($myFeeds[0]['feedText'], true);
-            }
-
-            $data['fnbItems'] = $this->dashboard_model->getAllActiveFnB();
-
-            //$data['beerCount'] = $this->dashboard_model->getBeersCount();
-
-            $data['mainLocs'] = $this->locations_model->getAllLocations();
-
-            $data['weekEvents'] = $this->dashboard_model->getWeeklyEvents();
-
-            $events = $this->dashboard_model->getAllApprovedEvents();
-            usort($events,
-                function ($a, $b) {
-                    $ts_a = strtotime($a['eventDate']);
-                    $ts_b = strtotime($b['eventDate']);
-
-                    return $ts_a > $ts_b;
-                }
-            );
-
-            $data['eventDetails'] = $events;
-
-            if (isStringSet($_SERVER['QUERY_STRING'])) {
-                $query = explode('/', $_SERVER['QUERY_STRING']);
-                if (isset($query[1]) && $query[1] == 'events') {
-                    if (isset($query[2])) {
-                        if (strpos($query[2], 'EV-') != -1 && isset($query[3])) {
-                            $event = explode('-', $query[2]);
-                            $eventData = $this->dashboard_model->getFullEventInfoById($event[1]);
-                            if (!myIsArray($eventData)) {
-                                $eventData = $this->dashboard_model->getCompEventInfoBySlug($query[2]);
-                            }
-                            //$eventAtt = $this->dashboard_model->getEventAttById($event[1]);
-                            $data['meta']['title'] = $eventData[0]['eventName'];
-                            $d = date_create($eventData[0]['eventDate']);
-                            $st = date_create($eventData[0]['startTime']);
-                            $et = date_create($eventData[0]['endTime']);
-                            $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
-                            if ($eventData[0]['isEventEverywhere'] == '1') {
-                                $forDescription .= " @ All Taprooms";
-                            } else {
-                                $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
-                            }
-                            $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
-                            $data['meta']['description'] = $forDescription;
-                            $data['meta']['link'] = $eventData[0]['eventShareLink'];
-                            $imgLink = base_url() . EVENT_PATH_THUMB . $eventData[0]['filename'];
-                            if ($eventData[0]['hasShareImg'] == ACTIVE) {
-                                $shareImg = $this->dashboard_model->getShareImg($eventData[0]['eventId']);
-                                if (isset($shareImg) && myIsArray($shareImg)) {
-                                    $imgLink = base_url() . EVENT_PATH_THUMB . $shareImg['filename'];
-                                }
-                            }
-                            $data['meta']['img'] = $imgLink;
-                        }
-                        else
-                        {
-                            //$event = explode('-',$query[2]);
-                            $eventData = $this->dashboard_model->getFullEventInfoBySlug($query[2]);
-                            if(!myIsArray($eventData))
-                            {
-                                $eventData = $this->dashboard_model->getCompEventInfoBySlug($query[2]);
-                            }
-                            //$eventAtt = $this->dashboard_model->getEventAttById($event[1]);
-                            $data['meta']['title'] = $eventData[0]['eventName'];
-                            $d = date_create($eventData[0]['eventDate']);
-                            $st = date_create($eventData[0]['startTime']);
-                            $et = date_create($eventData[0]['endTime']);
-                            $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
-                            if ($eventData[0]['isEventEverywhere'] == '1') {
-                                $forDescription .= " @ All Taprooms";
-                            } else {
-                                $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
-                            }
-                            $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
-                            $data['meta']['description'] = $forDescription;
-                            $data['meta']['link'] = $eventData[0]['eventShareLink'];
-                            $imgLink = base_url() . EVENT_PATH_THUMB . $eventData[0]['filename'];
-                            if ($eventData[0]['hasShareImg'] == ACTIVE) {
-                                $shareImg = $this->dashboard_model->getShareImg($eventData[0]['eventId']);
-                                if (isset($shareImg) && myIsArray($shareImg)) {
-                                    $imgLink = base_url() . EVENT_PATH_THUMB . $shareImg['filename'];
-                                }
-                            }
-                            $data['meta']['img'] = $imgLink;
-                        }
-                    } else {
-                        $metaTags = $this->dashboard_model->getRecentMeta();
-                        if (isset($metaTags) && myIsArray($metaTags)) {
-                            $data['meta1']['title'] = $metaTags['metaTitle'];
-                            $data['meta1']['description'] = $metaTags['metaDescription'];
-                            $data['meta1']['img'] = base_url() . 'asset/images/thumb/' . $metaTags['metaImg'];
-                        } else {
-                            $data['meta1']['title'] = 'Ways to kill your time';
-                            $data['meta1']['description'] = "Browse through the fun stuff that's going down at our taprooms.";
-                            $data['meta1']['img'] = base_url() . 'asset/images/thumb/doolally-app-icon.png';
-                        }
-                        $data['meta1']['link'] = base_url();
-                    }
-                }
-                elseif (isset($query[1]) && $query[1] == 'fnbshare')
-                {
-                    if (isset($query[2])) {
-                        $fnb = explode('-', $query[2]);
-                        $fnbData = $this->dashboard_model->getFnBById($fnb[1]);
-                        $fnbAtt = $this->dashboard_model->getFnbAttById($fnb[1]);
-                        $data['fnbShareId'] = $fnbData[0]['fnbId'];
-                        $data['meta']['title'] = $fnbData[0]['itemName'];
-                        if (isset($fnbData[0]['itemHeadline'])) {
-                            $truncated_RestaurantName = $fnbData[0]['itemHeadline'];
-                        } else {
-                            $truncated_RestaurantName = $fnbData[0]['itemDescription'];
-                        }
-                        $data['meta']['description'] = $truncated_RestaurantName;
-                        $data['meta']['link'] = base_url() . '?page/fnbshare/fnb-' . $fnbData[0]['fnbId'];
-                        if ($fnbData[0]['itemType'] == '1') {
-                            $data['meta']['img'] = base_url() . FOOD_PATH_THUMB . $fnbAtt[0]['filename'];
-                        } else {
-                            $data['meta']['img'] = base_url() . BEVERAGE_PATH_NORMAL . $fnbAtt[0]['filename'];
-                        }
-
-                    }
-                }
-                elseif($query[1] == 'filter_events')
-                {
-                    if(isset($query[2]) && isStringSet(trim($query[2])))
-                    {
-                        $orgData = $this->dashboard_model->filterByOrgName(urldecode(strtolower($query[2])));
-                        if(isset($orgData) && myIsArray($orgData))
-                        {
-                            $data['meta1']['title'] = 'Kitten and Puppy Adoption Drive';
-                            $data['meta1']['description'] = 'Kitten and Puppy Adoption Drive By '.$orgData['creatorName'];
-                            $data['meta1']['img'] = base_url() . ORGANISOR_AVATAR_PATH.$orgData['creatorAvatar'];
-                        }
-                    }
-                }
-            }
-
-            $data['currentUrl'] = $_SERVER['REQUEST_URI'];
-            $data['iosStyle'] = $this->dataformatinghtml_library->getIosStyleHtml($data);
-            $data['iosJs'] = $this->dataformatinghtml_library->getIosJsHtml($data);
-            $this->load->view('MobileHomeView', $data);
         }
+        //checking if device is mobile
         else
         {
             $get = $this->input->get();
 
             //EventsHigh Payment handle
-            if (isset($get['bookingid']) && isset($get['eid'])) {
-                if (isset($get['status']) && $get['status'] == 'success'
-                    && isset($get['userName']) && isset($get['userEmail']) && isset($get['userMobile'])
-                    && isset($get['nTickets'])
-                ) {
+            if(isset($get['bookingid']) && isset($get['eid']))
+            {
+                if(isset($get['status']) && $get['status'] == 'success'
+                && isset($get['userName']) && isset($get['userEmail']) && isset($get['userMobile'])
+                && isset($get['nTickets']))
+                {
                     $ehArray = array(
                         'bookingid' => $get['bookingid'],
                         'userName' => urldecode($get['userName']),
@@ -417,20 +209,24 @@ class Main extends MY_Controller
             } else {
                 $data['PaymentStatus'] = 0;
             }
-            if (isStringSet($_SERVER['QUERY_STRING'])) {
-                $query = explode('/', $_SERVER['QUERY_STRING']);
+            if(isStringSet($_SERVER['QUERY_STRING']))
+            {
+                $query = explode('/',$_SERVER['QUERY_STRING']);
 
-                if (isset($query[1])) {
+                if(isset($query[1]))
+                {
                     $data['pageName'] = $query[1];
-                    $data['pageUrl'] = explode('?page/', $_SERVER['REQUEST_URI'])[1];
-                    if ($query[1] == 'events') {
-                        if (isset($query[2]) && isStringSet($query[2]))
+                    $data['pageUrl'] = explode('?page/',$_SERVER['REQUEST_URI'])[1];
+                    if($query[1] == 'events')
+                    {
+                        if(isset($query[2]) && isStringSet($query[2]))
                         {
-                            if (strpos($query[2], 'EV-') != -1 && isset($query[3]))
+                            if(strpos($query[2],'EV-') != -1 && isset($query[3]))
                             {
-                                $event = explode('-', $query[2]);
+                                $event = explode('-',$query[2]);
                                 $eventData = $this->dashboard_model->getFullEventInfoById($event[1]);
-                                if (!myIsArray($eventData)) {
+                                if(!myIsArray($eventData))
+                                {
                                     $eventData = $this->dashboard_model->getCompEventInfoById($event[1]);
                                 }
                                 //$eventAtt = $this->dashboard_model->getEventAttById($event[1]);
@@ -491,40 +287,54 @@ class Main extends MY_Controller
                         else
                         {
                             $metaTags = $this->dashboard_model->getRecentMeta();
-                            if (isset($metaTags) && myIsArray($metaTags)) {
+                            if(isset($metaTags) && myIsArray($metaTags))
+                            {
                                 $data['meta1']['title'] = $metaTags['metaTitle'];
                                 $data['meta1']['description'] = $metaTags['metaDescription'];
-                                $data['meta1']['img'] = base_url() . 'asset/images/thumb/' . $metaTags['metaImg'];
-                            } else {
+                                $data['meta1']['img'] = base_url().'asset/images/thumb/'.$metaTags['metaImg'];
+                            }
+                            else
+                            {
                                 $data['meta1']['title'] = 'Ways to kill your time';
                                 $data['meta1']['description'] = "Browse through the fun stuff that's going down at our taprooms.";
-                                $data['meta1']['img'] = base_url() . 'asset/images/thumb/doolally-app-icon.png';
+                                $data['meta1']['img'] = base_url().'asset/images/thumb/doolally-app-icon.png';
                             }
                             $data['meta1']['link'] = base_url();
                         }
                     }
-                    elseif ($query[1] == 'fnbshare')
+                    elseif($query[1] == 'fnbshare')
                     {
-                        if (isset($query[2])) {
-                            $fnb = explode('-', $query[2]);
+                        if(isset($query[2]))
+                        {
+                            $fnb = explode('-',$query[2]);
                             $fnbData = $this->dashboard_model->getFnBById($fnb[1]);
                             $fnbAtt = $this->dashboard_model->getFnbAttById($fnb[1]);
-                            if (myIsMultiArray($fnbData)) {
+                            if(myIsMultiArray($fnbData))
+                            {
                                 $data['meta']['title'] = $fnbData[0]['itemName'];
-                                if (isset($fnbData[0]['itemHeadline'])) {
+                                if(isset($fnbData[0]['itemHeadline']))
+                                {
                                     $truncated_RestaurantName = $fnbData[0]['itemHeadline'];
-                                } else {
+                                }
+                                else
+                                {
                                     $truncated_RestaurantName = $fnbData[0]['itemDescription'];
                                 }
                                 $data['meta']['description'] = $truncated_RestaurantName;
-                                $data['meta']['link'] = base_url() . '?page/fnbshare/fnb-' . $fnbData[0]['fnbId'];
-                                if (isset($fnbAtt) && myIsArray($fnbAtt)) {
-                                    if ($fnbData[0]['itemType'] == '1') {
-                                        $data['meta']['img'] = base_url() . FOOD_PATH_THUMB . $fnbAtt[0]['filename'];
-                                    } else {
-                                        $data['meta']['img'] = base_url() . BEVERAGE_PATH_NORMAL . $fnbAtt[0]['filename'];
+                                $data['meta']['link'] = base_url().'?page/fnbshare/fnb-'.$fnbData[0]['fnbId'];
+                                if(isset($fnbAtt) && myIsArray($fnbAtt))
+                                {
+                                    if($fnbData[0]['itemType'] == '1')
+                                    {
+                                        $data['meta']['img'] = base_url().FOOD_PATH_THUMB.$fnbAtt[0]['filename'];
                                     }
-                                } else {
+                                    else
+                                    {
+                                        $data['meta']['img'] = base_url().BEVERAGE_PATH_NORMAL.$fnbAtt[0]['filename'];
+                                    }
+                                }
+                                else
+                                {
                                     $data['meta']['img'] = '';
                                 }
                             }
@@ -560,9 +370,9 @@ class Main extends MY_Controller
 
             $this->load->view('ComingSoonView', $data);
             return true;*/
-
             $myFeeds = $this->cron_model->getAllSortedFeeds();
-            if (isset($myFeeds) && myIsMultiArray($myFeeds)) {
+            if(isset($myFeeds) && myIsMultiArray($myFeeds))
+            {
                 $data['myFeeds'] = $myFeeds; //json_decode($myFeeds[0]['feedText'], true);
             }
 
@@ -573,10 +383,9 @@ class Main extends MY_Controller
             $data['mainLocs'] = $this->locations_model->getAllLocations();
 
             //$data['weekEvents'] = $this->dashboard_model->getWeeklyEvents();
-
             $events = $this->dashboard_model->getAllApprovedEvents();
             usort($events,
-                function ($a, $b) {
+                function($a, $b) {
                     $ts_a = strtotime($a['eventDate']);
                     $ts_b = strtotime($b['eventDate']);
 
@@ -592,11 +401,222 @@ class Main extends MY_Controller
             $data['leftSideCal'] = $this->dataformatinghtml_library->getWeeklyCalHtml($data);
             $data['rightSideFnb'] = $this->dataformatinghtml_library->getFnbSideHtml($data);
             $data['deskHeader'] = $this->dataformatinghtml_library->getDeskHeaderHtml($data);
+            $data['deskFooter'] = $this->dataformatinghtml_library->getDeskFooterHtml();
 
             $this->load->view('desktop/DesktopHomeView', $data);
         }
-    }
+	}
 
+    /*elseif ($this->mobile_detect->isMobile())
+{
+$get = $this->input->get();
+
+    //EventsHigh Payment handle
+if(isset($get['bookingid']) && isset($get['eid']))
+{
+if(isset($get['status']) && $get['status'] == 'success'
+&& isset($get['userName']) && isset($get['userEmail']) && isset($get['userMobile'])
+&& isset($get['nTickets']))
+{
+$ehArray = array(
+'bookingid' => $get['bookingid'],
+'userName' => urldecode($get['userName']),
+'userEmail' => $get['userEmail'],
+'userMobile' => $get['userMobile'],
+'nTickets' => $get['nTickets']
+);
+$this->thankYou1($get['eid'],$ehArray);
+}
+}
+
+if(isset($get['event']) && isStringSet($get['event']) && isset($get['hash']) && isStringSet($get['hash']))
+{
+    if(hash_compare(encrypt_data('EV-'.$get['event']),$get['hash']))
+    {
+        if(isset($get['status']) && $get['status'] == 'success' && isset($get['payment_id']))
+        {
+            $this->thankYou($get['event'],$get['payment_id']);
+        }
+    }
+}
+if(isSessionVariableSet($this->instaMojoStatus) && $this->instaMojoStatus == '1')
+{
+    $this->generalfunction_library->setSessionVariable('instaMojoStatus','0');
+    $this->instaMojoStatus = '0';
+    $data['MojoStatus'] = 1;
+}
+elseif(isSessionVariableSet($this->instaMojoStatus) && $this->instaMojoStatus == '2')
+{
+    $this->generalfunction_library->setSessionVariable('instaMojoStatus','0');
+    $this->instaMojoStatus = '0';
+    $data['MojoStatus'] = 2;
+}
+else
+{
+    $data['MojoStatus'] = 0;
+}
+
+//EventsHigh payment session
+if(isSessionVariableSet($this->paymentStatus) && $this->paymentStatus == '1')
+{
+    $this->generalfunction_library->setSessionVariable('paymentStatus','0');
+    $this->paymentStatus = '0';
+    $data['PaymentStatus'] = 1;
+}
+elseif(isSessionVariableSet($this->paymentStatus) && $this->paymentStatus == '2')
+{
+    $this->generalfunction_library->setSessionVariable('paymentStatus','0');
+    $this->paymentStatus = '0';
+    $data['PaymentStatus'] = 2;
+}
+else
+{
+    $data['PaymentStatus'] = 0;
+}
+
+$data['mobileStyle'] = $this->dataformatinghtml_library->getMobileStyleHtml($data);
+$data['mobileJs'] = $this->dataformatinghtml_library->getMobileJsHtml($data);
+
+$myFeeds = $this->cron_model->getAllSortedFeeds();
+
+if(isset($myFeeds) && myIsMultiArray($myFeeds))
+{
+    $data['myFeeds'] = $myFeeds;// json_decode($myFeeds[0]['feedText'], true);
+}
+
+$data['fnbItems'] = $this->dashboard_model->getAllActiveFnB();
+
+//$data['beerCount'] = $this->dashboard_model->getBeersCount();
+
+$data['mainLocs'] = $this->locations_model->getAllLocations();
+
+$data['weekEvents'] = $this->dashboard_model->getWeeklyEvents();
+
+$events = $this->dashboard_model->getAllApprovedEvents();
+usort($events,
+    function($a, $b) {
+        $ts_a = strtotime($a['eventDate']);
+        $ts_b = strtotime($b['eventDate']);
+
+        return $ts_a > $ts_b;
+    }
+);
+
+$data['eventDetails'] = $events;
+
+if(isStringSet($_SERVER['QUERY_STRING']))
+{
+    $query = explode('/',$_SERVER['QUERY_STRING']);
+    if(isset($query[1]) && $query[1] == 'events')
+    {
+        if(isset($query[2]))
+        {
+            if(strpos($query[2],'EV-') != -1 && isset($query[3]))
+            {
+                $event = explode('-',$query[2]);
+                $eventData = $this->dashboard_model->getFullEventInfoById($event[1]);
+                //$eventAtt = $this->dashboard_model->getEventAttById($event[1]);
+                $data['meta']['title'] = $eventData[0]['eventName'];
+                $d = date_create($eventData[0]['eventDate']);
+                $st = date_create($eventData[0]['startTime']);
+                $et = date_create($eventData[0]['endTime']);
+                $forDescription = date_format($d,DATE_FORMAT_SHARE).", ".date_format($st,'g:ia');
+                $forDescription .= " @ ".$eventData[0]['locName']." Taproom";
+                $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
+                $data['meta']['description'] = $forDescription;
+                $data['meta']['link'] = $eventData[0]['eventShareLink'];
+                $imgLink = base_url().EVENT_PATH_THUMB.$eventData[0]['filename'];
+                if($eventData[0]['hasShareImg'] == ACTIVE)
+                {
+                    $shareImg = $this->dashboard_model->getShareImg($eventData[0]['eventId']);
+                    if(isset($shareImg) && myIsArray($shareImg))
+                    {
+                        $imgLink = base_url().EVENT_PATH_THUMB.$shareImg['filename'];
+                    }
+                }
+                $data['meta']['img'] = $imgLink;
+            }
+            else
+            {
+                //$event = explode('-',$query[2]);
+                $eventData = $this->dashboard_model->getFullEventInfoBySlug($query[2]);
+                //$eventAtt = $this->dashboard_model->getEventAttById($event[1]);
+                $data['meta']['title'] = $eventData[0]['eventName'];
+                $d = date_create($eventData[0]['eventDate']);
+                $st = date_create($eventData[0]['startTime']);
+                $et = date_create($eventData[0]['endTime']);
+                $forDescription = date_format($d,DATE_FORMAT_SHARE).", ".date_format($st,'g:ia');
+                $forDescription .= " @ ".$eventData[0]['locName']." Taproom";
+                $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
+                $data['meta']['description'] = $forDescription;
+                $data['meta']['link'] = $eventData[0]['eventShareLink'];
+                $imgLink = base_url().EVENT_PATH_THUMB.$eventData[0]['filename'];
+                if($eventData[0]['hasShareImg'] == ACTIVE)
+                {
+                    $shareImg = $this->dashboard_model->getShareImg($eventData[0]['eventId']);
+                    if(isset($shareImg) && myIsArray($shareImg))
+                    {
+                        $imgLink = base_url().EVENT_PATH_THUMB.$shareImg['filename'];
+                    }
+                }
+                $data['meta']['img'] = $imgLink;
+            }
+        }
+        else
+        {
+            $metaTags = $this->dashboard_model->getRecentMeta();
+            if(isset($metaTags) && myIsArray($metaTags))
+            {
+                $data['meta1']['title'] = $metaTags['metaTitle'];
+                $data['meta1']['description'] = $metaTags['metaDescription'];
+                $data['meta1']['img'] = base_url().'asset/images/thumb/'.$metaTags['metaImg'];
+            }
+            else
+            {
+                $data['meta1']['title'] = 'Ways to kill your time';
+                $data['meta1']['description'] = "Browse through the fun stuff that's going down at our taprooms.";
+                $data['meta1']['img'] = base_url().'asset/images/thumb/doolally-app-icon.png';
+            }
+            $data['meta1']['link'] = base_url();
+        }
+    }
+    elseif(isset($query[1]) && $query[1] == 'fnbshare')
+    {
+        if(isset($query[2]))
+        {
+            $fnb = explode('-',$query[2]);
+            $fnbData = $this->dashboard_model->getFnBById($fnb[1]);
+            $fnbAtt = $this->dashboard_model->getFnbAttById($fnb[1]);
+            $data['fnbShareId'] = $fnbData[0]['fnbId'];
+            $data['meta']['title'] = $fnbData[0]['itemName'];
+            if(isset($fnbData[0]['itemHeadline']))
+            {
+                $truncated_RestaurantName = $fnbData[0]['itemHeadline'];
+            }
+            else
+            {
+                $truncated_RestaurantName = $fnbData[0]['itemDescription'];
+            }
+            $data['meta']['description'] = $truncated_RestaurantName;
+            $data['meta']['link'] = base_url().'?page/fnbshare/fnb-'.$fnbData[0]['fnbId'];
+            if($fnbData[0]['itemType'] == '1')
+            {
+                $data['meta']['img'] = base_url().FOOD_PATH_THUMB.$fnbAtt[0]['filename'];
+            }
+            else
+            {
+                $data['meta']['img'] = base_url().BEVERAGE_PATH_NORMAL.$fnbAtt[0]['filename'];
+            }
+
+        }
+    }
+}
+
+$data['currentUrl'] = $_SERVER['REQUEST_URI'];
+$data['iosStyle'] = $this->dataformatinghtml_library->getIosStyleHtml($data);
+$data['iosJs'] = $this->dataformatinghtml_library->getIosJsHtml($data);
+$this->load->view('MobileHomeView', $data);
+}*/
     public function about()
     {
         $data = array();
@@ -853,16 +873,22 @@ class Main extends MY_Controller
                     }
                 }
 
-                $actualRefundAmt = ((int)$cancelInfo['eventPrice'] * (int)$cancelInfo['quantity']);
+                $priceToUse = (int)$cancelInfo['eventPrice'];
+                if(isset($cancelInfo['regPrice']))
+                {
+                    $priceToUse = (int)$cancelInfo['regPrice'];
+                }
+
+                $actualRefundAmt = ((int)$priceToUse * (int)$cancelInfo['quantity']);
                 if($cancelInfo['isDirectlyRegistered'] == '1') //Doolally signup
                 {
-                    $totalPrice = (int)((int)$cancelInfo['eventPrice'] * (int)$cancelInfo['quantity']);
+                    $totalPrice = (int)((int)$priceToUse * (int)$cancelInfo['quantity']);
                     $commision = ((float)DOOLALLY_GATEWAY_CHARGE / 100) * (int)$totalPrice;
                     $actualRefundAmt = (($totalPrice - $commision) - $couponAmt);
                 }
                 else // EventsHigh Signup
                 {
-                    $totalPrice = ((int)$cancelInfo['eventPrice'] * (int)$cancelInfo['quantity']);
+                    $totalPrice = ((int)$priceToUse * (int)$cancelInfo['quantity']);
                     $commision = ((float)EH_GATEWAY_CHARGE / 100) * (int)$totalPrice;
                     $actualRefundAmt = (($totalPrice - $commision) - $couponAmt);
                 }
@@ -1066,40 +1092,55 @@ class Main extends MY_Controller
             }
             $comDetails = $this->dashboard_model->getCommDetails($events[0]['eventPlace']);
             $data['commDetails'] = $comDetails;
-            /*$shortDWName = $this->googleurlapi->shorten($events[0]['eventShareLink']);
-            if($shortDWName !== false)
-            {
-                $events[0]['eventShareLink'] = $shortDWName;
-            }*/
+
             $data['meta']['title'] = $events[0]['eventName'];
             $data['eventDetails'] = $events;
 
-            //}
-            /*else
+            //Getting previous cancel events
+            $prevEvents = $this->dashboard_model->getPreviousCancelEventsByUser($this->userMobId);
+            if(isset($prevEvents) && myIsArray($prevEvents))
             {
-                $pgError = $this->load->view('mobile/ios/EventView', $data);
-                echo json_encode($pgError);
-            }*/
-            /*$eventHighRecord = $this->dashboard_model->getEventHighRecord($events[0]['eventId']);
-            if (isset($eventHighRecord) && myIsArray($eventHighRecord)) {
-                $EHAtendees = $this->curl_library->attendeeEventsHigh($eventHighRecord['highId']);
-                if (isset($EHAtendees) && myIsArray($EHAtendees)) {
-                    $data['EHData'] = $EHAtendees;
-                    $data['EHTotal'] = array_sum(array_map(function ($foo) {
-                        return $foo['numTickets'];
-                    }, $EHAtendees));
+                $totCharges = 0;
+                foreach($prevEvents as $key => $row)
+                {
+                    if($row['isDirectlyRegistered'] == '1')
+                    {
+                        if(isset($row['regPrice']))
+                        {
+                            $netcharge = ((float)DOOLALLY_GATEWAY_CHARGE / 100) * (int)$row['regPrice'];
+                        }
+                        else
+                        {
+                            $netcharge = ((float)DOOLALLY_GATEWAY_CHARGE / 100) * (int)$row['eventPrice'];
+                        }
+                    }
+                    else
+                    {
+                        if(isset($row['regPrice']))
+                        {
+                            $netcharge = ((float)EH_GATEWAY_CHARGE / 100) * (int)$row['regPrice'];
+                        }
+                        else
+                        {
+                            $netcharge = ((float)EH_GATEWAY_CHARGE / 100) * (int)$row['eventPrice'];
+                        }
+                    }
+                    $totCharges += (int)$row['quantity'] * $netcharge;
                 }
-            }*/
+                $data['prevCharges'] = $totCharges;
+            }
         }
 
         if (isset($post['isAjax']) && $post['isAjax'] == '1') {
-            $eventAtt = $this->dashboard_model->getEventAttById($events[0]['eventId']);
-            if (isset($eventAtt) && myIsArray($eventAtt))
+            if (isSessionVariableSet($this->isMobUserSession) === TRUE)
             {
-                $data['eventDetails'][0]['filename'] = $eventAtt[0]['filename'];
+                $eventAtt = $this->dashboard_model->getEventAttById($events[0]['eventId']);
+                if (isset($eventAtt) && myIsArray($eventAtt))
+                {
+                    $data['eventDetails'][0]['filename'] = $eventAtt[0]['filename'];
+                }
+                $data['signupList'] =  $this->dashboard_model->getAllEventSignups($eventSlug);
             }
-            $data['EhSignupList'] = $this->dashboard_model->fetchEhSignupList($eventSlug);
-            $data['DoolallySignupList'] = $this->dashboard_model->fetchDoolallySignupList($eventSlug);
             $aboutView = $this->load->view('desktop/EventSingleView', $data);
         } else {
             $aboutView = $this->load->view('EventSingleView', $data);
@@ -1166,6 +1207,7 @@ class Main extends MY_Controller
             if (isset($mojoDetails) && myIsMultiArray($mojoDetails) && isset($mojoDetails['payment'])) {
                 $mojoNumber = $this->clearMobNumber($mojoDetails['payment']['buyer_phone']);
                 $userStatus = $this->checkPublicUser($mojoDetails['payment']['buyer_email'], $mojoNumber);
+                $eventData = $this->dashboard_model->getEventById($eventId);
                 $isSavedAlready = false;
                 if ($userStatus['status'] === FALSE) {
                     $userId = $userStatus['userData']['userId'];
@@ -1183,7 +1225,7 @@ class Main extends MY_Controller
                             );
                             $this->users_model->updatePublicUser($detail);
                         }
-                        $eventData = $this->dashboard_model->getEventById($eventId);
+                        //$eventData = $this->dashboard_model->getEventById($eventId);
                         $mailData = array(
                             'creatorName' => $mojoDetails['payment']['buyer_name'],
                             'creatorEmail' => $mojoDetails['payment']['buyer_email'],
@@ -1233,7 +1275,7 @@ class Main extends MY_Controller
                     $userId = $this->users_model->savePublicUser($user);
                     $checkUserAlreadyReg = $this->dashboard_model->checkUserBookedWithMojo($userId, $eventId, $mojoId);
                     if ($checkUserAlreadyReg['status'] === false) {
-                        $eventData = $this->dashboard_model->getEventById($eventId);
+                        //$eventData = $this->dashboard_model->getEventById($eventId);
                         $mailData = array(
                             'creatorName' => $mojoDetails['payment']['buyer_name'],
                             'creatorEmail' => $mojoDetails['payment']['buyer_email'],
@@ -1265,7 +1307,8 @@ class Main extends MY_Controller
                         'bookerUserId' => $userId,
                         'eventId' => $eventId,
                         'quantity' => $mojoDetails['payment']['quantity'],
-                        'paymentId' => $mojoId
+                        'paymentId' => $mojoId,
+                        'regPrice' => $eventData[0]['eventPrice']
                     );
 
                     $this->dashboard_model->saveEventRegis($requiredInfo);
@@ -1319,10 +1362,10 @@ class Main extends MY_Controller
             $userId = '';
 
             $requiredInfo = array();
-
             $ehDetails = $this->dashboard_model->getEventInfoByEhId($eventId);
             if (isset($ehDetails) && myIsMultiArray($ehDetails))
             {
+                $eventData = $this->dashboard_model->getEventById($ehDetails['eventId']);
                 $mojoNumber = $this->clearMobNumber($ehArray['userMobile']);
                 $userStatus = $this->checkPublicUser($ehArray['userEmail'], $mojoNumber);
                 $isSavedAlready = false;
@@ -1454,6 +1497,7 @@ class Main extends MY_Controller
                         'eventId' => $ehDetails['eventId'],
                         'quantity' => $ehArray['nTickets'],
                         'paymentId' => $ehArray['bookingid'],
+                        'regPrice' => $eventData[0]['eventPrice'],
                         'isDirectlyRegistered' => $isDirect
                     );
 
@@ -2505,6 +2549,7 @@ class Main extends MY_Controller
         {
             $eventInfo = $this->dashboard_model->getFullEventInfoById($post['eventId']);
             $this->sendemail_library->eventCancelMail($eventInfo);
+            $this->sendemail_library->eventCancelUserMail($eventInfo);
             $data['status'] = true;
             echo json_encode($data);
         }
@@ -3005,6 +3050,7 @@ class Main extends MY_Controller
             );
 
             $data['eventDetails'] = $events;
+            $data['weekEvents'] = $this->dashboard_model->getWeeklyEvents();
             $aboutView = $this->load->view('desktop/EventsPageView', $data);
             echo json_encode($aboutView);
         }
@@ -3086,5 +3132,68 @@ class Main extends MY_Controller
             'eventPrice' => $eventData[0]['eventPrice']
         );
         $this->sendemail_library->eventRegSuccessMail($mailData, $eventData[0]['eventPlace']);
+    }
+    public function remindEventUser()
+    {
+        $post = $this->input->post();
+        $data = array();
+
+        if(!isset($post['emailId']) && !isset($post['eventId']))
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'No Email Id Or Unknown Event!';
+            echo json_encode($data);
+            return false;
+        }
+
+        $checkReminder = $this->dashboard_model->checkEventReminder($post['eventId'],$post['emailId']);
+        if(isset($checkReminder) && myIsArray($checkReminder))
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'You\'ve already signed up for this reminder';
+            echo json_encode($data);
+            return false;
+        }
+
+        $eventInfo = $this->dashboard_model->getEventById($post['eventId']);
+        $eventInfo = $eventInfo[0];
+        if(isset($eventInfo) && myIsArray($eventInfo))
+        {
+            if($eventInfo['isRegFull'] == '1')
+            {
+                $data['status'] = false;
+                $data['errorMsg'] = 'Event Registration is Full!';
+                echo json_encode($data);
+            }
+            else
+            {
+                $date1 = date($eventInfo['eventDate'].' '.$eventInfo['startTime']);
+                if(strtotime($date1) >= strtotime('24 hours'))
+                {
+                    //subscribe
+                    $details = array(
+                        'eventId' => $post['eventId'],
+                        'emailId' => $post['emailId'],
+                        'hasSent' => 0,
+                        'insertedDT' => date('Y-m-d H:i:s')
+                    );
+                    $this->dashboard_model->saveEventreminder($details);
+                    $data['status'] = true;
+                    echo json_encode($data);
+                }
+                else
+                {
+                    $data['status'] = false;
+                    $data['errorMsg'] = 'Since the event is less than 24 hours away, we can\'t send you a reminder. We suggest you book your spot now.';
+                    echo json_encode($data);
+                }
+            }
+        }
+        else
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = 'Event Not Found!';
+            echo json_encode($data);
+        }
     }
 }

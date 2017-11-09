@@ -336,7 +336,7 @@ class curl_library
 
         return $this->getDataByPost($url,$details,0);
     }
-    
+
     //EventsHigh Disable Event
     public function disableEventsHigh($eventsHighId)
     {

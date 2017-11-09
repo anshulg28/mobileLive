@@ -57,7 +57,7 @@ class Cron_Model extends CI_Model
     public function getAllSortedFeeds()
     {
         $query = "SELECT feedText "
-            ."FROM socialviewmaster";
+            ."FROM socialviewmaster order by updateDateTime desc";
 
         $result = $this->db->query($query)->result_array();
 
@@ -66,7 +66,7 @@ class Cron_Model extends CI_Model
 
     public function getTopFeedCount()
     {
-        $query = "SELECT postsCount FROM socialfeedmaster
+        $query = "SELECT postsCount,feedText FROM socialfeedmaster
                   WHERE feedType =0
                   ORDER BY updateDateTime DESC LIMIT 0 , 1";
         $result = $this->db->query($query)->row_array();
@@ -78,16 +78,23 @@ class Cron_Model extends CI_Model
     {
         if($count == 0)
         {
-            $query = "SELECT feedText FROM socialfeedmaster
+            $query = "SELECT postsCount, feedText FROM socialfeedmaster
                   WHERE feedType = 0 ORDER BY updateDateTime DESC LIMIT ".$count.",".($count+1);
         }
         else
         {
-            $query = "SELECT feedText FROM socialfeedmaster
+            $query = "SELECT postsCount, feedText FROM socialfeedmaster
                   WHERE feedType = 0 ORDER BY updateDateTime DESC LIMIT ".$count.",".$count;
         }
         $result = $this->db->query($query)->row_array();
 
+        return $result;
+    }
+
+    function getTempFeeds()
+    {
+        $query = "SELECT * FROM socialviewtempmaster";
+        $result = $this->db->query($query)->result_array();
         return $result;
     }
 
@@ -265,6 +272,13 @@ class Cron_Model extends CI_Model
         $query = "SELECT empId,firstName,middleName,lastName,walletBalance, mobNum, insertedDT,
                     CASE ifActive WHEN 1 THEN 'Active' ELSE 'Not Active' END AS 'status'
                     FROM `staffmaster` WHERE ifActive = 1 AND (NOT empId LIKE '%GUEST%') ";
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function getAllReminders()
+    {
+        $query = "SELECT * FROM eventremindermaster WHERE hasSent = 0";
+
         $result = $this->db->query($query)->result_array();
         return $result;
     }

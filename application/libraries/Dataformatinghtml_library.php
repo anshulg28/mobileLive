@@ -118,5 +118,11 @@ class Dataformatinghtml_library
         $htmlPage = $this->CI->load->view('desktop/DeskHeaderView', $data, true);
         return $htmlPage;
     }
+    public function getDeskFooterHtml()
+    {
+        $data = array();
+        $htmlPage = $this->CI->load->view('desktop/DeskFooterView', $data, true);
+        return $htmlPage;
+    }
 }
 /* End of file */

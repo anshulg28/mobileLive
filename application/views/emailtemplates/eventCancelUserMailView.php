@@ -8,12 +8,10 @@
 <body>
     <p>Dear <?php echo trim($mailData[0]['creatorName'])?>,</p>
     <p>
-        We will send your cancellation request to the venue's Community Manager.
-        The final call on cancelling the event will be decided by the Community Manager.
-        Once cancelled, all the fees collected will be refunded to the attendees.<br><br>
+        Your request for cancellation is being reviewed. Please give us a couple of hours.<br><br>
 
         Thanks,<br>
-        <?php echo ucfirst($mailData['senderName']); ?>
+        <?php echo ucfirst($commName); ?>, Doolally
     </p>
 
 </body>

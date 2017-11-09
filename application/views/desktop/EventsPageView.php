@@ -7,6 +7,27 @@
         <?php
     }
 ?>
+<?php
+if(isset($weekEvents) && myIsMultiArray($weekEvents))
+{
+    ?>
+    <ul class="hide even-cal-list">
+        <?php
+        foreach($weekEvents as $key => $row)
+        {
+            ?>
+            <li data-evenDate="<?php echo $row['eventDate'];?>"
+                data-evenNames="<?php echo $row['eventNames'];?>"
+                data-evenEndTimes="<?php echo $row['eventEndTimes'];?>"
+                data-evenPlaces="<?php echo $row['eventPlaces'];?>">
+            </li>
+            <?php
+        }
+        ?>
+    </ul>
+    <?php
+}
+?>
 <div class="mdl-shadow--2dp event-creator-box">
     <div class="mdl-grid">
         <div class="mdl-cell--8-col">
@@ -22,14 +43,16 @@
         </div>
     </div>
 </div>
-<div class="event-section">
+<div class="content-for-mobile"></div>
+<div class="event-section" id="desk-event-section">
+    <div class="no-search-result hide">No Events Found</div>
     <?php
     if(isset($eventDetails) && myIsMultiArray($eventDetails))
     {
         $postImg = 0;
         foreach($eventDetails as $key => $row)
         {
-            if(isEventFinished($row['eventDate'], $row['endTime']))
+            if(isEventStarted($row['eventDate'], $row['startTime']))
             {
                 continue;
             }
@@ -52,28 +75,29 @@
                 }
             }
             ?>" data-eveTitle="<?php echo htmlspecialchars($row['eventName']);?>" data-orgName="<?php echo addslashes($row['creatorName']);?>">
-                <?php
-                if($postImg <=2)
-                {
-                    ?>
-                    <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
-                        <img itemprop="image" src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
-                    </a>
-                    <?php
-                }
-                else
-                {
-                    ?>
-                    <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
-                        <img itemprop="image" data-src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img lazy"/>
-                    </a>
-                    <?php
-                }
-                $postImg++;
-                ?>
+
                 <!--<div style="background-image:url()" valign="bottom" class="card-header color-white no-border">Journey To Mountains</div>-->
                 <div class="card-content">
                     <div class="card-content-inner">
+                        <?php
+                        if($postImg <=2)
+                        {
+                            ?>
+                            <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
+                                <img itemprop="image" src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
+                            </a>
+                            <?php
+                        }
+                        else
+                        {
+                            ?>
+                            <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
+                                <img itemprop="image" data-src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img lazy"/>
+                            </a>
+                            <?php
+                        }
+                        $postImg++;
+                        ?>
                         <ul class="mdl-list main-avatar-list">
                             <li class="mdl-list__item mdl-list__item--two-line">
                                                         <span class="mdl-list__item-primary-content">
@@ -88,7 +112,7 @@
                                                         </span>
                                 <span class="mdl-list__item-secondary-content">
                                                             <span class="mdl-list__item-secondary-info">
-                                                                <input type="hidden" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
+                                                                <input type="hidden" data-img="<?php if(isset($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-shareTxt="This looks pretty cool, shall we?" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
                                                                 <i class="my-pointer-item ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
                                                             </span>
                                                         </span>
@@ -126,14 +150,14 @@
                         <?php
                         }
                         ?>
-                            <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<?php if($row['isSpecialEvent'] == STATUS_YES){echo 'Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo 'All Taprooms';}else{ echo $row['locName'];} ?>
+                            <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<span class="eve-locName"><?php if($row['isSpecialEvent'] == STATUS_YES){echo 'Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo 'All Taprooms';}else{ echo $row['locName'];} ?></span>
                             <?php
                             if($row['showEventDate'] == STATUS_YES)
                             {
                                 ?>
                                 &nbsp;&nbsp;<span class="ic_events_icon event-date-main my-display-inline"></span>&nbsp;
-                                <?php $d = date_create($row['eventDate']);
-                                echo date_format($d,EVENT_DATE_FORMAT); ?>
+                                <span class="eve-eventDate"><?php $d = date_create($row['eventDate']);
+                                echo date_format($d,EVENT_DATE_FORMAT); ?></span>
                                 <?php
                             }
                             if($row['showEventPrice'] == STATUS_YES)
@@ -160,7 +184,11 @@
                             else
                             {
                                 ?>
-                                <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="event-bookNow dynamic">Book Event <i class="ic_back_icon my-display-inline"></i></a>
+                                <div class="event-action-btns">
+                                    <a href="#" data-eventId="<?php echo $row['eventId'];?>" class="remind-later-btn">Remind Me Later</a>
+                                    <div class="btn-divider"></div>
+                                    <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="event-bookNow dynamic">Book Event <i class="ic_back_icon my-display-inline"></i></a>
+                                </div>
                                 <?php
                             }
                             ?>
@@ -179,4 +207,39 @@
     }
     ?>
 </div>
+
+<script>
+    $(document).ready(function(){
+       if($(window).width() < mobileSize)
+       {
+           var mobHtm = '<br><div class="content-block-title weekly-cal">What\'s happening this week</div>' +
+               '<div id="calendar-mobile-glance"></div><br><div class="content-block-title weekly-cal">All Events</div>';
+           var eventAdd = '<a href="create_event" data-title="Create Event" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mobile-event-create dynamic">\n' +
+               '    <i class="ic_add"></i>\n' +
+               '</a>';
+           $('.event-creator-box').addClass('hide');
+           $('.content-for-mobile').html(mobHtm);
+           $('.content-for-mobile').append(eventAdd);
+           renderCalendarMobile();
+       }
+        $('#eventSearch').fastLiveFilter('#desk-event-section .demo-card-header-pic',{
+            selector:'.avatar-title,.mdl-list__item-sub-title,.eve-locName,.eve-eventDate',
+            callback: function(total){
+                if(total == 0)
+                {
+                    $('#desk-event-section .no-search-result').removeClass('hide');
+                }
+                else
+                {
+                    $('#desk-event-section .no-search-result').addClass('hide');
+                }
+            }
+        });
+        /*var monkeyList = new List('desk-event-section', {
+            valueNames: ['avatar-title','mdl-list__item-sub-title','eve-locName','eve-eventDate'],
+            pagination: false
+        });*/
+    });
+</script>
+
 

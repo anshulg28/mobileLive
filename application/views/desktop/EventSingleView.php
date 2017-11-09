@@ -31,6 +31,7 @@
     }
     elseif(isset($eventDetails) && myIsMultiArray($eventDetails))
     {
+        $superTotal = 0;
         foreach($eventDetails as $key => $row)
         {
             ?>
@@ -53,7 +54,7 @@
                                     </span>
                                     <span class="mdl-list__item-secondary-content">
                                         <span class="mdl-list__item-secondary-info">
-                                            <input type="hidden" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
+                                            <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
                                             <i class="my-pointer-item ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
                                         </span>
                                     </span>
@@ -90,10 +91,10 @@
                                 ?>
                                 </span>
                             </div>
-                            <div class="mdl-grid text-center">
+                            <div class="mdl-grid text-center host-main-specs">
                                 <div class="mdl-cell--12-col eventDash-stats">
                                     <ul class="list-inline">
-                                        <li>
+                                        <li id="show-host-earnings" data-eveCost="<?php if($row['costType'] == "1"){echo '0';}else{echo '1';}?>">
                                             <h4 class="dashboard-stats">
                                                 <?php
                                                 if($row['costType'] == "1")
@@ -104,12 +105,26 @@
                                                 }
                                                 else
                                                 {
-                                                    $total = (int)$row['eventPrice'] * (int)$row['totalQuant'];
-                                                    /*if(isset($EHTotal))
+                                                    $total = 0;
+                                                    if(isset($row['totalQuant']))
                                                     {
-                                                        $EHAmt = (int)$row['eventPrice'] * (int)$EHTotal;
-                                                        $total = $total + $EHAmt;
-                                                    }*/
+                                                        if(isset($signupList) && myIsArray($signupList))
+                                                        {
+                                                            foreach($signupList as $sKey => $sRow)
+                                                            {
+                                                               if(isset($sRow['regPrice']))
+                                                               {
+                                                                   $total = (int)$sRow['regPrice'] * (int)$sRow['quantity'];
+                                                               }
+                                                               else
+                                                               {
+                                                                   $total = (int)$row['eventPrice'] * (int)$sRow['quantity'];
+                                                               }
+                                                            }
+                                                        }
+                                                    }
+                                                    $superTotal = $total;
+                                                    //$total = (int)$row['eventPrice'] * (int)$row['totalQuant'];
                                                     echo 'Rs. '.number_format($total);
                                                 }
                                                 ?>
@@ -119,7 +134,7 @@
                                         <li>
                                             <div class="dash-spacer"></div>
                                         </li>
-                                        <li>
+                                        <li id="show-host-attendees">
                                             <h4 class="dashboard-stats">
                                                 <?php
                                                 if(isset($row['totalQuant']))
@@ -137,23 +152,159 @@
                                                 }
                                                 ?>
                                             </h4>
-                                            <span>People Attending</span>
+                                            <span>Attending</span>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-                            <hr>
-                            <div class="mdl-card__supporting-text">
-                                <span>Signups</span>
-                            </div>
+
+                            <!-- Event Deductions -->
                             <?php
-                                if(isset($DoolallySignupList) && myIsMultiArray($DoolallySignupList))
+                            if($row['costType'] != "1")
+                            {
+                                $hostEarns = $superTotal;
+                                $hostTds = ($hostEarns*10)/100;
+                                ?>
+                                <div class="host-event-segregation">
+                                    <hr>
+                                    <div class="common-head-title">
+                                        <span>Deductions</span>
+                                    </div>
+                                    <div class="custom-host-card mdl-shadow--2dp">
+                                        <div class="mdl-card__supporting-text">
+                                            <ul class="demo-list-icon mdl-list">
+                                                <li class="mdl-list__item">
+                                                    <span class="pull-left cost-heading">
+                                                        Collected from signups
+                                                    </span>
+                                                    <span class="pull-right">
+                                                        <?php echo '+ Rs. '.number_format($hostEarns);?>
+                                                    </span>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                    <div class="custom-host-card mdl-shadow--2dp">
+                                        <div class="mdl-card__supporting-text">
+                                            <ul class="demo-list-icon mdl-list">
+                                                <li class="mdl-list__item">
+                                                    <span class="pull-left cost-heading">
+                                                        Venue fee
+                                                    </span>
+                                                    <span class="pull-right">
+                                                        <?php
+                                                        $hostEarns -= DOOLALLY_VENUE_FEE;
+                                                        echo '- Rs. '.DOOLALLY_VENUE_FEE;
+                                                        ?>
+                                                    </span>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                    <div class="custom-host-card mdl-shadow--2dp">
+                                        <div class="mdl-card__supporting-text">
+                                            <ul class="demo-list-icon mdl-list">
+                                                <li class="mdl-list__item">
+                                                    <span class="pull-left cost-heading">
+                                                        TDS
+                                                    </span>
+                                                    <span class="pull-right">
+                                                        <?php
+                                                        $hostEarns -= $hostTds;
+                                                        echo '- Rs. '.$hostTds;
+                                                        ?>
+                                                    </span>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                    <div class="custom-host-card mdl-shadow--2dp">
+                                        <div class="mdl-card__supporting-text">
+                                            <ul class="demo-list-icon mdl-list">
+                                                <li class="mdl-list__item">
+                                                    <span class="pull-left cost-heading">
+                                                        FnB Coupon(s)
+                                                    </span>
+                                                    <span class="pull-right">
+                                                        <?php
+                                                        $coupAmt = (int)$row['totalQuant'] * (INT)NEW_DOOLALLY_FEE;
+                                                        $hostEarns -= $coupAmt;
+                                                        echo '- Rs. '.number_format($coupAmt);
+                                                        ?>
+                                                    </span>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                    <?php
+                                        if(isset($prevCharges) && $prevCharges != 0)
+                                        {
+                                            $hostEarns -= $prevCharges;
+                                            ?>
+                                            <div class="custom-host-card mdl-shadow--2dp">
+                                                <div class="mdl-card__supporting-text">
+                                                    <ul class="demo-list-icon mdl-list">
+                                                        <li class="mdl-list__item">
+                                                    <span class="pull-left cost-heading">
+                                                        Previous Event Charges
+                                                    </span>
+                                                            <span class="pull-right">
+                                                        <?php echo '- Rs. '.number_format($prevCharges);?>
+                                                    </span>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+                                            <?php
+                                        }
+                                    ?>
+                                    <div class="custom-host-card mdl-shadow--2dp">
+                                        <div class="mdl-card__supporting-text">
+                                            <ul class="demo-list-icon mdl-list">
+                                                <li class="mdl-list__item">
+                                                    <span class="pull-left">
+                                                        Total Payable
+                                                    </span>
+                                                    <span class="pull-right">
+                                                        <?php echo 'Rs. '.number_format($hostEarns);?>
+                                                    </span>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <?php
+                            }
+                            ?>
+
+                            <?php
+                                if(isset($signupList) && myIsMultiArray($signupList))
                                 {
-                                    foreach($DoolallySignupList as $signKey => $signRow)
+                                    $isHeadSet = false;
+                                    foreach($signupList as $signKey => $signRow)
                                     {
                                         $remain = (int)$signRow['quantity'] - 1;
                                         ?>
-                                        <div class="demo-list-action mdl-list">
+                                        <div class="demo-list-action mdl-list host-signup-list">
+                                            <?php
+                                                if(!$isHeadSet)
+                                                {
+                                                    $isHeadSet = true;
+                                                    ?>
+                                                    <hr>
+                                                    <div class="mdl-card__supporting-text">
+                                                        <span>Signups</span>
+                                                    </div>
+                                                    <?php
+                                                }
+                                            ?>
                                             <div class="mdl-list__item">
                                                 <span class="mdl-list__item-primary-content">
                                                   <span><?php echo $signRow['firstName'].' '.$signRow['lastName'];?></span>
@@ -176,37 +327,6 @@
                                         <?php
                                     }
                                 }
-                            ?>
-                            <?php
-                                if(isset($EhSignupList) && myIsArray($EhSignupList))
-                            {
-                                foreach($EhSignupList as $signKey => $signRow)
-                                {
-                                    $remain = (int)$signRow['quantity'] - 1;
-                                    ?>
-                                    <div class="demo-list-action mdl-list">
-                                        <div class="mdl-list__item">
-                                                <span class="mdl-list__item-primary-content">
-                                                  <span><?php echo $signRow['firstName'].' '.$signRow['lastName'];?></span>
-                                                    <?php
-                                                    if($remain != 0)
-                                                    {
-                                                        ?>
-                                                        <span class="mdl-chip mdl-list__item-avatar">
-                                                                <span class="mdl-chip__text">+<?php echo $remain;?></span>
-                                                            </span>
-                                                        <?php
-                                                    }
-                                                    ?>
-                                                </span>
-                                            <i data-email="<?php echo $signRow['emailId'];?>" class="mdl-list__item-secondary-action contact-email">
-                                                <i class="ic_event_email_icon"></i>
-                                            </i>
-                                        </div>
-                                    </div>
-                                    <?php
-                                }
-                            }
                             ?>
                             <div class="mdl-card__actions mdl-card--border">
                                 <?php

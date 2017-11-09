@@ -423,13 +423,18 @@ class Dashboard extends MY_Controller {
     {
         $data = $this->input->post()['data'];
         $src = $data['imgUrl'];
+        $img2 = $data['imgDataVertical'];
         $img = $data['imgData'];
         $img = str_replace('data:image/png;base64,', '', $img);
         $img = str_replace(' ', '+', $img);
+        $img2 = str_replace('data:image/png;base64,', '', $img2);
+        $img2 = str_replace(' ', '+', $img2);
         $data = base64_decode($img);
+        $data2 = base64_decode($img2);
         $filename = explode('.',basename($src));
         $dst = './uploads/events/thumb/'.$filename[0].'_cropped'.'.'.$filename[1];
-        if(file_put_contents($dst, $data) === false)
+        $dst2 = './uploads/events/thumb/'.$filename[0].'_vertical'.'.'.$filename[1];
+        if(file_put_contents($dst, $data) === false || file_put_contents($dst2, $data2) === false)
         {
             $response = Array(
                 "status" => 'error',
@@ -440,7 +445,8 @@ class Dashboard extends MY_Controller {
         {
             $response = Array(
                 "status" => 'success',
-                "url" => $dst
+                "url" => $dst,
+                "url2" => $dst2
             );
         }
         echo json_encode($response);
