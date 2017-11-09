@@ -18,11 +18,11 @@
             {
                 if($remaining == 1)
                 {
-                    echo ', along with a friend';
+                    echo ', along with a friend.';
                 }
                 else
                 {
-                    echo ', along with '.$remaining.' friends';
+                    echo ', along with '.$remaining.' friends.';
                 }
             }
             else

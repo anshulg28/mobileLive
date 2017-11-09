@@ -582,7 +582,7 @@ class Cron extends MY_Controller
 
             $content = '<html><body><p>Weekly Music search keys when no result is found!<br>PFA</p></body></html>';
 
-            $this->sendemail_library->sendEmail(array('tresha@brewcraftsindia.com','saha@brewcraftsindia.com','rishi@bcjukebox.in','deb.dutta@bcjukebox.in'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('tresha@brewcraftsindia.com','saha@brewcraftsindia.com','rishi@bcjukebox.in','deb.dutta@bcjukebox.in','gigmamabear@gmail.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com','Weekly Jukebox Records',$content,array("./uploads/Music_Search_Records".$endTime."_to_".$startTime.".csv"));
             try
             {

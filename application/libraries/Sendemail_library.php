@@ -193,7 +193,6 @@ class Sendemail_library
             $content = $this->CI->load->view('emailtemplates/eventRegSuccessMailView', $data, true);
         }
 
-
         $fromEmail = DEFAULT_SENDER_EMAIL;
         $fromPass = DEFAULT_SENDER_PASS;
         $replyTo = $mailRecord['userData']['emailId'];

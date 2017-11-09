@@ -50,7 +50,7 @@
                             {
                                 ?>
                                 <div class="content-block event-wrapper">
-                                    <form action="<?php echo base_url().'updateEvent';?>" id="eventSave" method="post" class="">
+                                    <form action="<?php echo base_url().'updateEvent';?>" id="eventEditSave" method="post" class="">
                                         <input type="hidden" name="eventId" value="<?php echo $row['eventId'];?>"/>
                                         <input type="hidden" name="attachment" value="<?php echo $row['filename']; ?>"/>
                                         <div class="event-img-space"

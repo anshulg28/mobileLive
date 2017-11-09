@@ -197,7 +197,7 @@
                                         <div class="row">
                                             <div class="col-5"></div>
                                             <div class="col-90">
-                                                <a href="#" data-href="<?php echo $row['eventPaymentLink'];?>" class="button button-big button-fill bookNow-event-btn other-booking-btn external">Rs. 2000 Bhonu</a>
+                                                <a href="#" data-href="<?php echo $row['eventPaymentLink'];?>" class="button button-big button-fill bookNow-event-btn other-booking-btn external">Rs. 500 single pass</a>
                                             </div>
                                             <div class="col-5"></div>
                                         </div>
@@ -205,7 +205,7 @@
                                         <div class="row">
                                             <div class="col-5"></div>
                                             <div class="col-90">
-                                                <a href="#" data-href="<?php echo $row['otherPaymentLink'];?>" class="button button-big button-fill bookNow-event-btn other-booking-btn external">Rs. 3000 Bhonu & Unlimited Beer</a>
+                                                <a href="#" data-href="<?php echo $row['otherPaymentLink'];?>" class="button button-big button-fill bookNow-event-btn other-booking-btn external">Rs. 1000 all day pass</a>
                                             </div>
                                             <div class="col-5"></div>
                                         </div>

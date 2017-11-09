@@ -132,6 +132,19 @@ class Main extends MY_Controller
 
                     }
                 }
+                elseif($query[1] == 'filter_events')
+                {
+                    if(isset($query[2]) && isStringSet(trim($query[2])))
+                    {
+                        $orgData = $this->dashboard_model->filterByOrgName(urldecode(strtolower($query[2])));
+                        if(isset($orgData) && myIsArray($orgData))
+                        {
+                            $data['meta1']['title'] = 'Superhero Art Fest By '.$orgData['creatorName'];
+                            $data['meta1']['description'] = "Unleash your inner superhero.";
+                            $data['meta1']['img'] = base_url() . ORGANISOR_AVATAR_PATH.$orgData['creatorAvatar'];
+                        }
+                    }
+                }
             }
             $this->load->view('ForTwitterView', $data);
         } //checking if device is mobile
@@ -332,9 +345,9 @@ class Main extends MY_Controller
                         $orgData = $this->dashboard_model->filterByOrgName(urldecode(strtolower($query[2])));
                         if(isset($orgData) && myIsArray($orgData))
                         {
-                            $data['meta1']['title'] = 'Events By '.$orgData['creatorName'];
-                            $data['meta1']['description'] = "Browse through upcoming events by ".$orgData['creatorName'];
-                            $data['meta1']['img'] = base_url() .EVENT_PATH_THUMB .'doolally-app-icon.png';
+                            $data['meta1']['title'] = 'Kitten and Puppy Adoption Drive';
+                            $data['meta1']['description'] = 'Kitten and Puppy Adoption Drive By '.$orgData['creatorName'];
+                            $data['meta1']['img'] = base_url() . ORGANISOR_AVATAR_PATH.$orgData['creatorAvatar'];
                         }
                     }
                 }
@@ -524,9 +537,9 @@ class Main extends MY_Controller
                             $orgData = $this->dashboard_model->filterByOrgName(urldecode(strtolower($query[2])));
                             if(isset($orgData) && myIsArray($orgData))
                             {
-                                $data['meta1']['title'] = 'Events By '.$orgData['creatorName'];
-                                $data['meta1']['description'] = "Browse through upcoming events by ".$orgData['creatorName'];
-                                $data['meta1']['img'] = base_url() . EVENT_PATH_THUMB.'doolally-app-icon.png';
+                                $data['meta1']['title'] = 'Kitten and Puppy Adoption Drive';
+                                $data['meta1']['description'] = 'Kitten and Puppy Adoption Drive By '.$orgData['creatorName'];
+                                $data['meta1']['img'] = base_url() . ORGANISOR_AVATAR_PATH.$orgData['creatorAvatar'];
                             }
                         }
                     }
@@ -1356,6 +1369,7 @@ class Main extends MY_Controller
                             'eventId' => $eventData[0]['eventId'],
                             'buyQuantity' => $ehArray['nTickets'],
                             'doolallyFee' => $eventData[0]['doolallyFee'],
+                            'eventPrice' => $eventData[0]['eventPrice'],
                             'bookerId' => $ehArray['bookingid']
                         );
                         $this->sendemail_library->eventRegSuccessMail($mailData, $eventData[0]['eventPlace']);
@@ -1419,6 +1433,7 @@ class Main extends MY_Controller
                             'eventId' => $eventData[0]['eventId'],
                             'buyQuantity' => $ehArray['nTickets'],
                             'doolallyFee' => $eventData[0]['doolallyFee'],
+                            'eventPrice' => $eventData[0]['eventPrice'],
                             'bookerId' => $ehArray['bookingid']
                         );
                         $this->sendemail_library->memberWelcomeMail($mailData, $eventData[0]['eventPlace']);
@@ -1976,7 +1991,12 @@ class Main extends MY_Controller
             else
             {
                 $userName = explode(' ',$post['creatorName']);
-                if(count($userName)< 2)
+                if(count($userName)> 2)
+                {
+                    $userName[0] = $post['creatorName'];
+                    $userName[1] = '';
+                }
+                elseif(count($userName)<2)
                 {
                     $userName[1] = '';
                 }
@@ -2480,11 +2500,13 @@ class Main extends MY_Controller
     public function sendCancelRequest()
     {
         $post = $this->input->post();
-
+        $data = array();
         if(isset($post['eventId']))
         {
             $eventInfo = $this->dashboard_model->getFullEventInfoById($post['eventId']);
             $this->sendemail_library->eventCancelMail($eventInfo);
+            $data['status'] = true;
+            echo json_encode($data);
         }
     }
 
@@ -3060,7 +3082,8 @@ class Main extends MY_Controller
             'eventId' => $eventData[0]['eventId'],
             'buyQuantity' => '2',
             'doolallyFee' => $eventData[0]['doolallyFee'],
-            'bookerId' => 'MOJO1234565'
+            'bookerId' => 'MOJO1234565',
+            'eventPrice' => $eventData[0]['eventPrice']
         );
         $this->sendemail_library->eventRegSuccessMail($mailData, $eventData[0]['eventPlace']);
     }

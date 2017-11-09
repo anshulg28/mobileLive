@@ -359,9 +359,12 @@
                                                     }
                                                     else
                                                     {
-                                                        ?>
-                                                        <i data-bookerId="<?php echo $row['bookerId'];?>" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect eve-cancel-btn pull-right"><i class="fa fa-ban fa-15x"></i>&nbsp;Cancel Booking</i>
-                                                        <?php
+                                                        if($row['eventId'] != EXTRA_RESTRICTION_EVENT)
+                                                        {
+                                                            ?>
+                                                            <i data-bookerId="<?php echo $row['bookerId'];?>" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect eve-cancel-btn pull-right"><i class="fa fa-ban fa-15x"></i>&nbsp;Cancel Booking</i>
+                                                            <?php
+                                                        }
                                                     }
                                                     ?>
                                                 </div>

@@ -26,7 +26,7 @@
             <meta property="og:title" content="<?php echo $meta['title'];?>" />
             <meta property="og:type" content="website" />
             <meta property="og:url" content="<?php echo $meta['link'];?>" />
-            <meta property="og:image" itemprop="image" content="<?php echo $meta['img'];?>" />
+            <meta property="og:image" content="<?php echo $meta['img'];?>" />
             <meta property="og:description" content="<?php echo $meta['description'];?>" />
             <?php
         }

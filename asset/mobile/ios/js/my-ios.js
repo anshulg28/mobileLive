@@ -157,7 +157,21 @@ myApp.onPageInit('eventSingle', function (page) {
                         dataType: 'json',
                         url: base_url+'sendCancelRequest',
                         data: {eventId: eveId},
-                        success: function(){},
+                        success: function(data){
+                            vex.dialog.buttons.YES.text = 'Close';
+                            vex.dialog.alert({
+                                unsafeMessage: '<label class="head-title">Success!</label><br><br>Your request for cancellation is being reviewed. Please give us a couple of hours.',
+                                callback: function(){
+                                    setTimeout(function(){
+                                        mainView.router.load({
+                                            url:'event_dash',
+                                            ignoreCache: true
+                                        });
+                                        myApp.showTab('#tab2');
+                                    },500);
+                                }
+                            });
+                        },
                         error: function(){}
                     });
                 }
@@ -1175,7 +1189,7 @@ myApp.onPageInit('eventEdit', function (page) {
 
     var eventEditStatus = false;
     var isReqEditPending = false;
-    $(document).on('submit','.event-edit-mobile #eventSave', function(e){
+    $(document).on('submit','.event-edit-mobile #eventEditSave', function(e){
         e.preventDefault();
         var formObj = this;
 
@@ -1270,7 +1284,7 @@ myApp.onPageInit('eventEdit', function (page) {
             return false;
         }
 
-        $('.event-edit-mobile #eventSave input[type="submit"]').attr('disabled','disabled');
+        $('.event-edit-mobile #eventEditSave input[type="submit"]').attr('disabled','disabled');
 
         if(typeof cropData['imgUrl'] != 'undefined' && eventEditStatus === false)
         {
@@ -4125,6 +4139,15 @@ $$('.panel-left').on('panel:opened', function () {
             }
         },500);
     }
+});
+$(document).ready(function(){
+
+    $('#tab3 .fnb-section .col-50').each(function(i,val){
+        if($(this).find('.show-full-beer-card').hasClass("hide"))
+        {
+            $(this).addClass('hide');
+        }
+    });
 });
 /*
 $(document).on('click','#menu-tip-dismis', function(e){

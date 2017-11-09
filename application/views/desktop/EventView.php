@@ -180,10 +180,10 @@
                             {
                                 ?>
                                 <div class="mdl-cell mdl-cell--6-col">
-                                    <a href="#" data-href="<?php echo $row['eventPaymentLink'];?>" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn other-booking-btn external">Rs. 2000 Bhonu</a>
+                                    <a href="#" data-href="<?php echo $row['eventPaymentLink'];?>" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn other-booking-btn external">Rs. 500 single pass</a>
                                 </div>
                                 <div class="mdl-cell mdl-cell--6-col">
-                                    <a href="#" data-href="<?php echo $row['otherPaymentLink'];?>" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn other-booking-btn external">Rs. 3000 Bhonu & Unlimited Beer</a>
+                                    <a href="#" data-href="<?php echo $row['otherPaymentLink'];?>" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn other-booking-btn external">Rs. 1000 all day pass</a>
                                 </div>
                                 <?php
                             }

@@ -547,6 +547,7 @@ class Dashboard extends MY_Controller {
                 $fileName = preg_replace('/\(|\)/','',$filePath);
                 $fileName = preg_replace('/[^a-zA-Z0-9.]\.]/', '', $fileName);
                 $fileName = str_replace(' ','_',$fileName);
+                $fileName = time().'_'.$fileName;
                 $config = array();
                 $config['upload_path'] = './uploads/events/';
                 $config['allowed_types'] = 'gif|jpg|png|jpeg|PNG|JPG';

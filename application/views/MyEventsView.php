@@ -409,9 +409,12 @@
                                                         }
                                                         else
                                                         {
-                                                            ?>
-                                                            <a data-bookerId="<?php echo $row['bookerId'];?>" href="#" class="link color-black eve-cancel-btn"><i class="fa fa-ban fa-15x"></i>&nbsp;Cancel Booking</a>
-                                                            <?php
+                                                            if($row['eventId'] != EXTRA_RESTRICTION_EVENT)
+                                                            {
+                                                                ?>
+                                                                <a data-bookerId="<?php echo $row['bookerId'];?>" href="#" class="link color-black eve-cancel-btn"><i class="fa fa-ban fa-15x"></i>&nbsp;Cancel Booking</a>
+                                                                <?php
+                                                            }
                                                         }
                                                     ?>
                                                 </div>

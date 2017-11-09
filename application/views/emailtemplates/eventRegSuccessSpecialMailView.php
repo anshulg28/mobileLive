@@ -18,11 +18,11 @@
             {
                 if($remaining == 1)
                 {
-                    echo ', along with a friend';
+                    echo ', along with a friend.';
                 }
                 else
                 {
-                    echo ', along with '.$remaining.' friends';
+                    echo ', along with '.$remaining.' friends.';
                 }
             }
             else
@@ -40,17 +40,19 @@
         <?php
         if(isset($mailData['eveOfferCode']) && $mailData['eveOfferCode'] != '')
         {
-            if((int)$mailData['doolallyFee'] == 3000)
+            if((int)$mailData['eventPrice'] == 500)
             {
                 ?>
-                All you need to do is show up and show this code(s) <?php echo implode(',',$mailData['eveOfferCode']);?> to the waiter serving you.
-                As a part of your fee for the event, you drink unlimited beer during the pop-up.
+                As part of the pass, you will be entitled to one quiz and also as a part of the fee for the event,
+                you can redeem Rs 300 on F&B at any of our Doolally Taprooms.
+                Just show this code(s) <?php echo implode(',',$mailData['eveOfferCode']);?> to the waiter who is serving you.
                 <?php
             }
             else
             {
                 ?>
-                All you need to do is show up and show this code(s) <?php echo implode(',',$mailData['eveOfferCode']);?> to the waiter serving you.
+                As part of  the All Day Pass, you will be entitled to attend all three quizzes and also as a part of the fee for the event, you can redeem Rs 300 on F&B at any of our Doolally Taprooms.
+                Just show this code(s) <?php echo implode(',',$mailData['eveOfferCode']);?> to the waiter who is serving you.
                 <?php
             }
             ?>

@@ -3067,7 +3067,17 @@
                         dataType: 'json',
                         url: base_url+'sendCancelRequest',
                         data: {eventId: eveId},
-                        success: function(){},
+                        success: function(data){
+                            vex.dialog.buttons.YES.text = 'Close';
+                            vex.dialog.alert({
+                                unsafeMessage: '<label class="head-title">Success!</label><br><br>Your request for cancellation is being reviewed. Please give us a couple of hours.',
+                                callback: function () {
+                                    setTimeout(function () {
+                                        replaceHistory('Doolally', 'event_dash', true);
+                                    }, 500);
+                                }
+                            });
+                        },
                         error: function(){}
                     });
                 }
@@ -3535,5 +3545,16 @@
         {
             mySnackTime('Payment Gateway Error!');
         }
+    });
+</script>
+<script>
+    $(document).ready(function(){
+
+        $('.fnb-div-wrapper').each(function(i,val){
+            if($(this).find('.show-full-beer-card').hasClass("hide"))
+            {
+                $(this).addClass('hide');
+            }
+        });
     });
 </script>

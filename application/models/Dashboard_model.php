@@ -703,7 +703,7 @@ class Dashboard_Model extends CI_Model
     public function checkUserBookedWithMojo($userId, $eventId,$mojoId)
     {
         $query = "SELECT * FROM eventregistermaster
-                  WHERE isUserCancel != 1 AND paymentId = '".$mojoId."' AND bookerUserId = ".$userId." AND eventId = ".$eventId;
+                  WHERE paymentId = '".$mojoId."' AND bookerUserId = ".$userId." AND eventId = ".$eventId;
         $result = $this->db->query($query)->result_array();
 
         if(myIsArray($result))
@@ -1121,7 +1121,7 @@ class Dashboard_Model extends CI_Model
     }
     function filterByOrgName($orgName)
     {
-        $query = "SELECT creatorName FROM eventmaster WHERE LOWER(creatorName) LIKE '%".$orgName."%'";
+        $query = "SELECT creatorName, creatorAvatar FROM eventmaster WHERE LOWER(creatorName) LIKE '%".$orgName."%'";
 
         $result = $this->db->query($query)->row_array();
 
