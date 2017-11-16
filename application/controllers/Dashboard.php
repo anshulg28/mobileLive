@@ -406,7 +406,7 @@ class Dashboard extends MY_Controller {
             $config['image_library']    = 'gd2';
             $config['source_image']     = $image_path.$img_name;
             $config['new_image']        = $image_thumb;
-            $config['quality']          = 95;
+            $config['quality']          = 90;
             $config['maintain_ratio']   = TRUE;
             $config['height']           = 480;
             $config['width']            = 690;

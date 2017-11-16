@@ -67,18 +67,11 @@
                         <textarea class="mdl-textfield__input" tabindex="2" type="text" rows= "3" id="eventDesc" name="eventDescription"></textarea>
                         <label class="mdl-textfield__label" for="eventDesc">Describe your event</label>
                     </div>
-                    <div class="mdl-cell mdl-cell--6-col">
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" id="eventDate" name="eventDate" tabindex="3"
-                                   placeholder="Date of Event" data-format="Y-m-d" data-default-date="new Date()" data-lock="from"
-                                   data-large-default="true" data-large-mode="true" data-modal="true" data-max-year="2018" data-min-year="2016">
-                            <label class="mdl-textfield__label" for="eventDate">Event Date</label>
-                        </div>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                            <!--onfocus="scrollToField(this)"-->
-                            <input class="mdl-textfield__input" tabindex="5" type="text" id="endTime" name="endTime">
-                            <label class="mdl-textfield__label" for="endTime">End Time</label>
-                        </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                        <input class="mdl-textfield__input" type="text" id="eventDate" name="eventDate" tabindex="3"
+                               placeholder="Date of Event" data-format="Y-m-d" data-default-date="new Date()" data-lock="from"
+                               data-large-default="true" data-large-mode="true" data-modal="true" data-max-year="2018" data-min-year="2016">
+                        <label class="mdl-textfield__label" for="eventDate">Event Date</label>
                     </div>
                     <div class="mdl-cell mdl-cell--6-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
@@ -99,6 +92,13 @@
                             </select>
                             <label class="mdl-textfield__label" for="eventType">Event Type</label>
                         </div>-->
+                    </div>
+                    <div class="mdl-cell mdl-cell--6-col">
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                            <!--onfocus="scrollToField(this)"-->
+                            <input class="mdl-textfield__input" tabindex="5" type="text" id="endTime" name="endTime">
+                            <label class="mdl-textfield__label" for="endTime">End Time</label>
+                        </div>
                     </div>
                 </div>
                 <div class="event-header-name mdl-grid">

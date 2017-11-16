@@ -329,7 +329,29 @@
                                                                 echo "Free";
                                                                 break;
                                                             default :
-                                                                echo 'Rs '.$row['eventPrice'];
+                                                                if($row['eventId'] == SPECIAL_EVENT_DOOLALLYID)
+                                                                {
+                                                                    if($row['regPrice'] > $row['eventPrice'])
+                                                                    {
+                                                                        echo 'Rs '.$row['spPrice'];
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        echo 'Rs '.$row['eventPrice'];
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    echo 'Rs '.$row['eventPrice'];
+                                                                }
+                                                                /*if(isset($row['regPrice']) && $row['regPrice'] != 0)
+                                                                {
+                                                                    echo 'Rs '.$row['regPrice'];
+                                                                }
+                                                                else
+                                                                {
+                                                                    echo 'Rs '.$row['eventPrice'];
+                                                                }*/
                                                                 break;
 
                                                         }
@@ -352,7 +374,14 @@
                                                         $price = 0;
                                                         if($row['costType'] != EVENT_FREE)
                                                         {
-                                                            $price = ((int)$row['quantity'] * (int)$row['eventPrice']);
+                                                            if(isset($row['regPrice']) && $row['regPrice'] != 0)
+                                                            {
+                                                                $price = ((int)$row['quantity'] * (int)$row['regPrice']);
+                                                            }
+                                                            else
+                                                            {
+                                                                $price = ((int)$row['quantity'] * (int)$row['eventPrice']);
+                                                            }
                                                         }
                                                     ?>
                                                     <div class="attendee-pay-info"><i class="fa fa-money"></i> Booking Information</div>
@@ -364,6 +393,7 @@
                                                             echo date_format($d,DATE_TIME_FORMAT_UI);
                                                         ?>
                                                     </span>
+                                                    <span class="my-display-inline">Booking Id: <?php echo $row['paymentId'];?></span>&nbsp;
                                                 </div>
                                                 <div class="mdl-card__actions mdl-card--border attending-action-btns">
                                                     <i data-email="<?php echo $row['creatorEmail'];?>" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect contact-email">

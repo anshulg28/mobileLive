@@ -10,7 +10,7 @@
     <p>Rumour has it that you have signed up for <b><?php echo $mailData['eventName'];?></b> happening on
         <a href="<?php echo $calendar_url;?>" target="_blank"><?php $d = date_create($mailData['eventDate']); echo date_format($d,DATE_MAIL_FORMAT_UI);?></a>,
     <?php echo date('h:i a',strtotime($mailData['startTime'])).'-'.date('h:i a',strtotime($mailData['endTime']));?>
-        at <a href="<?php echo $locInfo['mapLink'];?>" target="_blank">Doolally Taproom, <?php echo trim($locInfo['locName']);?></a><?php
+        at <a href="<?php echo $locInfo['mapLink'];?>" target="_blank">Doolally Taproom, <?php echo trim($locInfo['locName']);?></a<?php
         if(isset($mailData['buyQuantity']))
         {
             $remaining = ((int)$mailData['buyQuantity']-1);
@@ -18,17 +18,17 @@
             {
                 if($remaining == 1)
                 {
-                    echo ', along with a friend.';
+                    echo '>, along with a friend.';
                 }
                 else
                 {
-                    echo ', along with '.$remaining.' friends.';
+                    echo '>, along with '.$remaining.' friends.';
                 }
             }
             else
             {
 
-                echo '.';
+                echo '>.';
             }
         }
         ?>
@@ -51,7 +51,7 @@
             else
             {
                 ?>
-                As part of  the All Day Pass, you will be entitled to attend all three quizzes and also as a part of the fee for the event, you can redeem Rs 300 on F&B at any of our Doolally Taprooms.
+                As part of the All Day Pass, you will be entitled to attend all three quizzes and also as a part of the fee for the event, you can redeem Rs 300 on F&B at any of our Doolally Taprooms.
                 Just show this code(s) <?php echo implode(',',$mailData['eveOfferCode']);?> to the waiter who is serving you.
                 <?php
             }

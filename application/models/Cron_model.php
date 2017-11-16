@@ -57,7 +57,7 @@ class Cron_Model extends CI_Model
     public function getAllSortedFeeds()
     {
         $query = "SELECT feedText "
-            ."FROM socialviewmaster order by updateDateTime desc";
+            ."FROM socialviewmaster order by viewId desc";
 
         $result = $this->db->query($query)->result_array();
 

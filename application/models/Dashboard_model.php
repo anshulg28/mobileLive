@@ -500,9 +500,11 @@ class Dashboard_Model extends CI_Model
 
     public function getEventsRegisteredByUser($userId)
     {
-        $query = "SELECT erm.bookerId,erm.bookerUserId,erm.eventId,erm.quantity,erm.createdDT,erm.isUserCancel, em.*, ea.filename, l.locName
+        $query = "SELECT erm.bookerId,erm.bookerUserId,erm.paymentId, erm.isCouponUsed,erm.eventId,erm.quantity,erm.createdDT,
+                  erm.isUserCancel,erm.regPrice, em.*, ea.filename, l.locName, esm.eventPrice AS 'spPrice'
                   FROM eventregistermaster erm
                   LEFT JOIN eventmaster em ON em.eventId = erm.eventId
+                  LEFT JOIN eventspecialmaster esm ON erm.eventId = esm.eventId
                   LEFT JOIN eventattachment ea ON ea.eventId = erm.eventId
                   LEFT JOIN locationmaster l ON l.id = em.eventPlace
                   WHERE erm.eventDone != 1 AND bookerUserId = ".$userId;

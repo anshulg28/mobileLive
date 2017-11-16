@@ -118,19 +118,10 @@ elseif(isset($eventDetails) && myIsMultiArray($eventDetails))
                                 <textarea class="mdl-textfield__input" tabindex="2" type="text" rows= "3" id="eventDesc" name="eventDescription"><?php echo $row['eventDescription'];?></textarea>
                                 <label class="mdl-textfield__label" for="eventDesc">Describe your event</label>
                             </div>
-                            <div class="mdl-cell mdl-cell--6-col">
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" tabindex="3" type="text" id="eventDate" name="eventDate" value="<?php echo $row['eventDate'];?>"
-                                           placeholder="Date of Event">
-                                    <label class="mdl-textfield__label" for="eventDate">Event Date</label>
-                                </div>
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                    <!--onfocus="scrollToField(this)"-->
-                                    <input class="mdl-textfield__input" tabindex="5" type="text" id="endTime" name="endTime"
-                                           value="<?php echo date("h:i A", strtotime($row['endTime']));?>"/>
-                                    <label class="mdl-textfield__label" for="endTime">End Time</label>
-                                </div>
-
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                <input class="mdl-textfield__input" tabindex="3" type="text" id="eventDate" name="eventDate" value="<?php echo $row['eventDate'];?>"
+                                       placeholder="Date of Event">
+                                <label class="mdl-textfield__label" for="eventDate">Event Date</label>
                             </div>
                             <div class="mdl-cell mdl-cell--6-col">
                                 <!--<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -152,6 +143,15 @@ elseif(isset($eventDetails) && myIsMultiArray($eventDetails))
                                            value="<?php echo date("h:i A", strtotime($row['startTime']));?>"/>
                                     <label class="mdl-textfield__label" for="startTime">Start Time</label>
                                 </div>
+                            </div>
+                            <div class="mdl-cell mdl-cell--6-col">
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                    <!--onfocus="scrollToField(this)"-->
+                                    <input class="mdl-textfield__input" tabindex="5" type="text" id="endTime" name="endTime"
+                                           value="<?php echo date("h:i A", strtotime($row['endTime']));?>"/>
+                                    <label class="mdl-textfield__label" for="endTime">End Time</label>
+                                </div>
+
                             </div>
                         </div>
                         <div class="event-header-name mdl-grid">

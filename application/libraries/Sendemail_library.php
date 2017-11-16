@@ -70,15 +70,15 @@ class Sendemail_library
             {
                 if((int)$userData['doolallyFee'] > (int)NEW_DOOLALLY_FEE)
                 {
-                    $userData['eveOfferCode'][] = $this->generateCustomCode($userData['eventId'],$userData['eventDate'],$userData['bookerId'],$userData['doolallyFee']);
+                    $userData['eveOfferCode'][] = $this->generateCustomCode($userData['eventId'],$userData['eventDate'],$userData['startTime'],$userData['bookerId'],$userData['doolallyFee']);
                 }
                 elseif((int)$userData['doolallyFee'] < (int)NEW_DOOLALLY_FEE && (int)$userData['doolallyFee'] != 0)
                 {
-                    $userData['eveOfferCode'][] = $this->generateCustomCode($userData['eventId'],$userData['eventDate'],$userData['bookerId'],$userData['doolallyFee']);
+                    $userData['eveOfferCode'][] = $this->generateCustomCode($userData['eventId'],$userData['eventDate'],$userData['startTime'],$userData['bookerId'],$userData['doolallyFee']);
                 }
                 else
                 {
-                    $userData['eveOfferCode'][] = $this->generateEventCode($userData['eventId'],$userData['eventDate'],$userData['bookerId']);
+                    $userData['eveOfferCode'][] = $this->generateEventCode($userData['eventId'],$userData['eventDate'],$userData['startTime'],$userData['bookerId']);
                 }
             }
         }
@@ -161,15 +161,15 @@ class Sendemail_library
             {
                 if((int)$userData['doolallyFee'] > (int)NEW_DOOLALLY_FEE)
                 {
-                    $userData['eveOfferCode'][] = $this->generateCustomCode($userData['eventId'],$userData['eventDate'],$userData['bookerId'],$userData['doolallyFee']);
+                    $userData['eveOfferCode'][] = $this->generateCustomCode($userData['eventId'],$userData['eventDate'],$userData['startTime'],$userData['bookerId'],$userData['doolallyFee']);
                 }
                 elseif((int)$userData['doolallyFee'] < (int)NEW_DOOLALLY_FEE && (int)$userData['doolallyFee'] != 0)
                 {
-                    $userData['eveOfferCode'][] = $this->generateCustomCode($userData['eventId'],$userData['eventDate'],$userData['bookerId'],$userData['doolallyFee']);
+                    $userData['eveOfferCode'][] = $this->generateCustomCode($userData['eventId'],$userData['eventDate'],$userData['startTime'],$userData['bookerId'],$userData['doolallyFee']);
                 }
                 else
                 {
-                    $userData['eveOfferCode'][] = $this->generateEventCode($userData['eventId'],$userData['eventDate'],$userData['bookerId']);
+                    $userData['eveOfferCode'][] = $this->generateEventCode($userData['eventId'],$userData['eventDate'],$userData['startTime'],$userData['bookerId']);
                 }
             }
         }
@@ -1050,7 +1050,7 @@ class Sendemail_library
         $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
-    public function generateEventCode($eveId,$eveDate,$bookerId)
+    public function generateEventCode($eveId,$eveDate,$startTime,$bookerId)
     {
         $allCodes = $this->CI->offers_model->getAllCodes();
         $usedCodes = array();
@@ -1077,6 +1077,7 @@ class Sendemail_library
                 'ifActive' => 1,
                 'createDateTime' => date('Y-m-d H:i:s'),
                 'validFromDate' => $eveDate,
+                'validFromTime' => $startTime,
                 'useDateTime' => null
             );
         }
@@ -1094,6 +1095,7 @@ class Sendemail_library
                 'ifActive' => 1,
                 'createDateTime' => date('Y-m-d H:i:s'),
                 'validFromDate' => $eveDate,
+                'validFromTime' => $startTime,
                 'useDateTime' => null
             );
         }
@@ -1102,7 +1104,7 @@ class Sendemail_library
         return 'EV-'.$newCode;
     }
 
-    public function generateCustomCode($eveId,$eveDate,$bookerId,$cusAmt)
+    public function generateCustomCode($eveId,$eveDate,$startTime,$bookerId,$cusAmt)
     {
         $allCodes = $this->CI->offers_model->getAllCodes();
         $usedCodes = array();
@@ -1129,6 +1131,7 @@ class Sendemail_library
                 'ifActive' => 1,
                 'createDateTime' => date('Y-m-d H:i:s'),
                 'validFromDate' => $eveDate,
+                'validFromTime' => $startTime,
                 'useDateTime' => null
             );
         }
@@ -1146,6 +1149,7 @@ class Sendemail_library
                 'ifActive' => 1,
                 'createDateTime' => date('Y-m-d H:i:s'),
                 'validFromDate' => $eveDate,
+                'validFromTime' => $startTime,
                 'useDateTime' => null
             );
         }

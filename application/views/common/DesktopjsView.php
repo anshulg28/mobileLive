@@ -275,7 +275,7 @@
                 return 'Some Unknown Error Occurred!';
                 break;
             case 1:
-                return 'User Permission Denied Or Location Unknown';
+                return 'To request a song, please turn on your location.';
                 break;
             case 2:
                 return 'position unavailable (error response from location provider)';
@@ -559,6 +559,7 @@
     {
         if($(ele).val() != '')
         {
+            var prof = $(ele).attr('data-prof');
             $.ajax({
                 type:'POST',
                 dataType:'json',
@@ -570,12 +571,31 @@
 
                     if(typeof data.image === 'undefined')
                     {
-                        $(ele).parent().find('.liveurl').find('img').attr('src',base_url+'asset/images/placeholder.jpg');
+                        $(ele).parent().find('.liveurl').find('img').addClass('hide');
+                        //$(ele).parent().find('.liveurl').find('img').attr('src',base_url+'asset/images/placeholder.jpg');
                         //$(ele).parent().find('.liveurl').find('img').addClass('lazy');
                     }
                     else
                     {
-                        $(ele).parent().find('.liveurl').find('img').attr('src',data.image);//base_url+'asset/images/placeholder.jpg');
+
+                        if(prof !== 'undefined')
+                        {
+                            var profParts = prof.split('/');
+                            profParts[profParts.length-1] = '';
+                            prof = profParts.join('/');
+                            var ogImg = data.image.split('/');
+                            ogImg[ogImg.length-1] = '';
+                            var newOg = ogImg.join('/');
+
+                            if(prof == newOg)
+                            {
+                                $(ele).parent().find('.liveurl').find('img').addClass('hide');
+                            }
+                            else
+                            {
+                                $(ele).parent().find('.liveurl').find('img').attr('src',data.image);
+                            }
+                        }//base_url+'asset/images/placeholder.jpg');
                         //$(ele).parent().find('.liveurl').find('img').attr('data-src',);
                         //$(ele).parent().find('.liveurl').find('img').addClass('lazy');
                     }
@@ -1467,6 +1487,50 @@
                         lastFetched += 1;
                         foundMoreFeeds = true;
                         appendCards(data.moreFeeds);
+                        if(lessFeeds)
+                        {
+                            lessFeeds = false;
+                            var totalToLoad = lastIndex + itemsPerLoad;
+                            if(totalToLoad > maxItems)
+                            {
+                                totalToLoad = maxItems;
+                            }
+                            for (var i = lastIndex; i < totalToLoad; i++) {
+                                $($('.custom-accordion .my-card-items')[i]).removeClass('hide');
+                                $('.my-card-items').each(function(i,val){
+                                    if(!$(this).hasClass('hide'))
+                                    {
+                                        if(typeof $(this).find('.my-link-url').val() !== 'undefined')
+                                            renderLinks($(this).find('.my-link-url'));
+                                    }
+                                    //renderLinks(val);
+                                });
+                            }
+                            var oldScroll = $('.mdl-layout__content').scrollTop();
+                            $('.mdl-layout__content').scrollTop(oldScroll-100);
+
+                            // Update last loaded index
+                            lastIndex = totalToLoad;
+                            if($(window).width() > mobileSize)
+                            {
+                                var panelHeight = $('#mainContent-view section.mdl-layout__tab-panel.is-active').height()+50;
+                                var fnbHeight = $('.sideFnbWrapper').height()+50;
+                                if(panelHeight > fnbHeight)
+                                {
+                                    $('.mdl-grid.page-content').css({
+                                        'height': panelHeight,
+                                        'overflow':'hidden'
+                                    });
+                                }
+                                else
+                                {
+                                    $('.mdl-grid.page-content').css({
+                                        'height': fnbHeight,
+                                        'overflow':'hidden'
+                                    });
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -1894,6 +1958,10 @@
     var needToHideDrawer = false;
     function load(url)
     {
+        if(url.indexOf('&utm_medium=social&utm_source=pinterest.com&utm_campaign=buffer') != -1)
+        {
+            url = 'events';
+        }
         if($(window).width() < mobileSize)
         {
             if(isDynamic)
@@ -1909,6 +1977,7 @@
                         }
                         $('#event-filter-box').removeClass('hide');
                         $('header .mdl-layout__drawer-button').removeClass('hide');
+                        $('header .mobile-adjustment-col').removeClass('hide');
                         needToHideDrawer = false;
                         break;
                     case 'fnb':
@@ -1920,6 +1989,7 @@
                         }
                         $('#filter-fnb-menu-mobile').removeClass('hide');
                         $('header .mdl-layout__drawer-button').removeClass('hide');
+                        $('header .mobile-adjustment-col').removeClass('hide');
                         needToHideDrawer = false;
                         break;
                     default:
@@ -1935,6 +2005,7 @@
                         $('header .mdl-layout__drawer-button').addClass('hide');
                         $('#event-filter-box').addClass('hide');
                         $('#filter-fnb-menu-mobile').addClass('hide');
+                        $('header .mobile-adjustment-col').addClass('hide');
                         needToHideDrawer = true;
                 }
             }
@@ -2131,11 +2202,12 @@
                     {
                         if(data.status === true)
                         {
-                            console.log(data.locId );
+                            //console.log(data.locId );
                             if(typeof data.locId != 'undefined')
                             {
                                 var locId = data.locId;
-                                $('#even-'+locId).click();
+                                filterEventsByLoc(locId);
+                                $('#event-filter-box').removeClass('hide');
                             }
                             else if(typeof data.isOrgFilter !== 'undefined' && data.isOrgFilter === true)
                             {
@@ -3535,6 +3607,49 @@
         }
     });
 
+    function filterEventsByLoc(locId)
+    {
+        if(typeof locId !== 'undefined')
+        {
+            if(event_initial_state == '')
+            {
+                event_initial_state = $('#eventsTab .event-section').html();
+            }
+            //$('.filter-events-list .clear-event-filter').removeClass('my-vanish');
+            //$('#filter-events-menu').addClass('on');
+            var filterVal = locId;
+            //var catArray = '';
+            if(event_initial_state != '')
+            {
+                $('#eventsTab .event-section').html(event_initial_state);
+            }
+            var specialEves = $('#eventsTab .eve-special');
+            var allLocEves = $('#eventsTab .eve-all');
+            var catArray = $('#eventsTab .eve-'+filterVal);
+            if(catArray.length == 0)
+            {
+                $('#eventsTab .event-section').append('No Events Found!');
+            }
+            else
+            {
+                $(catArray).hide();
+                $('#eventsTab .eve-'+filterVal).remove();
+                $('#eventsTab .event-section').prepend(catArray);
+                $(catArray).slideToggle();
+            }
+            if(allLocEves.length != 0)
+            {
+                $('#eventsTab .event-section').prepend(allLocEves);
+            }
+            if(specialEves.length != 0)
+            {
+                $('#eventsTab .event-section').prepend(specialEves);
+            }
+
+            //myApp.closeModal('.popover-event-filter');
+        }
+    }
+
     $(document).on('click','.filter-events-list .clear-event-filter', function(){
 
         $('#filter-events-menu').removeClass('on');
@@ -3613,6 +3728,22 @@
     $(document).on('click','#doolally-age-gate .age-gate-yes', function(){
         localStorageUtil.setLocal("ageGateGone","1");
         $('#doolally-age-gate').addClass('hide');
+        setTimeout(function(){
+            //my-events-tooltip
+            if(localStorageUtil.getLocal('isEventPop') != null)
+            {
+                if(localStorageUtil.getLocal('isEventPop') == '0')
+                {
+                    eventTip.show(eventPopper);
+                    $('.tippy-overlay').removeClass('hide');
+                }
+            }
+            else
+            {
+                eventTip.show(eventPopper);
+                $('.tippy-overlay').removeClass('hide');
+            }
+        },300)
     });
 
     var eventTip,eventEl,eventPopper,menuTip,menuEl,menuPopper;
@@ -3730,21 +3861,31 @@
     }
 
     $(window).load(function(){
-        //my-events-tooltip
-        if(localStorageUtil.getLocal('isEventPop') != null)
+        if(localStorageUtil.getLocal("ageGateGone") != null)
         {
-            if(localStorageUtil.getLocal('isEventPop') == '0')
+            //my-events-tooltip
+            if(localStorageUtil.getLocal('isEventPop') != null)
+            {
+                if(localStorageUtil.getLocal('isEventPop') == '0')
+                {
+                    eventTip.show(eventPopper);
+                    $('.tippy-overlay').removeClass('hide');
+                }
+            }
+            else
             {
                 eventTip.show(eventPopper);
                 $('.tippy-overlay').removeClass('hide');
             }
         }
-        else
+
+        if($('#timelineTab .custom-accordion .demo-card-header-pic').length < 6)
         {
-            eventTip.show(eventPopper);
-            $('.tippy-overlay').removeClass('hide');
+            lessFeeds = true;
+            getMeMoreFeeds(lastFetched);
         }
     });
+    var lessFeeds = false;
     /*$(document).on('click','#event-tip-dismis', function(e){
         e.preventDefault();
         localStorageUtil.setLocal('isEventPop','1');
@@ -3909,9 +4050,9 @@
             },100);
         }
     });
-    function renderCalendarMobile()
+    function renderCalendarMobile(calSelector)
     {
-        if(typeof $('#eventsTab .even-cal-list') === 'undefined')
+        if(typeof $(calSelector) === 'undefined')
         {
             var d = new Date();
             $('#calendar-mobile-glance').fullCalendar({
@@ -3937,20 +4078,35 @@
         {
             var events = [];
             var d = new Date();
-            $('#eventsTab .even-cal-list li').each(function(j,val){
+            $(calSelector+' li').each(function(j,val){
                 var tempData = {};
-                var eveName = $(val).attr('data-evenNames');
-                if(eveName.indexOf(';') != -1)
+                if(typeof $(val).attr('data-evenNames') !== 'undefined')
                 {
-                    var res = eveName.split(';');
-                    var places = $(val).attr('data-evenPlaces').split(',');
-                    var endTimes = $(val).attr('data-evenEndTimes').split(',');
-                    for(var i=0;i<res.length;i++)
+                    var eveName = $(val).attr('data-evenNames');
+                    if(eveName.indexOf(';') != -1)
                     {
-                        if(!isEventFinished($(val).attr('data-evenDate'),endTimes[i]))
+                        var res = eveName.split(';');
+                        var places = $(val).attr('data-evenPlaces').split(',');
+                        var endTimes = $(val).attr('data-evenEndTimes').split(',');
+                        for(var i=0;i<res.length;i++)
+                        {
+                            if(!isEventFinished($(val).attr('data-evenDate'),endTimes[i]))
+                            {
+                                tempData = {};
+                                tempData['title'] = res[i];
+                                tempData['allDay'] = true;
+                                tempData['start'] = $(val).attr('data-evenDate');
+                                tempData['className'] = 'evenPlace';
+                                events.push(tempData);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(!isEventFinished($(val).attr('data-evenDate'),$(val).attr('data-evenEndTimes')))
                         {
                             tempData = {};
-                            tempData['title'] = res[i];
+                            tempData['title'] = eveName;
                             tempData['allDay'] = true;
                             tempData['start'] = $(val).attr('data-evenDate');
                             tempData['className'] = 'evenPlace';
@@ -3958,18 +4114,14 @@
                         }
                     }
                 }
-                else
+                /*else
                 {
-                    if(!isEventFinished($(val).attr('data-evenDate'),$(val).attr('data-evenEndTimes')))
-                    {
-                        tempData = {};
-                        tempData['title'] = eveName;
-                        tempData['allDay'] = true;
-                        tempData['start'] = $(val).attr('data-evenDate');
-                        tempData['className'] = 'evenPlace';
-                        events.push(tempData);
-                    }
-                }
+                    tempData = {};
+                    tempData['allDay'] = true;
+                    tempData['start'] = $(val).attr('data-evenDate');
+                    tempData['className'] = 'evenPlace';
+                    events.push(tempData);
+                }*/
             });
             $('#calendar-mobile-glance').fullCalendar({
                 defaultView: 'basicWeek',

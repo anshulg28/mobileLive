@@ -292,7 +292,7 @@
                                                                     {
                                                                         ?>
                                                                         <div class="link-card-wrapper">
-                                                                            <input type="hidden" class="my-link-url" value="<?php echo $row['entities']['urls'][0]['expanded_url'];?>"/>
+                                                                            <input type="hidden" data-prof="<?php echo $row['user']['profile_image_url_https'];?>" class="my-link-url" value="<?php echo $row['entities']['urls'][0]['expanded_url'];?>"/>
                                                                             <div class="liveurl feed-image-container hide">
                                                                                 <img src="" class="link-image mainFeed-img" />
                                                                                 <div class="details">
@@ -611,47 +611,48 @@
                                     }
                                     $img_collection = array();
                                     ?>
-                                    <div itemscope itemtype="http://schema.org/Event" class="mdl-card mdl-shadow--2dp demo-card-header-pic <?php
-                                    if(isset($row['eventPlace']))
-                                    {
-                                        if($row['isSpecialEvent'] == STATUS_YES)
+                                    <div class="search-event-card">
+                                        <div itemscope itemtype="http://schema.org/Event" class="mdl-card mdl-shadow--2dp demo-card-header-pic <?php
+                                        if(isset($row['eventPlace']))
                                         {
-                                            echo 'eve-special';
+                                            if($row['isSpecialEvent'] == STATUS_YES)
+                                            {
+                                                echo 'eve-special';
+                                            }
+                                            elseif($row['isEventEverywhere'] == STATUS_YES)
+                                            {
+                                                echo 'eve-all';
+                                            }
+                                            else
+                                            {
+                                                echo 'eve-'.$row['eventPlace'];
+                                            }
                                         }
-                                        elseif($row['isEventEverywhere'] == STATUS_YES)
-                                        {
-                                            echo 'eve-all';
-                                        }
-                                        else
-                                        {
-                                            echo 'eve-'.$row['eventPlace'];
-                                        }
-                                    }
-                                    ?>" data-eveTitle="<?php echo htmlspecialchars($row['eventName']);?>" data-orgName="<?php echo addslashes($row['creatorName']);?>">
-                                        <!--<div style="background-image:url()" valign="bottom" class="card-header color-white no-border">Journey To Mountains</div>-->
-                                        <div class="card-content">
-                                            <div class="card-content-inner">
-                                                <?php
-                                                if($postImg <=2)
-                                                {
-                                                    ?>
-                                                    <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
-                                                        <img itemprop="image" src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
-                                                    </a>
+                                        ?>" data-eveTitle="<?php echo htmlspecialchars($row['eventName']);?>" data-orgName="<?php echo addslashes($row['creatorName']);?>">
+                                            <!--<div style="background-image:url()" valign="bottom" class="card-header color-white no-border">Journey To Mountains</div>-->
+                                            <div class="card-content">
+                                                <div class="card-content-inner">
                                                     <?php
-                                                }
-                                                else
-                                                {
+                                                    if($postImg <=2)
+                                                    {
+                                                        ?>
+                                                        <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
+                                                            <img itemprop="image" src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img"/>
+                                                        </a>
+                                                        <?php
+                                                    }
+                                                    else
+                                                    {
+                                                        ?>
+                                                        <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
+                                                            <img itemprop="image" data-src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img lazy"/>
+                                                        </a>
+                                                        <?php
+                                                    }
+                                                    $postImg++;
                                                     ?>
-                                                    <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="dynamic">
-                                                        <img itemprop="image" data-src="<?php echo base_url().EVENT_PATH_THUMB.$row['filename'];?>" class="mainFeed-img lazy"/>
-                                                    </a>
-                                                    <?php
-                                                }
-                                                $postImg++;
-                                                ?>
-                                                <ul class="mdl-list main-avatar-list">
-                                                    <li class="mdl-list__item mdl-list__item--two-line">
+                                                    <ul class="mdl-list main-avatar-list">
+                                                        <li class="mdl-list__item mdl-list__item--two-line">
                                                         <span class="mdl-list__item-primary-content">
                                                             <h1 class="hide" itemprop="name"> <?php echo $row['eventName'];?></h1>
                                                             <span class="avatar-title eve-search-title">
@@ -662,78 +663,78 @@
                                                             </span>
                                                             <span class="mdl-list__item-sub-title eve-search-orgName">By <?php echo $row['creatorName'];?></span>
                                                         </span>
-                                                        <span class="mdl-list__item-secondary-content">
+                                                            <span class="mdl-list__item-secondary-content">
                                                             <span class="mdl-list__item-secondary-info">
                                                                 <input type="hidden" data-shareTxt="This looks pretty cool, shall we?" data-img="<?php if(isset($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
                                                                 <i class="my-pointer-item ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
                                                             </span>
                                                         </span>
-                                                    </li>
-                                                </ul>
-                                                <meta class="hide" itemprop="startDate" content="<?php echo $row['eventDate'].'T'.$row['startTime'];?>" />
-                                                <meta class="hide" itemprop="endDate" content="<?php echo $row['eventDate'].'T'.$row['endTime'];?>" />
-                                                <div class="mdl-card__supporting-text">
-                                                    <?php
-                                                    $eventDescrip = (mb_strlen($row['eventDescription']) > 100) ? substr($row['eventDescription'], 0, 100) . '..' : $row['eventDescription'];
-                                                    ?>
-                                                    <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment dynamic" itemprop="description">
-                                                        <?php echo $eventDescrip;?>
-                                                    </a>
-                                                    <p>
+                                                        </li>
+                                                    </ul>
+                                                    <meta class="hide" itemprop="startDate" content="<?php echo $row['eventDate'].'T'.$row['startTime'];?>" />
+                                                    <meta class="hide" itemprop="endDate" content="<?php echo $row['eventDate'].'T'.$row['endTime'];?>" />
+                                                    <div class="mdl-card__supporting-text">
                                                         <?php
-                                                        if($row['isEventEverywhere'] == STATUS_NO)
-                                                        {
+                                                        $eventDescrip = (mb_strlen($row['eventDescription']) > 100) ? substr($row['eventDescription'], 0, 100) . '..' : $row['eventDescription'];
+                                                        ?>
+                                                        <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="comment dynamic" itemprop="description">
+                                                            <?php echo $eventDescrip;?>
+                                                        </a>
+                                                        <p>
+                                                            <?php
+                                                            if($row['isEventEverywhere'] == STATUS_NO)
+                                                            {
                                                             $mapSplit = explode('/',$row['mapLink']);
                                                             $cords = explode(',',$mapSplit[count($mapSplit)-1]);
                                                             ?>
-                                                            <div style="opacity:0;position:absolute;z-index:-1" itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                                                <span itemprop="name"><?php echo 'Doolally Taproom '.$row['locName'];?></span>
-                                                                <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
-                                                                    <meta itemprop="latitude" content="<?php echo $cords[0];?>" />
-                                                                    <meta itemprop="longitude" content="<?php echo $cords[1];?>" />
-                                                                </div>
-                                                                <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                                                        <div style="opacity:0;position:absolute;z-index:-1" itemprop="location" itemscope itemtype="http://schema.org/Place">
+                                                            <span itemprop="name"><?php echo 'Doolally Taproom '.$row['locName'];?></span>
+                                                            <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+                                                                <meta itemprop="latitude" content="<?php echo $cords[0];?>" />
+                                                                <meta itemprop="longitude" content="<?php echo $cords[1];?>" />
+                                                            </div>
+                                                            <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
                                                                                 <span itemprop="streetAddress">
                                                                                     <?php echo $row['locAddress'];?>
                                                                                 </span>
-                                                                </div>
                                                             </div>
-                                                            <?php
-                                                        }
-                                                        else
+                                                        </div>
+                                                    <?php
+                                                    }
+                                                    else
+                                                    {
+                                                        if(isset($mainLocs) && myIsArray($mainLocs))
                                                         {
-                                                            if(isset($mainLocs) && myIsArray($mainLocs))
+                                                            foreach($mainLocs as $locKey => $locRow)
                                                             {
-                                                                foreach($mainLocs as $locKey => $locRow)
-                                                                {
-                                                                    $mapSplit = explode('/',$locRow['mapLink']);
-                                                                    $cords = explode(',',$mapSplit[count($mapSplit)-1]);
-                                                                    ?>
-                                                                    <div style="opacity:0;position:absolute;z-index:-1" itemprop="location" itemscope itemtype="http://schema.org/Place">
-                                                                        <span itemprop="name"><?php echo 'Doolally Taproom '.$locRow['locName'];?></span>
-                                                                        <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
-                                                                            <meta itemprop="latitude" content="<?php echo $cords[0];?>" />
-                                                                            <meta itemprop="longitude" content="<?php echo $cords[1];?>" />
-                                                                        </div>
-                                                                        <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                                                                $mapSplit = explode('/',$locRow['mapLink']);
+                                                                $cords = explode(',',$mapSplit[count($mapSplit)-1]);
+                                                                ?>
+                                                                <div style="opacity:0;position:absolute;z-index:-1" itemprop="location" itemscope itemtype="http://schema.org/Place">
+                                                                    <span itemprop="name"><?php echo 'Doolally Taproom '.$locRow['locName'];?></span>
+                                                                    <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+                                                                        <meta itemprop="latitude" content="<?php echo $cords[0];?>" />
+                                                                        <meta itemprop="longitude" content="<?php echo $cords[1];?>" />
+                                                                    </div>
+                                                                    <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
                                                                                 <span itemprop="streetAddress">
                                                                                     <?php echo $locRow['locAddress'];?>
                                                                                 </span>
-                                                                        </div>
                                                                     </div>
-                                                                    <?php
-                                                                }
+                                                                </div>
+                                                                <?php
                                                             }
                                                         }
-                                                        ?>
-                                                    <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<span class="eve-locName"><?php if($row['isSpecialEvent'] == STATUS_YES){echo 'Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo 'All Taprooms';}else{ echo $row['locName'];} ?></span>
+                                                    }
+                                                    ?>
+                                                        <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<span class="eve-locName"><?php if($row['isSpecialEvent'] == STATUS_YES){echo 'Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo 'All Taprooms';}else{ echo $row['locName'];} ?></span>
                                                         <?php
                                                         if($row['showEventDate'] == STATUS_YES)
                                                         {
                                                             ?>
                                                             &nbsp;&nbsp;<span class="ic_events_icon event-date-main my-display-inline"></span>&nbsp;
                                                             <span class="eve-eventDate"><?php $d = date_create($row['eventDate']);
-                                                            echo date_format($d,EVENT_DATE_FORMAT); ?></span>
+                                                                echo date_format($d,EVENT_DATE_FORMAT); ?></span>
                                                             <?php
                                                         }
                                                         if($row['showEventPrice'] == STATUS_YES)
@@ -759,16 +760,22 @@
                                                         else
                                                         {
                                                             ?>
-                                                            <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="event-bookNow dynamic">Book Event <i class="ic_back_icon my-display-inline"></i></a>
+                                                            <div class="event-action-btns">
+                                                                <a href="#" data-eventId="<?php echo $row['eventId'];?>" class="remind-later-btn">Remind Me Later</a>
+                                                                <div class="btn-divider"></div>
+                                                                <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="event-bookNow dynamic">Book Event <i class="ic_back_icon my-display-inline"></i></a>
+                                                            </div>
                                                             <?php
                                                         }
                                                         ?>
                                                         <a itemprop="url" href="<?php echo base_url().'?page/events/'.$row['eventSlug'];?>" class="color-black hide"><?php echo $row['eventName'];?></a>
-                                                    </p>
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <?php
                                 }
                             }
@@ -1077,9 +1084,9 @@
             $('.event-creator-box').addClass('hide');
             $('.content-for-mobile').html(mobHtm);
             $('.content-for-mobile').append(eventAdd);
-            renderCalendarMobile();
+            renderCalendarMobile('.even-cal-list');
         }
-        $('#eventSearch').fastLiveFilter('#desk-event-section .demo-card-header-pic',{
+        $('#eventSearch').fastLiveFilter('#desk-event-section .search-event-card',{
             selector:'.eve-search-title,.eve-search-orgName,.eve-locName,.eve-eventDate',
             callback: function(total){
                 if(total == 0)

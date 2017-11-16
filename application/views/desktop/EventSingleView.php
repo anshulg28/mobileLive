@@ -114,11 +114,11 @@
                                                             {
                                                                if(isset($sRow['regPrice']))
                                                                {
-                                                                   $total = (int)$sRow['regPrice'] * (int)$sRow['quantity'];
+                                                                   $total += (int)$sRow['regPrice'] * (int)$sRow['quantity'];
                                                                }
                                                                else
                                                                {
-                                                                   $total = (int)$row['eventPrice'] * (int)$sRow['quantity'];
+                                                                   $total += (int)$row['eventPrice'] * (int)$sRow['quantity'];
                                                                }
                                                             }
                                                         }
@@ -307,8 +307,10 @@
                                             ?>
                                             <div class="mdl-list__item">
                                                 <span class="mdl-list__item-primary-content">
-                                                  <span><?php echo $signRow['firstName'].' '.$signRow['lastName'];?></span>
+                                                  <span><?php echo $signRow['firstName'].' '.$signRow['lastName'];?> </span>
                                                     <?php
+                                                    $totPay = (int)$signRow['quantity'] * (int)$signRow['regPrice'];
+                                                    echo '<span class="dim-text-opacity">(Rs. '.$totPay.')</span>';
                                                     if($remain != 0)
                                                     {
                                                         ?>
@@ -393,13 +395,14 @@
 <script>
     $(document).on('click','.contact-email', function(){
         var email = $(this).attr('data-email');
+        vex.dialog.buttons.YES.text = 'OK';
         vex.dialog.prompt({
             message: 'Email Id of the attendee: ',
             value:email,
-            callback: function (value) {
-                console.log(value);
-            }
+            callback: function(){},
+            afterClose: function(){vex.closeAll();}
         });
+        $('.vex-dialog-button-secondary.vex-dialog-button.vex-last').addClass('hide');
         setTimeout(function(){
             $('.vex-dialog-prompt-input').select();
         },100);

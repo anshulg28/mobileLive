@@ -158,14 +158,21 @@ class Main extends MY_Controller
             {
                 if(isset($get['status']) && $get['status'] == 'success'
                 && isset($get['userName']) && isset($get['userEmail']) && isset($get['userMobile'])
-                && isset($get['nTickets']))
+                && isset($get['nTickets']) && isset($get['amount']))
                 {
+                    $couponUsed = 0;
+                    if(isset($get['cc']))
+                    {
+                        $couponUsed = 1;
+                    }
                     $ehArray = array(
                         'bookingid' => $get['bookingid'],
                         'userName' => urldecode($get['userName']),
                         'userEmail' => $get['userEmail'],
                         'userMobile' => $get['userMobile'],
-                        'nTickets' => $get['nTickets']
+                        'nTickets' => $get['nTickets'],
+                        'amount' => $get['amount'],
+                        'couponUsed' => $couponUsed
                     );
                     $this->thankYou1($get['eid'], $ehArray);
                 }
@@ -1365,7 +1372,15 @@ $this->load->view('MobileHomeView', $data);
             $ehDetails = $this->dashboard_model->getEventInfoByEhId($eventId);
             if (isset($ehDetails) && myIsMultiArray($ehDetails))
             {
-                $eventData = $this->dashboard_model->getEventById($ehDetails['eventId']);
+                //$eventData = $this->dashboard_model->getEventById($ehDetails['eventId']);
+                if($eventId == SPECIAL_EVENT_EHID)
+                {
+                    $eventData = $this->dashboard_model->getSpecialEventById($ehDetails['eventId']);
+                }
+                else
+                {
+                    $eventData = $this->dashboard_model->getEventById($ehDetails['eventId']);
+                }
                 $mojoNumber = $this->clearMobNumber($ehArray['userMobile']);
                 $userStatus = $this->checkPublicUser($ehArray['userEmail'], $mojoNumber);
                 $isSavedAlready = false;
@@ -1389,34 +1404,6 @@ $this->load->view('MobileHomeView', $data);
                             );
                             $this->users_model->updatePublicUser($detail);
                         }
-                        if($eventId == SPECIAL_EVENT_EHID)
-                        {
-                            $eventData = $this->dashboard_model->getSpecialEventById($ehDetails['eventId']);
-                        }
-                        else
-                        {
-                            $eventData = $this->dashboard_model->getEventById($ehDetails['eventId']);
-                        }
-                        $mailData = array(
-                            'creatorName' => $ehArray['userName'],
-                            'creatorEmail' => $ehArray['userEmail'],
-                            'creatorPhone' => $ehArray['userMobile'],
-                            'eventName' => $eventData[0]['eventName'],
-                            'eventDate' => $eventData[0]['eventDate'],
-                            'startTime' => $eventData[0]['startTime'],
-                            'endTime' => $eventData[0]['endTime'],
-                            'hostEmail' => $eventData[0]['creatorEmail'],
-                            'hostName' => $eventData[0]['creatorName'],
-                            'eventDescrip' => $eventData[0]['eventDescription'],
-                            'eventCost' => $eventData[0]['costType'],
-                            'eventId' => $eventData[0]['eventId'],
-                            'buyQuantity' => $ehArray['nTickets'],
-                            'doolallyFee' => $eventData[0]['doolallyFee'],
-                            'eventPrice' => $eventData[0]['eventPrice'],
-                            'bookerId' => $ehArray['bookingid']
-                        );
-                        $this->sendemail_library->eventRegSuccessMail($mailData, $eventData[0]['eventPlace']);
-                        $this->sendemail_library->eventHostSuccessMail($mailData, $eventData[0]['eventPlace']);
                     }
                     else
                     {
@@ -1451,16 +1438,60 @@ $this->load->view('MobileHomeView', $data);
 
                     $userId = $this->users_model->savePublicUser($user);
                     $checkUserAlreadyReg = $this->dashboard_model->checkUserBookedWithMojo($userId, $ehDetails['eventId'], $ehArray['bookingid']);
-                    if ($checkUserAlreadyReg['status'] === false)
+                    $isSavedAlready = $checkUserAlreadyReg['status'];
+                }
+
+                //Save Booking Details
+
+                if (!$isSavedAlready)
+                {
+                    if(isset($ehArray['amount']) && $ehArray['amount'] != '')
                     {
-                        if($eventId == SPECIAL_EVENT_EHID)
+                        if((int)$ehArray['amount'] == 0)
                         {
-                            $eventData = $this->dashboard_model->getSpecialEventById($ehDetails['eventId']);
+                            $evePrice = 0;
                         }
                         else
                         {
-                            $eventData = $this->dashboard_model->getEventById($ehDetails['eventId']);
+                            $evePrice = (int)$ehArray['amount'] / (int)$ehArray['nTickets'];
                         }
+                        $requiredInfo = array(
+                            'bookerUserId' => $userId,
+                            'eventId' => $ehDetails['eventId'],
+                            'quantity' => $ehArray['nTickets'],
+                            'paymentId' => $ehArray['bookingid'],
+                            'regPrice' => (int)$evePrice,
+                            'isDirectlyRegistered' => $isDirect,
+                            'isCouponUsed' => $ehArray['couponUsed']
+                        );
+                    }
+                    else
+                    {
+                        $requiredInfo = array(
+                            'bookerUserId' => $userId,
+                            'eventId' => $ehDetails['eventId'],
+                            'quantity' => $ehArray['nTickets'],
+                            'paymentId' => $ehArray['bookingid'],
+                            'regPrice' => $eventData[0]['eventPrice'],
+                            'isDirectlyRegistered' => $isDirect,
+                            'isCouponUsed' => $ehArray['couponUsed']
+                        );
+                    }
+
+                    $this->dashboard_model->saveEventRegis($requiredInfo);
+                    $dbError = $this->db->error();
+                    if($dbError['code'] != 0 && $dbError['message'] != '')
+                    {
+                        $details = array(
+                            'errorMsg' => 'code: '.$dbError['code'].', '.addslashes($dbError['message']),
+                            'errorTrace' => 'function thankYou1, line No: 1510',
+                            'fromWhere' => 'Mobile',
+                            'insertedDT' => date('Y-m-d H:i:s')
+                        );
+                        $this->dashboard_model->saveMyLog($details);
+                    }
+                    else
+                    {
                         $mailData = array(
                             'creatorName' => $ehArray['userName'],
                             'creatorEmail' => $ehArray['userEmail'],
@@ -1482,26 +1513,6 @@ $this->load->view('MobileHomeView', $data);
                         $this->sendemail_library->memberWelcomeMail($mailData, $eventData[0]['eventPlace']);
                         $this->sendemail_library->eventHostSuccessMail($mailData, $eventData[0]['eventPlace']);
                     }
-                    else
-                    {
-                        $isSavedAlready = true;
-                    }
-                }
-
-                //Save Booking Details
-
-                if (!$isSavedAlready)
-                {
-                    $requiredInfo = array(
-                        'bookerUserId' => $userId,
-                        'eventId' => $ehDetails['eventId'],
-                        'quantity' => $ehArray['nTickets'],
-                        'paymentId' => $ehArray['bookingid'],
-                        'regPrice' => $eventData[0]['eventPrice'],
-                        'isDirectlyRegistered' => $isDirect
-                    );
-
-                    $this->dashboard_model->saveEventRegis($requiredInfo);
                     //$this->sendemail_library->newEventMail($mailEvent);
                     if (isSessionVariableSet($this->isMobUserSession) === FALSE)
                     {
@@ -1547,15 +1558,22 @@ $this->load->view('MobileHomeView', $data);
         {
             if(isset($get['status']) && $get['status'] == 'success'
                 && isset($get['userName']) && isset($get['userEmail']) && isset($get['userMobile'])
-                && isset($get['nTickets']))
+                && isset($get['nTickets']) && isset($get['amount']))
             {
+                $couponUsed = 0;
+                if(isset($get['cc']))
+                {
+                    $couponUsed = 1;
+                }
                 log_message('error','In the Eventshigh Callback: '.$get['bookingid'].' DT: '.date('Y-m-d H:i:s'));
                 $ehArray = array(
                     'bookingid' => $get['bookingid'],
                     'userName' => urldecode($get['userName']),
                     'userEmail' => $get['userEmail'],
                     'userMobile' => $get['userMobile'],
-                    'nTickets' => $get['nTickets']
+                    'nTickets' => $get['nTickets'],
+                    'amount' => $get['amount'],
+                    'couponUsed' => $couponUsed
                 );
                 $this->thankYou1($get['eid'],$ehArray,0);
                 log_message('error','Booking Complete: '.$get['bookingid'].' DT: '.date('Y-m-d H:i:s'));
@@ -3126,7 +3144,7 @@ $this->load->view('MobileHomeView', $data);
             'eventDescrip' => $eventData[0]['eventDescription'],
             'eventCost' => $eventData[0]['costType'],
             'eventId' => $eventData[0]['eventId'],
-            'buyQuantity' => '2',
+            'buyQuantity' => '1',
             'doolallyFee' => $eventData[0]['doolallyFee'],
             'bookerId' => 'MOJO1234565',
             'eventPrice' => $eventData[0]['eventPrice']
@@ -3195,5 +3213,24 @@ $this->load->view('MobileHomeView', $data);
             $data['errorMsg'] = 'Event Not Found!';
             echo json_encode($data);
         }
+    }
+
+    public function insDup()
+    {
+        $requiredInfo = array(
+            'bookerUserId' => '995',
+            'eventId' => '533',
+            'quantity' => '2',
+            'paymentId' => '4bEDh',
+            'isDirectlyRegistered' => 0
+        );
+
+        $this->dashboard_model->saveEventRegis($requiredInfo);
+        $dbError = $this->db->error();
+        if($dbError['code'] != 0 && $dbError['message'] != '')
+        {
+            var_dump($dbError);
+        }
+        //var_dump($this->db->error());
     }
 }
