@@ -32,14 +32,28 @@
             }
         }
         ?>
-    </p>
-
-    <p>This mail is to let you know what your <?php echo date('l',strtotime($mailData['eventDate']));?>
-        is going to look like. The event will run from <?php echo date('h:i a',strtotime($mailData['startTime'])).'-'.date('h:i a',strtotime($mailData['endTime']));?>.<br><br>
+            <br><br>
+        <?php
+        if(isset($mailData['customEmailText']))
+        {
+            echo $mailData['customEmailText'];
+        }
+        else
+        {
+            ?>
+            This mail is to let you know what your <?php echo date('l',strtotime($mailData['eventDate']));?>
+            is going to look like. The event will run from <?php echo date('h:i a',strtotime($mailData['startTime'])).'-'.date('h:i a',strtotime($mailData['endTime']));?>.<br><br>
+            <?php
+        }
+        ?>
 
         <?php
             if(isset($mailData['eveOfferCode']) && $mailData['eveOfferCode'] != '')
             {
+                if(isset($mailData['customEmailText']))
+                {
+                    echo '<br><br>';
+                }
                 if((int)$mailData['eventPrice'] == 500)
                 {
                     ?>
@@ -59,9 +73,7 @@
                 <br><br>
                 <?php
             }
-        ?>
-
-        You can access your events from the <a href="<?php echo base_url();?>?page/event_dash" target="_blank">My Events</a> section.
+        ?>You can access your events from the <a href="<?php echo base_url();?>?page/event_dash" target="_blank">My Events</a> section.
         This is a place where information on date, timings, organiser will be available to you. You can also cancel your attendance from this dashboard.<br><br>
 
         Username: <?php echo $mailData['creatorEmail'];?><br>
@@ -69,7 +81,7 @@
 
         See you!<br>
         <?php echo ucfirst($commName);?>, Doolally
-    </>
+    </p>
 
 </body>
 </html>

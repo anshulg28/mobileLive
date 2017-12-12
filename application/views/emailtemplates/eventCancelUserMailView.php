@@ -11,7 +11,7 @@
         Your request for cancellation is being reviewed. Please give us a couple of hours.<br><br>
 
         Thanks,<br>
-        <?php echo ucfirst($commName); ?>, Doolally
+        <?php echo trim(ucfirst($commName)); ?>, Doolally
     </p>
 
 </body>

@@ -209,6 +209,20 @@ class Cron_Model extends CI_Model
         return $data;
     }
 
+    public function getAllTrans()
+    {
+        $query = "SELECT erm.*,CONCAT(um.firstName,' ',um.lastName) AS 'Uname',um.mobNum,um.emailId
+                    FROM eventregistermaster erm
+                    LEFT JOIN eventmaster em ON erm.eventId = em.eventId
+                    LEFT JOIN eventcompletedmaster ecm ON erm.eventId = ecm.eventId
+                    LEFT JOIN doolally_usersmaster um ON erm.bookerUserId = um.userId
+                    WHERE (em.costType != 1 OR ecm.costType != 1) AND DATE(erm.createdDT) = CURRENT_DATE() - INTERVAL 1 DAY";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+
+    }
+
     public function getIntaRecords()
     {
         $query = "SELECT um.firstName, um.lastName,
@@ -222,11 +236,18 @@ class Cron_Model extends CI_Model
                     LEFT JOIN locationmaster lm1 ON ecm.eventPlace = lm1.id
                     LEFT JOIN locationmaster lm ON em.eventPlace = lm.id
                     LEFT JOIN eventshighmaster ehm ON erm.eventId = ehm.eventId AND ehm.highStatus = 1
-                    WHERE DATE(erm.createdDT) = CURRENT_DATE() - INTERVAL 1 DAY";
+                    WHERE em.costType != 1 AND DATE(erm.createdDT) = CURRENT_DATE() - INTERVAL 1 DAY";
 
         $result = $this->db->query($query)->result_array();
         return $result;
 
+    }
+    public function getEhRefundDetails($bookId)
+    {
+        $query = "SELECT refundId, refundAmount 
+                    FROM ehrefundmaster WHERE transStatus LIKE 'Success' AND bookingId LIKE '".$bookId."'";
+        $result = $this->db->query($query)->row_array();
+        return $result;
     }
 
     public function getWeeklyFeedbacks()

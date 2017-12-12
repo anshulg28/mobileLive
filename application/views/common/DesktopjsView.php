@@ -54,9 +54,9 @@
 </script>
 <!-- Loading bar -->
 <script>
-    $(document).bind("contextmenu",function(e){
+    /*$(document).bind("contextmenu",function(e){
         e.preventDefault();
-    });
+    });*/
     function showProgressLoader()
     {
         $('#custom-progressBar').removeClass('hide');
@@ -81,7 +81,9 @@
             {
                 time1 = endTime;
             }
-            var nowTime = nowDate.getHours()+':'+nowDate.getMinutes();
+            var currentHour = nowDate.getHours();
+            currentHour = ("0" + currentHour).slice(-2);
+            var nowTime = currentHour+':'+nowDate.getMinutes();
             if(nowTime > time1)
             {
                 result = true;
@@ -328,40 +330,47 @@
                         var res = eveName.split(';');
                         var places = $(val).attr('data-evenPlaces').split(',');
                         var urls = $(val).attr('data-evenUrls').split(',');
+                        var endTimes = $(val).attr('data-evenEndTimes').split(',');
                         for(var i=0;i<res.length;i++)
                         {
-                            tempData = {};
-                            if(res[i].length > 35)
+                            if(!isEventFinished($(val).attr('data-evenDate'),endTimes[i]))
                             {
-                                tempData['title'] = res[i].substr(0,35)+'..';
+                                tempData = {};
+                                if(res[i].length > 35)
+                                {
+                                    tempData['title'] = res[i].substr(0,35)+'..';
+                                }
+                                else
+                                {
+                                    tempData['title'] = res[i];
+                                }
+                                tempData['allDay'] = true;
+                                tempData['start'] = $(val).attr('data-evenDate');
+                                tempData['className'] = 'evenPlace_'+places[i];
+                                tempData['url'] = urls[i];
+                                events.push(tempData);
                             }
-                            else
-                            {
-                                tempData['title'] = res[i];
-                            }
-                            tempData['allDay'] = true;
-                            tempData['start'] = $(val).attr('data-evenDate');
-                            tempData['className'] = 'evenPlace_'+places[i];
-                            tempData['url'] = urls[i];
-                            events.push(tempData);
                         }
                     }
                     else
                     {
-                        tempData = {};
-                        if(eveName.length > 35)
+                        if(!isEventFinished($(val).attr('data-evenDate'),$(val).attr('data-evenEndTimes')))
                         {
-                            tempData['title'] = eveName.substr(0,35)+'..';
+                            tempData = {};
+                            if(eveName.length > 35)
+                            {
+                                tempData['title'] = eveName.substr(0,35)+'..';
+                            }
+                            else
+                            {
+                                tempData['title'] = eveName;
+                            }
+                            tempData['allDay'] = true;
+                            tempData['start'] = $(val).attr('data-evenDate');
+                            tempData['className'] = 'evenPlace_'+$(val).attr('data-evenPlaces');
+                            tempData['url'] = $(val).attr('data-evenUrls');
+                            events.push(tempData);
                         }
-                        else
-                        {
-                            tempData['title'] = eveName;
-                        }
-                        tempData['allDay'] = true;
-                        tempData['start'] = $(val).attr('data-evenDate');
-                        tempData['className'] = 'evenPlace_'+$(val).attr('data-evenPlaces');
-                        tempData['url'] = $(val).attr('data-evenUrls');
-                        events.push(tempData);
                     }
                 }
                 else
@@ -697,7 +706,7 @@
         if($(this).scrollTop() >= 500)
         {
             if(document.location.href == base_url+'?page/events' || document.location.href == base_url+'?page/events/'
-                || document.location.href.indexOf('filter_events') != -1)
+                || document.location.href.indexOf('filter_events') != -1 || document.location.href.indexOf('songlist') != -1)
             {
 
             }
@@ -1836,7 +1845,7 @@
                         else if(data[i]['entities']['urls'] != null && data[i]['entities']['urls'].length > 0)
                         {
                             bigCardHtml += '<div class="link-card-wrapper">';
-                            bigCardHtml += '<input type="hidden" class="my-link-url" value="'+data[i]['entities']['urls'][0]['expanded_url']+'"/>';
+                            bigCardHtml += '<input type="hidden" data-prof="'+data[i]['user']['profile_image_url_https']+'" class="my-link-url" value="'+data[i]['entities']['urls'][0]['expanded_url']+'"/>';
                             bigCardHtml += '<div class="liveurl feed-image-container hide">';
                             bigCardHtml += '<img src="" class="link-image mainFeed-img lazy lazy-fadein"/>';
                             bigCardHtml += '<div class="details"><div class="title"></div><div class="description"></div>';
@@ -2023,10 +2032,12 @@
             }
         }
         var errUrl = url;
+        var startT = new Date();
         $.ajax({
             type:'POST',
             cache: false,
             url: url,
+            async: true,
             data:{isAjax:1},
             success: function(data){
                 if(url.indexOf('jukebox') != -1)
@@ -2057,8 +2068,12 @@
             },
             error: function(xhr, status ,error)
             {
-                alert('Error Fetching Details!');
-                var err = 'Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
+                hideProgressLoader();
+                vex.dialog.buttons.YES.text = 'Close';
+                vex.dialog.alert({
+                    unsafeMessage: 'Error Fetching Details!'
+                });
+                var err = 'Time: '+startT.toUTCString()+' Url: '+errUrl+' StatusText: '+xhr.statusText+' Status: '+xhr.status+' resp: '+xhr.responseText;
                 saveErrorLog(err);
             }
         });
@@ -2454,6 +2469,7 @@
     $(document).on('click','.demo-list-two .request_song_btn', function(){
         var songId = $(this).attr('data-songId');
         var tapId = $(this).attr('data-tapId');
+        var tapSong = $(this).attr('data-songName');
         var song = $(this);
         $.geolocation.get({
             win: function(position)
@@ -2464,6 +2480,7 @@
                 var postData = {
                     'songId': songId,
                     'tapId': tapId,
+                    'songName': tapSong,
                     'location': jukeLong+','+jukeLat
                 };
                 var errUrl = base_url+'main/playTapSong';
@@ -3728,7 +3745,7 @@
     $(document).on('click','#doolally-age-gate .age-gate-yes', function(){
         localStorageUtil.setLocal("ageGateGone","1");
         $('#doolally-age-gate').addClass('hide');
-        setTimeout(function(){
+        /*setTimeout(function(){
             //my-events-tooltip
             if(localStorageUtil.getLocal('isEventPop') != null)
             {
@@ -3743,10 +3760,10 @@
                 eventTip.show(eventPopper);
                 $('.tippy-overlay').removeClass('hide');
             }
-        },300)
+        },300)*/
     });
 
-    var eventTip,eventEl,eventPopper,menuTip,menuEl,menuPopper;
+    /*var eventTip,eventEl,eventPopper,menuTip,menuEl,menuPopper;
     if($(window).width() < mobileSize)
     {
         eventTip =  tippy('footer #main-events-tab',{
@@ -3858,10 +3875,10 @@
         });
          menuEl = document.querySelector('#main-web-menu');
          menuPopper = menuTip.getPopperElement(menuEl);
-    }
+    }*/
 
     $(window).load(function(){
-        if(localStorageUtil.getLocal("ageGateGone") != null)
+        /*if(localStorageUtil.getLocal("ageGateGone") != null)
         {
             //my-events-tooltip
             if(localStorageUtil.getLocal('isEventPop') != null)
@@ -3877,7 +3894,7 @@
                 eventTip.show(eventPopper);
                 $('.tippy-overlay').removeClass('hide');
             }
-        }
+        }*/
 
         if($('#timelineTab .custom-accordion .demo-card-header-pic').length < 6)
         {
@@ -4093,7 +4110,15 @@
                             if(!isEventFinished($(val).attr('data-evenDate'),endTimes[i]))
                             {
                                 tempData = {};
-                                tempData['title'] = res[i];
+                                if(res[i].length > 35)
+                                {
+                                    tempData['title'] = res[i].substr(0,35)+'..';
+                                }
+                                else
+                                {
+                                    tempData['title'] = res[i];
+                                }
+                                //tempData['title'] = res[i];
                                 tempData['allDay'] = true;
                                 tempData['start'] = $(val).attr('data-evenDate');
                                 tempData['className'] = 'evenPlace';
@@ -4106,7 +4131,15 @@
                         if(!isEventFinished($(val).attr('data-evenDate'),$(val).attr('data-evenEndTimes')))
                         {
                             tempData = {};
-                            tempData['title'] = eveName;
+                            if(eveName.length > 35)
+                            {
+                                tempData['title'] = eveName.substr(0,35)+'..';
+                            }
+                            else
+                            {
+                                tempData['title'] = eveName;
+                            }
+                            //tempData['title'] = eveName;
                             tempData['allDay'] = true;
                             tempData['start'] = $(val).attr('data-evenDate');
                             tempData['className'] = 'evenPlace';

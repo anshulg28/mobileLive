@@ -51,7 +51,13 @@ class Main extends MY_Controller
                             $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
                             if ($eventData[0]['isEventEverywhere'] == '1') {
                                 $forDescription .= " @ All Taprooms";
-                            } else {
+                            }
+                            elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                            {
+                                $forDescription .= " @ " ."1st Brewhouse, Pune";
+                            }
+                            else
+                            {
                                 $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
                             }
                             $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
@@ -81,7 +87,13 @@ class Main extends MY_Controller
                             $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
                             if ($eventData[0]['isEventEverywhere'] == '1') {
                                 $forDescription .= " @ All Taprooms";
-                            } else {
+                            }
+                            elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                            {
+                                $forDescription .= " @ " ."1st Brewhouse, Pune";
+                            }
+                            else
+                            {
                                 $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
                             }
                             $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
@@ -244,7 +256,13 @@ class Main extends MY_Controller
                                 $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
                                 if ($eventData[0]['isEventEverywhere'] == '1') {
                                     $forDescription .= " @ All Taprooms";
-                                } else {
+                                }
+                                elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                                {
+                                    $forDescription .= " @ " ."1st Brewhouse, Pune";
+                                }
+                                else
+                                {
                                     $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
                                 }
                                 $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
@@ -255,6 +273,13 @@ class Main extends MY_Controller
                                     $shareImg = $this->dashboard_model->getShareImg($eventData[0]['eventId']);
                                     if (isset($shareImg) && myIsArray($shareImg)) {
                                         $imgLink = base_url() . EVENT_PATH_THUMB . $shareImg['filename'];
+                                    }
+                                }
+                                else
+                                {
+                                    if(isset($eventData[0]['lowResImage']))
+                                    {
+                                        $data['meta']['lowRes'] = base_url().EVENT_PATH_THUMB.$eventData[0]['lowResImage'];
                                     }
                                 }
                                 $data['meta']['img'] = $imgLink;
@@ -275,7 +300,13 @@ class Main extends MY_Controller
                                 $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
                                 if ($eventData[0]['isEventEverywhere'] == '1') {
                                     $forDescription .= " @ All Taprooms";
-                                } else {
+                                }
+                                elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                                {
+                                    $forDescription .= " @ " ."1st Brewhouse, Pune";
+                                }
+                                else
+                                {
                                     $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
                                 }
                                 $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
@@ -286,6 +317,13 @@ class Main extends MY_Controller
                                     $shareImg = $this->dashboard_model->getShareImg($eventData[0]['eventId']);
                                     if (isset($shareImg) && myIsArray($shareImg)) {
                                         $imgLink = base_url() . EVENT_PATH_THUMB . $shareImg['filename'];
+                                    }
+                                }
+                                else
+                                {
+                                    if(isset($eventData[0]['lowResImage']))
+                                    {
+                                        $data['meta']['lowRes'] = base_url().EVENT_PATH_THUMB.$eventData[0]['lowResImage'];
                                     }
                                 }
                                 $data['meta']['img'] = $imgLink;
@@ -1508,7 +1546,9 @@ $this->load->view('MobileHomeView', $data);
                             'buyQuantity' => $ehArray['nTickets'],
                             'doolallyFee' => $eventData[0]['doolallyFee'],
                             'eventPrice' => $eventData[0]['eventPrice'],
-                            'bookerId' => $ehArray['bookingid']
+                            'bookerId' => $ehArray['bookingid'],
+                            'customEmailText' => $eventData[0]['customEmailText'],
+                            'isSpecialEvent' => $eventData[0]['isSpecialEvent']
                         );
                         $this->sendemail_library->memberWelcomeMail($mailData, $eventData[0]['eventPlace']);
                         $this->sendemail_library->eventHostSuccessMail($mailData, $eventData[0]['eventPlace']);
@@ -1891,6 +1931,15 @@ $this->load->view('MobileHomeView', $data);
             {
                 $post['email'] = $this->userMobEmail;
             }
+            $songData = array(
+                'songName' => $post['songName'],
+                'taproomId' => $post['tapId'],
+                'fromWhere' => 'desktop',
+                'userEmail' => $this->userMobEmail,
+                'insertedDateTime' => date('Y-m-d H:i:s')
+            );
+
+            $this->dashboard_model->saveSongReqRecord($songData);
             $songStatus = $this->curl_library->requestThirdPartySong($post);
             if(isset($songStatus['error']))
             {
@@ -1981,7 +2030,7 @@ $this->load->view('MobileHomeView', $data);
             }
             $details = array(
                 'errorMsg' => 'Error: Important event fields are not set!',
-                'errorTrace' => 'function saveEvent, line No: 1907, IP: '.$remoteIp,
+                'errorTrace' => 'function saveEvent, line No: 1993, IP: '.$remoteIp,
                 'fromWhere' => 'Mobile',
                 'insertedDT' => date('Y-m-d H:i:s')
             );
@@ -2033,7 +2082,7 @@ $this->load->view('MobileHomeView', $data);
             "eventPlace" => $post['eventPlace'],
             "eventDate" => $post['eventDate']
         );
-        $eventSpace = $this->dashboard_model->checkEventSpace($Edetails);
+        //$eventSpace = $this->dashboard_model->checkEventSpace($Edetails);
         $isEventExists = $this->dashboard_model->isExistingEvent($Edetails);
         $existEveNames = '';
         if($isEventExists['status'] === TRUE)
@@ -3232,5 +3281,39 @@ $this->load->view('MobileHomeView', $data);
             var_dump($dbError);
         }
         //var_dump($this->db->error());
+    }
+
+    public function sendOnlyEmail()
+    {
+        $eventData = $this->dashboard_model->getEventById('771');
+        $ehArray = array(
+            'userName' => 'Anshul',
+            'userEmail' => 'anshulgupta@rocketmail.com',
+            'userMobile' => '8879103942',
+            'nTickets' => '1',
+            'bookingid' => 'ABCTEST'
+        );
+        $mailData = array(
+            'creatorName' => $ehArray['userName'],
+            'creatorEmail' => $ehArray['userEmail'],
+            'creatorPhone' => $ehArray['userMobile'],
+            'eventName' => $eventData[0]['eventName'],
+            'eventDate' => $eventData[0]['eventDate'],
+            'startTime' => $eventData[0]['startTime'],
+            'endTime' => $eventData[0]['endTime'],
+            'hostEmail' => $eventData[0]['creatorEmail'],
+            'hostName' => $eventData[0]['creatorName'],
+            'eventDescrip' => $eventData[0]['eventDescription'],
+            'eventCost' => $eventData[0]['costType'],
+            'eventId' => $eventData[0]['eventId'],
+            'buyQuantity' => $ehArray['nTickets'],
+            'doolallyFee' => $eventData[0]['doolallyFee'],
+            'eventPrice' => $eventData[0]['eventPrice'],
+            'bookerId' => $ehArray['bookingid'],
+            'customEmailText' => $eventData[0]['customEmailText'],
+            'isSpecialEvent' => $eventData[0]['isSpecialEvent']
+        );
+        $this->sendemail_library->testWelcomeMail($mailData, $eventData[0]['eventPlace']);
+        //$this->sendemail_library->eventHostSuccessMail($mailData, $eventData[0]['eventPlace']);
     }
 }

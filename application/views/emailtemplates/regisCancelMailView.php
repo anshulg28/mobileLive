@@ -7,10 +7,10 @@
 
 <body>
     <p>
-        Dear <?php echo $mailData['creatorName']; ?>,<br><br>
+        Dear <?php echo trim($mailData['creatorName']); ?>,<br><br>
 
-        <?php echo $mailData['firstName'].' '.$mailData['lastName']; ?> has withdrawn from <?php echo trim($mailData['eventName']); ?>.
-        We are processing his/her refund. Please note that <?php echo $mailData['firstName'].' '.$mailData['lastName']; ?> will be removed from your list of attendees.<br><br>
+        <?php echo trim($mailData['firstName']).' '.trim($mailData['lastName']); ?> has withdrawn from <?php echo trim($mailData['eventName']); ?>.
+        We are processing his/her refund. Please note that <?php echo trim($mailData['firstName']).' '.trim($mailData['lastName']); ?> will be removed from your list of attendees.<br><br>
 
         Thanks,<br>
         Doolally

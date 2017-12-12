@@ -53,6 +53,110 @@ class Sendemail_library
         $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
+    //For Testing only
+    public function testWelcomeMail($userData, $eventPlace)
+    {
+        $locData = $this->CI->locations_model->getLocationDetailsById($eventPlace);
+        $mailRecord = $this->CI->users_model->searchUserByLoc($eventPlace);
+
+        $data['locInfo'] = $locData['locData'][0];
+        $data['commName'] = 'Doolally';
+        if(isset($mailRecord['userData']['firstName']))
+        {
+            $data['commName'] = $mailRecord['userData']['firstName'];
+        }
+        if($userData['eventCost'] == EVENT_PAID || $userData['eventCost'] == EVENT_DOOLALLY_FEE)
+        {
+            for($i=0;$i<(int)$userData['buyQuantity'];$i++)
+            {
+                if((int)$userData['doolallyFee'] > (int)NEW_DOOLALLY_FEE)
+                {
+                    $userData['eveOfferCode'][] = $this->generateCustomCode($userData['eventId'],$userData['eventDate'],$userData['startTime'],$userData['bookerId'],$userData['doolallyFee']);
+                }
+                elseif((int)$userData['doolallyFee'] < (int)NEW_DOOLALLY_FEE && (int)$userData['doolallyFee'] != 0)
+                {
+                    $userData['eveOfferCode'][] = $this->generateCustomCode($userData['eventId'],$userData['eventDate'],$userData['startTime'],$userData['bookerId'],$userData['doolallyFee']);
+                }
+                else
+                {
+                    $userData['eveOfferCode'][] = $this->generateEventCode($userData['eventId'],$userData['eventDate'],$userData['startTime'],$userData['bookerId']);
+                }
+            }
+        }
+        $data['mailData'] = $userData;
+        $startDate = str_replace(' ','T',date('Ymd His',strtotime($userData['eventDate'].' '.$userData['startTime'])));
+        $endDate = str_replace(' ','T',date('Ymd His',strtotime($userData['eventDate'].' '.$userData['endTime'])));
+        if($userData['isSpecialEvent'] == STATUS_YES)
+        {
+            $data['calendar_url'] =
+                'https://www.google.com/calendar/event?action=TEMPLATE'.
+                '&text='.urlencode($userData["eventName"]).
+                '&dates='.$startDate.'/'.$endDate.
+                '&location='.urlencode(SPECIAL_EVENT_VENUE_MAIL_NAME).
+                '&details='. urlencode($userData["eventDescrip"]).
+                '&sprop=&sprop=name:';
+        }
+        else
+        {
+            $data['calendar_url'] =
+                'https://www.google.com/calendar/event?action=TEMPLATE'.
+                '&text='.urlencode($userData["eventName"]).
+                '&dates='.$startDate.'/'.$endDate.
+                '&location='.urlencode('Doolally Taproom, '.$locData['locData'][0]['locName']).
+                '&details='. urlencode($userData["eventDescrip"]).
+                '&sprop=&sprop=name:';
+        }
+
+        if($userData['eventId'] == SPECIAL_EVENT_DOOLALLYID)
+        {
+            $content = $this->CI->load->view('emailtemplates/eventRegSuccessMailView', $data, true);
+        }
+        else
+        {
+            $content = $this->CI->load->view('emailtemplates/eventRegSuccessMailView', $data, true);
+        }
+
+
+        $fromEmail = DEFAULT_SENDER_EMAIL;
+        $fromPass = DEFAULT_SENDER_PASS;
+        $replyTo = $mailRecord['userData']['emailId'];
+
+        $cc = '';//        = implode(',',$this->CI->config->item('ccList')).','.$replyTo;
+        /* $extraCc = getExtraCCEmail($replyTo);
+         if(isStringSet($extraCc))
+         {
+             $cc = $cc.','.$extraCc;
+         }*/
+        $fromName  = 'Doolally';
+        if(isset($mailRecord['userData']['firstName']))
+        {
+            $fromName = $mailRecord['userData']['firstName'];
+        }
+
+        $subject = 'You are attending '.$userData['eventName'];
+        $toEmail = $userData['creatorEmail'];
+
+        //Saving mail
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->dashboard_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+    }
+
     public function memberWelcomeMail($userData, $eventPlace)
     {
         $locData = $this->CI->locations_model->getLocationDetailsById($eventPlace);
@@ -85,13 +189,26 @@ class Sendemail_library
         $data['mailData'] = $userData;
         $startDate = str_replace(' ','T',date('Ymd His',strtotime($userData['eventDate'].' '.$userData['startTime'])));
         $endDate = str_replace(' ','T',date('Ymd His',strtotime($userData['eventDate'].' '.$userData['endTime'])));
-        $data['calendar_url'] =
-            'https://www.google.com/calendar/event?action=TEMPLATE'.
-            '&text='.urlencode($userData["eventName"]).
-            '&dates='.$startDate.'/'.$endDate.
-            '&location='.urlencode('Doolally Taproom, '.$locData['locData'][0]['locName']).
-            '&details='. urlencode($userData["eventDescrip"]).
-            '&sprop=&sprop=name:';
+        if($userData['isSpecialEvent'] == STATUS_YES)
+        {
+            $data['calendar_url'] =
+                'https://www.google.com/calendar/event?action=TEMPLATE'.
+                '&text='.urlencode($userData["eventName"]).
+                '&dates='.$startDate.'/'.$endDate.
+                '&location='.urlencode(SPECIAL_EVENT_VENUE_MAIL_NAME).
+                '&details='. urlencode($userData["eventDescrip"]).
+                '&sprop=&sprop=name:';
+        }
+        else
+        {
+            $data['calendar_url'] =
+                'https://www.google.com/calendar/event?action=TEMPLATE'.
+                '&text='.urlencode($userData["eventName"]).
+                '&dates='.$startDate.'/'.$endDate.
+                '&location='.urlencode('Doolally Taproom, '.$locData['locData'][0]['locName']).
+                '&details='. urlencode($userData["eventDescrip"]).
+                '&sprop=&sprop=name:';
+        }
 
         if($userData['eventId'] == SPECIAL_EVENT_DOOLALLYID)
         {
@@ -108,11 +225,11 @@ class Sendemail_library
         $replyTo = $mailRecord['userData']['emailId'];
 
         $cc        = implode(',',$this->CI->config->item('ccList')).','.$replyTo;
-        $extraCc = getExtraCCEmail($replyTo);
+       /* $extraCc = getExtraCCEmail($replyTo);
         if(isStringSet($extraCc))
         {
             $cc = $cc.','.$extraCc;
-        }
+        }*/
         $fromName  = 'Doolally';
         if(isset($mailRecord['userData']['firstName']))
         {
@@ -254,11 +371,11 @@ class Sendemail_library
         $replyTo = $mailRecord['userData']['emailId'];
 
         $cc        = implode(',',$this->CI->config->item('ccList')).','.$replyTo;
-        $extraCc = getExtraCCEmail($replyTo);
+        /*$extraCc = getExtraCCEmail($replyTo);
         if(isStringSet($extraCc))
         {
             $cc = $cc.','.$extraCc;
-        }
+        }*/
         $fromName  = 'Doolally';
         if(isset($mailRecord['userData']['firstName']))
         {
@@ -308,11 +425,12 @@ class Sendemail_library
         $replyTo = $mailRecord['userData']['emailId'];
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
-        $extraCc = getExtraCCEmail($replyTo);
+        $cc .= ','.$replyTo;
+       /* $extraCc = getExtraCCEmail($replyTo);
         if(isStringSet($extraCc))
         {
             $cc = $cc.','.$extraCc;
-        }
+        }*/
         $fromName  = 'Doolally';
 
         $d = date_create($userData[0]['eventDate']);
@@ -364,11 +482,12 @@ class Sendemail_library
         $replyTo = $mailRecord['userData']['emailId'];
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
-        $extraCc = getExtraCCEmail($replyTo);
+        $cc .= ','.$replyTo;
+        /*$extraCc = getExtraCCEmail($replyTo);
         if(isStringSet($extraCc))
         {
             $cc = $cc.','.$extraCc;
-        }
+        }*/
         $fromName  = 'Doolally';
 
         if(isset($userData['oldEventName']))
@@ -428,11 +547,12 @@ class Sendemail_library
         $replyTo = $mailRecord['userData']['emailId'];
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
-        $extraCc = getExtraCCEmail($replyTo);
+        $cc .= ','.$replyTo;
+        /*$extraCc = getExtraCCEmail($replyTo);
         if(isStringSet($extraCc))
         {
             $cc = $cc.','.$extraCc;
-        }
+        }*/
         $fromName  = 'Doolally';
         if(isset($mailRecord['userData']['firstName']))
         {
@@ -491,11 +611,12 @@ class Sendemail_library
             $fromEmail = $userData[0]['creatorEmail'];
         }*/
         $cc        = implode(',',$this->CI->config->item('ccList'));
-        $extraCc = getExtraCCEmail($replyTo);
+        $cc .= ','.$replyTo;
+        /*$extraCc = getExtraCCEmail($replyTo);
         if(isStringSet($extraCc))
         {
             $cc = $cc.','.$extraCc;
-        }
+        }*/
         $fromName  = 'Doolally';
 
         $subject = $userData[0]['eventName'].' Event Cancel';
@@ -549,11 +670,12 @@ class Sendemail_library
             $fromEmail = $userData[0]['creatorEmail'];
         }*/
         $cc        = implode(',',$this->CI->config->item('ccList'));
-        $extraCc = getExtraCCEmail($replyTo);
+        $cc .= ','.$replyTo;
+        /*$extraCc = getExtraCCEmail($replyTo);
         if(isStringSet($extraCc))
         {
             $cc = $cc.','.$extraCc;
-        }
+        }*/
         $fromName  = 'Doolally';
 
         $subject = $userData[0]['eventName'].' Event Cancel';
@@ -670,11 +792,15 @@ class Sendemail_library
         //$fromEmail = $senderEmail;
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
-        $extraCc = getExtraCCEmail($replyTo);
+        if($mailRecord['status'] === true)
+        {
+            $cc .= ','.$mailRecord['userData']['emailId'];
+        }
+        /*$extraCc = getExtraCCEmail($replyTo);
         if(isStringSet($extraCc))
         {
             $cc = $cc.','.$extraCc;
-        }
+        }*/
         $fromName  = $senderName;
 
         $subject = 'Event Details';
@@ -749,6 +875,8 @@ class Sendemail_library
         $replyTo = $fromEmail;
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
+        $cc .= ','.$replyTo;
+
         $fromName  = 'Doolally';
         $subject = $userData['eventName'].' Event Reminder';
         $toEmail = $userData['emailId'];
@@ -933,11 +1061,12 @@ class Sendemail_library
             $replyTo = $mailRecord['userData']['emailId'];
         }
 
-        $extraCc = getExtraCCEmail($replyTo);
+        $cc .= ','.$replyTo;
+        /*$extraCc = getExtraCCEmail($replyTo);
         if(isStringSet($extraCc))
         {
             $cc = $cc.','.$extraCc;
-        }
+        }*/
 
         $subject = $userData['firstName'].' has withdrawn from '.$userData['eventName'];
         $toEmail = $userData['creatorEmail'];
@@ -1018,11 +1147,12 @@ class Sendemail_library
         //$fromEmail = $senderEmail;
 
         $cc        = implode(',',$this->CI->config->item('ccList'));
-        $extraCc = getExtraCCEmail($replyTo);
+        $cc .= ','.$replyTo;
+        /*$extraCc = getExtraCCEmail($replyTo);
         if(isStringSet($extraCc))
         {
             $cc = $cc.','.$extraCc;
-        }
+        }*/
         $fromName  = $senderName;
 
         $subject = 'You have withdrawn from '.$userData['eventName'];

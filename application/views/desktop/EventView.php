@@ -49,7 +49,7 @@
                                             <?php
                                             if($row['isSpecialEvent'] == STATUS_YES)
                                             {
-                                                echo 'Pune';
+                                                echo '1st Brewhouse, Pune';
                                             }
                                             elseif($row['isEventEverywhere'] == '1')
                                             {
@@ -63,7 +63,7 @@
                                         </span>
                                     </span>
                                     <?php
-                                    if($row['isEventEverywhere'] == '0')
+                                    if($row['isEventEverywhere'] == '0' || $row['isSpecialEvent'] == STATUS_YES)
                                     {
                                         ?>
                                         <span class="mdl-list__item-secondary-content">
@@ -111,7 +111,7 @@
                                         <span class="mdl-list__item-secondary-content">
                                             <span class="mdl-list__item-secondary-info">
                                                <span class="fa-15x ic_events_icon point-item my-right-event-icon custom-addToCal"
-                                                     data-ev-title="<?php echo htmlspecialchars($row['eventName']);?>" data-ev-location="Doolally Taproom, <?php echo $row['locName'];?>"
+                                                     data-ev-title="<?php echo htmlspecialchars($row['eventName']);?>" data-ev-location="Doolally Taproom<?php if($row['isSpecialEvent'] == STATUS_YES){echo ', Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo '';} else{echo $row['locName'];}?>"
                                                      data-ev-start="<?php echo $row['eventDate'].' '.$row['startTime'];?>"
                                                      data-ev-end="<?php echo $row['eventDate'].' '.$row['endTime'];?>"
                                                      data-ev-description="<?php echo htmlspecialchars(strip_tags($row['eventDescription'],'<br><ul></ul><li></li>'));?>">
@@ -193,10 +193,23 @@
                                 <div class="mdl-cell mdl-cell--2-col"></div>
                                 <div class="mdl-cell mdl-cell--8-col">
                                     <?php
-                                    if($row['isSpecialEvent'] == '1')
+                                    /*if($row['isSpecialEvent'] == '1')
+                                    {
+                                        */?><!--
+                                        <a href="http://beerolympics.in" target="_blank" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn">Visit Now </a>
+                                        --><?php
+/*                                    }
+                                    else*/
+                                    if(isEventFinished($row['eventDate'],$row['endTime']))
                                     {
                                         ?>
-                                        <a href="http://beerolympics.in" target="_blank" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn">Visit Now </a>
+                                        <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Event Over </a>
+                                        <?php
+                                    }
+                                    elseif(isEventStarted($row['eventDate'],$row['startTime']))
+                                    {
+                                        ?>
+                                        <a href="#" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bookNow-event-btn" disabled>Event Started </a>
                                         <?php
                                     }
                                     elseif($row['isEventEverywhere'] == STATUS_YES || (isset($eventCompleted) && $eventCompleted))
@@ -276,7 +289,7 @@
                             <p class="event-share-text text-center">
                                 Share "<?php echo htmlspecialchars($row['eventName']); ?>"
                             </p>
-                            <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" id="shareLink" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];}?>"/>
+                            <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg']) && isStringSet($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" id="shareLink" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];}?>"/>
                             <div id="share" class="my-social-share"></div>
                         </div>
                     </div>

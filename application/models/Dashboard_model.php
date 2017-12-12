@@ -890,7 +890,7 @@ class Dashboard_Model extends CI_Model
     }
     public function getFullEventInfoBySlug($eventSlug)
     {
-        $query = "SELECT em.*, ea.filename, l.locName, l.mapLink, eh.highId
+        $query = "SELECT em.*, ea.filename,ea.lowResImage, l.locName, l.mapLink, eh.highId
                   FROM eventmaster em
                   LEFT JOIN eventattachment ea ON ea.eventId = em.eventId
                   LEFT JOIN locationmaster l ON eventPlace = l.id
@@ -905,7 +905,7 @@ class Dashboard_Model extends CI_Model
 
     public function getCompEventInfoBySlug($eventSlug)
     {
-        $query = "SELECT em.*, ea.filename, l.locName, l.mapLink, eh.highId
+        $query = "SELECT em.*, ea.filename,ea.lowResImage, l.locName, l.mapLink, eh.highId
                   FROM eventcompletedmaster em
                   LEFT JOIN eventattachment ea ON ea.eventId = em.eventId
                   LEFT JOIN locationmaster l ON eventPlace = l.id
@@ -1170,6 +1170,12 @@ class Dashboard_Model extends CI_Model
     {
         $this->db->where('id',$id);
         $this->db->update('eventremindermaster',$details);
+        return true;
+    }
+
+    public function saveSongReqRecord($details)
+    {
+        $this->db->insert('musicrequestmaster', $details);
         return true;
     }
 

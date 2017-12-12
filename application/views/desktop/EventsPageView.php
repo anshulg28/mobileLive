@@ -52,7 +52,7 @@ if(isset($weekEvents) && myIsMultiArray($weekEvents))
         $postImg = 0;
         foreach($eventDetails as $key => $row)
         {
-            if(isEventStarted($row['eventDate'], $row['startTime']))
+            if(isEventFinished($row['eventDate'], $row['endTime']))
             {
                 continue;
             }
@@ -64,7 +64,7 @@ if(isset($weekEvents) && myIsMultiArray($weekEvents))
                 {
                     if($row['isSpecialEvent'] == STATUS_YES)
                     {
-                        echo 'eve-special';
+                        echo 'eve-speciall';
                     }
                     elseif($row['isEventEverywhere'] == STATUS_YES)
                     {
@@ -105,7 +105,7 @@ if(isset($weekEvents) && myIsMultiArray($weekEvents))
                                                             <h1 class="hide" itemprop="name"> <?php echo $row['eventName'];?></h1>
                                                             <span class="avatar-title">
                                                                 <?php
-                                                                $eventName = (mb_strlen($row['eventName']) > 45) ? substr($row['eventName'], 0, 45) . '..' : $row['eventName'];
+                                                                $eventName = (mb_strlen($row['eventName']) > 35) ? substr($row['eventName'], 0, 35) . '..' : $row['eventName'];
                                                                 echo $eventName;
                                                                 ?>
                                                             </span>
@@ -113,7 +113,7 @@ if(isset($weekEvents) && myIsMultiArray($weekEvents))
                                                         </span>
                                     <span class="mdl-list__item-secondary-content">
                                                             <span class="mdl-list__item-secondary-info">
-                                                                <input type="hidden" data-img="<?php if(isset($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-shareTxt="This looks pretty cool, shall we?" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
+                                                                <input type="hidden" data-img="<?php if(isset($row['verticalImg']) && isStringSet($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-shareTxt="This looks pretty cool, shall we?" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
                                                                 <i class="my-pointer-item ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
                                                             </span>
                                                         </span>
@@ -151,7 +151,7 @@ if(isset($weekEvents) && myIsMultiArray($weekEvents))
                             <?php
                             }
                             ?>
-                                <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<span class="eve-locName"><?php if($row['isSpecialEvent'] == STATUS_YES){echo 'Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo 'All Taprooms';}else{ echo $row['locName'];} ?></span>
+                                <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<span class="eve-locName"><?php if($row['isSpecialEvent'] == STATUS_YES){echo '1st Brewhouse, Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo 'All Taprooms';}else{ echo $row['locName'];} ?></span>
                                 <?php
                                 if($row['showEventDate'] == STATUS_YES)
                                 {
@@ -159,6 +159,14 @@ if(isset($weekEvents) && myIsMultiArray($weekEvents))
                                     &nbsp;&nbsp;<span class="ic_events_icon event-date-main my-display-inline"></span>&nbsp;
                                     <span class="eve-eventDate"><?php $d = date_create($row['eventDate']);
                                         echo date_format($d,EVENT_DATE_FORMAT); ?></span>
+                                    <?php
+                                }
+                                if($row['showEventTime'] == STATUS_YES)
+                                {
+                                    ?>
+                                    <i class="material-icons my-display-inline main-time-comp">access_time</i>
+                                    <span class="eve-eventDate"><?php $d = date_create($row['startTime']);
+                                        echo date_format($d,'g:i a'); ?></span>
                                     <?php
                                 }
                                 if($row['showEventPrice'] == STATUS_YES)
@@ -176,23 +184,28 @@ if(isset($weekEvents) && myIsMultiArray($weekEvents))
                                     }
                                 }
 
-                                if($row['isEventEverywhere'] == STATUS_YES)
+                                /*if($row['isEventEverywhere'] == STATUS_YES)
                                 {
-                                    ?>
-                                    <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="event-bookNow dynamic">View Details</a>
+                                    */?><!--
+                                    <a href="<?php /*echo 'events/'.$row['eventSlug'];*/?>" class="event-bookNow dynamic">View Details</a>
                                     <?php
-                                }
+/*                                }
                                 else
                                 {
-                                    ?>
+                                    */?>
                                     <div class="event-action-btns">
-                                        <a href="#" data-eventId="<?php echo $row['eventId'];?>" class="remind-later-btn">Remind Me Later</a>
+                                        <a href="#" data-eventId="<?php /*echo $row['eventId'];*/?>" class="remind-later-btn">Remind Me Later</a>
                                         <div class="btn-divider"></div>
-                                        <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="event-bookNow dynamic">Book Event <i class="ic_back_icon my-display-inline"></i></a>
+                                        <a href="<?php /*echo 'events/'.$row['eventSlug'];*/?>" class="event-bookNow dynamic">Book Event <i class="ic_back_icon my-display-inline"></i></a>
                                     </div>
-                                    <?php
-                                }
-                                ?>
+                                    --><?php
+/*                                }
+                                */?>
+                                <div class="event-action-btns">
+                                    <a href="#" data-eventId="<?php echo $row['eventId'];?>" class="remind-later-btn">Remind Me Later</a>
+                                    <div class="btn-divider"></div>
+                                    <a href="<?php echo 'events/'.$row['eventSlug'];?>" class="event-bookNow dynamic">Book Event <i class="ic_back_icon my-display-inline"></i></a>
+                                </div>
                                 <a itemprop="url" href="<?php echo base_url().'?page/events/'.$row['eventSlug'];?>" class="color-black hide"><?php echo $row['eventName'];?></a>
                                 </p>
                             </div>
@@ -241,6 +254,7 @@ if(isset($weekEvents) && myIsMultiArray($weekEvents))
             valueNames: ['avatar-title','mdl-list__item-sub-title','eve-locName','eve-eventDate'],
             pagination: false
         });*/
+        componentHandler.upgradeDom();
     });
 </script>
 

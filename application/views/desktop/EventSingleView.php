@@ -54,7 +54,7 @@
                                     </span>
                                     <span class="mdl-list__item-secondary-content">
                                         <span class="mdl-list__item-secondary-info">
-                                            <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
+                                            <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg']) && isStringSet($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
                                             <i class="my-pointer-item ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
                                         </span>
                                     </span>
@@ -309,7 +309,12 @@
                                                 <span class="mdl-list__item-primary-content">
                                                   <span><?php echo $signRow['firstName'].' '.$signRow['lastName'];?> </span>
                                                     <?php
-                                                    $totPay = (int)$signRow['quantity'] * (int)$signRow['regPrice'];
+                                                    $price = (int)$row['eventPrice'];
+                                                    if(isset($signRow['regPrice']))
+                                                    {
+                                                        $price = (int)$signRow['regPrice'];
+                                                    }
+                                                    $totPay = (int)$signRow['quantity'] * $price;
                                                     echo '<span class="dim-text-opacity">(Rs. '.$totPay.')</span>';
                                                     if($remain != 0)
                                                     {

@@ -6,74 +6,101 @@
 </head>
 
 <body>
-    <p>Hi <?php echo trim(ucfirst($mailData['creatorName']));?>,</p>
-    <p>Rumour has it that you have signed up for <b><?php echo $mailData['eventName'];?></b> happening on
-        <a href="<?php echo $calendar_url;?>" target="_blank"><?php $d = date_create($mailData['eventDate']); echo date_format($d,DATE_MAIL_FORMAT_UI);?></a>,
+<p>Hi <?php echo trim(ucfirst($mailData['creatorName']));?>,</p>
+<p>Rumour has it that you have signed up for <b><?php echo $mailData['eventName'];?></b> happening on
+    <a href="<?php echo $calendar_url;?>" target="_blank"><?php $d = date_create($mailData['eventDate']); echo date_format($d,DATE_MAIL_FORMAT_UI);?></a>,
     <?php echo date('h:i a',strtotime($mailData['startTime'])).'-'.date('h:i a',strtotime($mailData['endTime']));?>
-        at <a href="<?php echo $locInfo['mapLink'];?>" target="_blank">Doolally Taproom, <?php echo trim($locInfo['locName']);?></a<?php
-        if(isset($mailData['buyQuantity']))
+    at <?php
+    if($mailData['isSpecialEvent'] == STATUS_YES)
+    {
+        ?>
+        <a href="<?php echo SPECIAL_EVENT_VENUE_MAP;?>" target="_blank"><?php echo SPECIAL_EVENT_VENUE_MAIL_NAME;?></a
+        <?php
+    }
+    else
+    {
+        ?>
+        <a href="<?php echo $locInfo['mapLink'];?>" target="_blank">Doolally Taproom, <?php echo trim($locInfo['locName']);?></a
+        <?php
+    }
+    ?><?php
+    if(isset($mailData['buyQuantity']))
+    {
+        $remaining = ((int)$mailData['buyQuantity']-1);
+        if($remaining>0)
         {
-            $remaining = ((int)$mailData['buyQuantity']-1);
-            if($remaining>0)
+            if($remaining == 1)
             {
-                if($remaining == 1)
-                {
-                    echo '>, along with a friend.';
-                }
-                else
-                {
-                    echo '>, along with '.$remaining.' friends.';
-                }
+                echo '>, along with a friend.';
             }
             else
             {
-
-                echo '>.';
+                echo '>, along with '.$remaining.' friends.';
             }
         }
-        ?>
-    </p>
+        else
+        {
 
-    <p>All material will be provided by the organisers for the workshop, all you need to do is show up.
+            echo '>.';
+        }
+    }
+    ?>
+    <br><br>
+    <?php
+    if(isset($mailData['customEmailText']))
+    {
+        echo $mailData['customEmailText'];
+    }
+    else
+    {
+        ?>
+        All material will be provided by the organisers for the workshop, all you need to do is show up.
         <?php
-            if(isset($mailData['eveOfferCode']) && $mailData['eveOfferCode'] != '')
-            {
-                if((int)$mailData['doolallyFee'] > (int)NEW_DOOLALLY_FEE)
-                {
-                    ?>
-                    As part of your fee for the event, you can also spend Rs <?php echo $mailData['doolallyFee'];?>
-                    at any of our taprooms.
-                    <?php
-                }
-                elseif((int)$mailData['doolallyFee'] < (int)NEW_DOOLALLY_FEE && (int)$mailData['doolallyFee'] != 0)
-                {
-                    echo DOOLALLY_CUSTOM_FEE_MAIL_TEXT;
-                }
-                else
-                {
-                    echo 'As part of your fee for the event, you can also redeem Rs '.NEW_DOOLALLY_FEE.' on F&B at any of our Doolally taprooms. ';
-                }
-                ?>
-                Just show this code(s) <?php echo implode(',',$mailData['eveOfferCode']);?> to the waiter who is serving you.<br><br>
-                Don't hurry or anything, it's valid till hell freezes over.<br><br>
-                <?php
-            }
-            else
-            {
-                ?>
-                <br><br>
-                <?php
-            }
+    }
+    ?>
+    <?php
+    if(isset($mailData['eveOfferCode']) && $mailData['eveOfferCode'] != '')
+    {
+        if(isset($mailData['customEmailText']))
+        {
+            echo '<br><br>';
+        }
+
+        if((int)$mailData['doolallyFee'] > (int)NEW_DOOLALLY_FEE)
+        {
+            ?>
+            As part of your fee for the event, you can also spend Rs <?php echo $mailData['doolallyFee'];?>
+            at any of our taprooms.
+            <?php
+        }
+        elseif((int)$mailData['doolallyFee'] < (int)NEW_DOOLALLY_FEE && (int)$mailData['doolallyFee'] != 0)
+        {
+            echo DOOLALLY_CUSTOM_FEE_MAIL_TEXT;
+        }
+        else
+        {
+            echo 'As part of your fee for the event, you can also redeem Rs '.NEW_DOOLALLY_FEE.' on F&B at any of our Doolally taprooms. ';
+        }
         ?>
-        You can access your events from the <a href="<?php echo base_url();?>?page/event_dash" target="_blank">My Events</a> section.
-        This is a place where information on date, timings, organiser will be available to you. You can also cancel your attendance from this dashboard.<br><br>
+        Just show this code(s) <?php echo implode(',',$mailData['eveOfferCode']);?> to the waiter who is serving you.<br><br>
+        Don't hurry or anything, it's valid till hell freezes over.<br><br>
+        <?php
+    }
+    else
+    {
+        ?>
+        <br><br>
+        <?php
+    }
+    ?>You can access your events from the <a href="<?php echo base_url();?>?page/event_dash" target="_blank">My Events</a> section.
+    This is a place where information on date, timings, organiser will be available to you. You can also cancel your attendance from this dashboard.<br><br>
 
-        Username: <?php echo $mailData['creatorEmail'];?><br>
-        Password: Your Mobile Number<br><br>
+    Username: <?php echo $mailData['creatorEmail'];?><br>
+    Password: Your Mobile Number<br><br>
 
-        See you!<br>
-        <?php echo ucfirst($commName);?>, Doolally
-    </p>
+    See you!<br>
+    <?php echo ucfirst($commName);?>, Doolally
+</p>
 
 </body>
 </html>

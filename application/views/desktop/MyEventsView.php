@@ -82,7 +82,7 @@
                                         </span>
                                         <span class="mdl-list__item-secondary-content">
                                             <span class="mdl-list__item-secondary-info">
-                                                <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{ echo $row['eventShareLink'];}?>"/>
+                                                <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg']) && isStringSet($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{ echo $row['eventShareLink'];}?>"/>
                                                 <?php
                                                 if($row['ifApproved'] == EVENT_APPROVED && $row['ifActive'] == ACTIVE)
                                                 {
@@ -140,16 +140,23 @@
                                     }
                                     ?>
                                     <div class="hosting-extra-info">
-                                        <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<?php echo $row['locName']; ?>
+                                        <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<?php if($row['isSpecialEvent'] == STATUS_YES){echo '1st Brewhouse, Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){ echo 'All Taprooms';} else{echo $row['locName'];} ?>
                                         <i class="custom-addToCal"
-                                           data-ev-title="<?php echo htmlspecialchars($row['eventName']);?>" data-ev-location="Doolally Taproom, <?php echo $row['locName'];?>"
+                                           data-ev-title="<?php echo htmlspecialchars($row['eventName']);?>" data-ev-location="Doolally Taproom<?php if($row['isSpecialEvent'] == STATUS_YES){echo ', Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo '';} else{echo $row['locName'];}?>"
                                            data-ev-start="<?php echo $row['eventDate'].' '.$row['startTime'];?>"
                                            data-ev-end="<?php echo $row['eventDate'].' '.$row['endTime'];?>"
                                            data-ev-description="<?php echo htmlspecialchars(strip_tags($row['eventDescription'],'<br>'));?>">
 
-                                            &nbsp;&nbsp;<span class="ic_events_icon event-date-main"></span>&nbsp;
-                                            <u><?php $d = date_create($row['eventDate']);
-                                                echo date_format($d,EVENT_DATE_FORMAT); ?></u>
+                                            <?php
+                                            if($row['showEventDate'] == STATUS_YES)
+                                            {
+                                                ?>
+                                                &nbsp;&nbsp;<span class="ic_events_icon event-date-main"></span>&nbsp;
+                                                <u><?php $d = date_create($row['eventDate']);
+                                                    echo date_format($d,EVENT_DATE_FORMAT); ?></u>
+                                                <?php
+                                            }
+                                            ?>
                                         </i>
                                     </div>
                                 </div>
@@ -213,7 +220,7 @@
                                         </span>
                                         <span class="mdl-list__item-secondary-content">
                                             <span class="mdl-list__item-secondary-info">
-                                                <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{ echo $row['eventShareLink'];}?>"/>
+                                                <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg']) && isStringSet($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{ echo $row['eventShareLink'];}?>"/>
                                                 <?php
                                                 if($row['ifApproved'] == EVENT_APPROVED && $row['ifActive'] == ACTIVE)
                                                 {
@@ -229,16 +236,23 @@
                                 <div class="mdl-card__supporting-text">
                                     <i class="material-icons">info_outline</i>&nbsp;&nbsp;Event Completed<br>
                                     <div class="hosting-extra-info">
-                                        <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<?php echo $row['locName']; ?>
+                                        <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<?php if($row['isSpecialEvent'] == STATUS_YES){echo '1st Brewhouse, Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){ echo 'All Taprooms';} else{echo $row['locName'];} ?>
                                         <i class="custom-addToCal"
-                                           data-ev-title="<?php echo htmlspecialchars($row['eventName']);?>" data-ev-location="Doolally Taproom, <?php echo $row['locName'];?>"
+                                           data-ev-title="<?php echo htmlspecialchars($row['eventName']);?>" data-ev-location="Doolally Taproom<?php if($row['isSpecialEvent'] == STATUS_YES){echo ', Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo '';} else{echo $row['locName'];}?>"
                                            data-ev-start="<?php echo $row['eventDate'].' '.$row['startTime'];?>"
                                            data-ev-end="<?php echo $row['eventDate'].' '.$row['endTime'];?>"
                                            data-ev-description="<?php echo htmlspecialchars(strip_tags($row['eventDescription'],'<br>'));?>">
 
-                                            &nbsp;&nbsp;<span class="ic_events_icon event-date-main"></span>&nbsp;
-                                            <u><?php $d = date_create($row['eventDate']);
-                                                echo date_format($d,EVENT_DATE_FORMAT); ?></u>
+                                            <?php
+                                            if($row['showEventDate'] == STATUS_YES)
+                                            {
+                                                ?>
+                                                &nbsp;&nbsp;<span class="ic_events_icon event-date-main"></span>&nbsp;
+                                                <u><?php $d = date_create($row['eventDate']);
+                                                    echo date_format($d,EVENT_DATE_FORMAT); ?></u>
+                                                <?php
+                                            }
+                                            ?>
                                         </i>
                                     </div>
                                 </div>
@@ -302,7 +316,7 @@
                                                         </span>
                                                         <span class="mdl-list__item-secondary-content">
                                                             <span class="mdl-list__item-secondary-info">
-                                                                <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-shareTxt="Finally! I have signed myself up, why don't you check it out?" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
+                                                                <input type="hidden" data-pin-url="<?php echo $row['eventShareLink'];?>" data-img="<?php if(isset($row['verticalImg']) && isStringSet($row['verticalImg'])){echo base_url().EVENT_PATH_THUMB.$row['verticalImg'];}else{echo base_url().EVENT_PATH_THUMB.$row['filename'];} ?>" data-shareTxt="Finally! I have signed myself up, why don't you check it out?" data-name="<?php echo htmlspecialchars($row['eventName']);?>" value="<?php if(isset($row['shortUrl'])){echo $row['shortUrl'];}else{echo $row['eventShareLink'];} ?>"/>
                                                                 <i class="my-pointer-item ic_me_share_icon pull-right event-share-icn event-card-share-btn"></i>
                                                             </span>
                                                         </span>
@@ -317,7 +331,7 @@
                                                         <?php echo $eventDescrip;?>
                                                     </a>
                                                     <p>
-                                                        <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<?php echo $row['locName']; ?>
+                                                        <i class="ic_me_location_icon main-loc-icon"></i>&nbsp;<?php if($row['isSpecialEvent'] == STATUS_YES){echo '1st Brewhouse, Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){ echo 'All Taprooms';} else{echo $row['locName'];} ?>
                                                         <!--&nbsp;&nbsp;<span class="ic_events_icon event-date-main my-display-inline"></span>&nbsp;
                                                         --><?php /*$d = date_create($row['eventDate']);
                                                         echo date_format($d,EVENT_DATE_FORMAT); */?>
@@ -357,14 +371,21 @@
                                                         }
                                                         ?>
                                                         <i class="custom-addToCal"
-                                                           data-ev-title="<?php echo htmlspecialchars($row['eventName']);?>" data-ev-location="Doolally Taproom, <?php echo $row['locName'];?>"
+                                                           data-ev-title="<?php echo htmlspecialchars($row['eventName']);?>" data-ev-location="Doolally Taproom<?php if($row['isSpecialEvent'] == STATUS_YES){echo ', Pune';} elseif($row['isEventEverywhere'] == STATUS_YES){echo '';} else{echo $row['locName'];}?>"
                                                            data-ev-start="<?php echo $row['eventDate'].' '.$row['startTime'];?>"
                                                            data-ev-end="<?php echo $row['eventDate'].' '.$row['endTime'];?>"
                                                            data-ev-description="<?php echo htmlspecialchars(strip_tags($row['eventDescription'],'<br>'));?>">
 
-                                                            &nbsp;&nbsp;<span class="ic_events_icon event-date-main"></span>&nbsp;
-                                                            <u><?php $d = date_create($row['eventDate']);
-                                                                echo date_format($d,EVENT_DATE_FORMAT); ?></u>
+                                                            <?php
+                                                            if($row['showEventDate'] == STATUS_YES)
+                                                            {
+                                                                ?>
+                                                                &nbsp;&nbsp;<span class="ic_events_icon event-date-main"></span>&nbsp;
+                                                                <u><?php $d = date_create($row['eventDate']);
+                                                                    echo date_format($d,EVENT_DATE_FORMAT); ?></u>
+                                                                <?php
+                                                            }
+                                                            ?>
                                                         </i>
                                                         <!--<a href="<?php /*echo 'events/'.$row['eventSlug'];*/?>" class="event-bookNow dynamic">View Details <i class="ic_back_icon my-display-inline"></i></a>-->
                                                         <?php
@@ -410,6 +431,12 @@
                                                     {
                                                         ?>
                                                         <i href="#" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event Cancelled</i>
+                                                        <?php
+                                                    }
+                                                    elseif(isEventFinished($row['eventDate'], $row['endTime']))
+                                                    {
+                                                        ?>
+                                                        <i href="#" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect pull-right" disabled>Event Over</i>
                                                         <?php
                                                     }
                                                     elseif(isEventStarted($row['eventDate'], $row['startTime']))

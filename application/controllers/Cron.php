@@ -397,21 +397,22 @@ class Cron extends MY_Controller
     {
         $colKeys = array('Payment ID','Refund Id','Location','Transaction Date/Time','Link/Purpose','No. of Tickets','Per Ticket Price',
             'Sale Amount','Transaction Type','Instamojo Fees','Total Tax','Net Sale Amount','Buyer Name','Buyer Email','Buyer Phone Number');
-        $ehColKeys = array('Payment ID','Location','Transaction Date/Time','Link/Purpose','No. of Tickets','Per Ticket Price',
+        $ehColKeys = array('Payment ID','Refund Id','Refund Amount','Location','Transaction Date/Time','Link/Purpose','No. of Tickets','Per Ticket Price',
             'Sale Amount','Transaction Type','EventsHigh Fees','Net Sale Amount','Buyer Name','Buyer Email','Buyer Phone Number');
-        $allInsta = $this->cron_model->getIntaRecords();
+        $allTrans = $this->cron_model->getAllTrans();
+        //$allInsta = $this->cron_model->getIntaRecords();
         $allRefunds = $this->curl_library->allInstaRefunds();
 
 
         $refundArray = array();
-        if( isset($allInsta) && myIsArray($allInsta))
+        if( isset($allTrans) && myIsArray($allTrans) && isset($allTrans[0]['eventId']))
         {
             $startTime = date('d_M_Y',strtotime('-1 day'));
             $endTime = date('d_M',strtotime('-15 day'));
             $file = fopen("./uploads/InstamojoRecords_".$startTime.".csv","w");
             $file1 = fopen("./uploads/EventsHighRecords_".$startTime.".csv","w");
             $firstRow = true;
-            foreach($allInsta as $key => $row)
+            foreach($allTrans as $key => $row)
             {
                 if($firstRow)
                 {
@@ -421,17 +422,135 @@ class Cron extends MY_Controller
                     $textToWrite = $ehColKeys;
                     fputcsv($file1,$textToWrite);
                 }
-                if(isset($row['highId']))
+
+                //Found Other payment records
+                $eveDetails = $this->dashboard_model->getFullEventInfoById($row['eventId']);
+                if(isset($eveDetails) && myIsArray($eveDetails) && isset($eveDetails[0]['eventId']))
+                {
+
+                }
+                else
+                {
+                    $eveDetails = $this->dashboard_model->getCompEventInfoById($row['eventId']);
+                }
+
+                if(stripos($row['paymentId'], 'MOJO') !== FALSE)
+                {
+                    //Found Instamojo record
+                    $instaRecord = $this->curl_library->getInstaMojoRecord($row['paymentId']);
+                    if(isset($instaRecord) && myIsArray($instaRecord) && $instaRecord['success'] === true && isset($instaRecord['payment']['amount']))
+                    {
+                        if($instaRecord['payment']['currency'] != 'Free' && (double)$instaRecord['payment']['amount'] != 0)
+                        {
+                            $refundId = '';
+                            //Checking if payment id has refund or not
+                            if($allRefunds['success'] === true)
+                            {
+                                $refundKey = array_search($row['paymentId'], array_column($allRefunds['refunds'], 'payment_id'));
+                                if($refundKey)
+                                {
+                                    $refundId = $allRefunds['refunds'][$refundKey]['id'];
+                                }
+                            }
+
+                            $finalAmt = (double)$instaRecord['payment']['amount'];
+                            $serviceTax = ((double)$instaRecord['payment']['fees'] * 18)/100;
+                            $swachTax = ($finalAmt * 0.0095) / 100;
+                            $netAmt = $finalAmt - ((double)$instaRecord['payment']['fees'] + $serviceTax);
+                            $d = date_create($row['createdDT']);
+                            $recordRow = array(
+                                $row['paymentId'],
+                                $refundId,
+                                $eveDetails[0]['locName'],
+                                date_format($d,'n/d/Y g:i a'),
+                                $eveDetails[0]['eveName'],
+                                $row['quantity'],
+                                $eveDetails[0]['eventPrice'],
+                                $instaRecord['payment']['amount'],
+                                $instaRecord['payment']['status'],
+                                $instaRecord['payment']['fees'],
+                                $serviceTax,
+                                $netAmt,
+                                $instaRecord['payment']['buyer_name'],
+                                $instaRecord['payment']['buyer_email'],
+                                $instaRecord['payment']['buyer_phone']
+                            );
+                            $textToWrite = $recordRow;
+                            fputcsv($file,$textToWrite);
+                        }
+                    }
+                }
+                else
+                {
+
+                    if(isset($eveDetails) && myIsArray($eveDetails) && isset($eveDetails[0]['eventId']))
+                    {
+                        foreach($eveDetails as $payKey => $payRow)
+                        {
+                            $refundAr = $this->cron_model->getEhRefundDetails($row['paymentId']);
+                            $refId = '';
+                            $refAmt = '';
+                            if(isset($refundAr) && myIsArray($refundAr) && isset($refundAr['refundId']))
+                            {
+                                $refId = $refundAr['refundId'];
+                                $refAmt = $refundAr['refundAmount'];
+                            }
+                            if($row['isDirectlyRegistered'] == '1') //Doolally signup
+                            {
+                                $totalPrice = (int)((int)$payRow['eventPrice'] * (int)$row['quantity']);
+                                $commision = ((float)DOOLALLY_GATEWAY_CHARGE / 100) * (int)$totalPrice;
+                            }
+                            else // EventsHigh Signup
+                            {
+                                $totalPrice = ((int)$payRow['eventPrice'] * (int)$row['quantity']);
+                                $commision = ((float)EH_GATEWAY_CHARGE / 100) * (int)$totalPrice;
+                            }
+                            $ehRow = array(
+                                $row['paymentId'],
+                                $refId,
+                                $refAmt,
+                                $payRow['locName'],
+                                $row['createdDT'],
+                                $payRow['eveName'],
+                                $row['quantity'],
+                                $payRow['eventPrice'],
+                                $totalPrice,
+                                'Success',
+                                $commision,
+                                $totalPrice,
+                                $row['Uname'],
+                                $row['emailId'],
+                                $row['mobNum']
+                            );
+                            $textToWrite = $ehRow;
+                            fputcsv($file1,$textToWrite);
+                        }
+                    }
+                }
+
+
+                /*if(isset($row['highId']))
                 {
                     $ehArray = $this->curl_library->attendeeEventsHigh($row['highId']);
+
                     if(isset($ehArray) && myIsArray($ehArray))
                     {
                         foreach($ehArray as $subKey => $subRow)
                         {
                             if($subRow['amount'] != 0)
                             {
+                                $refundAr = $this->cron_model->getEhRefundDetails($subRow['bookingId']);
+                                $refId = '';
+                                $refAmt = '';
+                                if(isset($refundAr) && myIsArray($refundAr) && isset($refundAr['refundId']))
+                                {
+                                    $refId = $refundAr['refundId'];
+                                    $refAmt = $refundAr['refundAmount'];
+                                }
                                 $ehRow = array(
                                     $subRow['bookingId'],
+                                    $refId,
+                                    $refAmt,
                                     $row['locName'],
                                     $subRow['bookedOn'],
                                     $row['eveName'],
@@ -453,7 +572,7 @@ class Cron extends MY_Controller
                 }
                 fclose($file1);
                 $instaRecord = $this->curl_library->getInstaMojoRecord($row['paymentId']);
-                if(isset($instaRecord) && myIsArray($instaRecord) && $instaRecord['success'] === true)
+                if(isset($instaRecord) && myIsArray($instaRecord) && $instaRecord['success'] === true && isset($instaRecord['payment']['amount']))
                 {
                     if($instaRecord['payment']['currency'] != 'Free' && (double)$instaRecord['payment']['amount'] != 0)
                     {
@@ -493,8 +612,9 @@ class Cron extends MY_Controller
                         $textToWrite = $recordRow;
                         fputcsv($file,$textToWrite);
                     }
-                }
+                }*/
             }
+            fclose($file1);
             fclose($file);
             $content = '<html><body><p>Instamojo and Eventshigh Records With Location Filtered!<br>Refund ID, if present, indicates that the ticket has been canceled and refund issued<br>PFA</p></body></html>';
 

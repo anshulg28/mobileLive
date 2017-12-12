@@ -16,7 +16,6 @@ if(isset($status) && $status === true)
             <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-right" id="juke-logout">
                 Logout
             </button>
-            <ul class="pagination list-of-song"></ul>
             <ul class="demo-list-two mdl-list list clear">
                 <?php
                 //$songCount = 0;
@@ -25,7 +24,7 @@ if(isset($status) && $status === true)
                     foreach($playRow as $key => $row)
                     {
                         ?>
-                        <li class="mdl-list__item mdl-list__item--two-line demo-card-square mdl-shadow--2dp request_song_btn" data-songId="<?php echo $row['id'];?>"
+                        <li class="mdl-list__item mdl-list__item--two-line demo-card-square mdl-shadow--2dp request_song_btn" data-songName="<?php echo addslashes($row['name']);?>" data-songId="<?php echo $row['id'];?>"
                             data-tapId="<?php echo $tapId;?>">
                         <span class="mdl-list__item-primary-content">
                             <?php
@@ -60,7 +59,7 @@ if(isset($status) && $status === true)
                 }
                 ?>
             </ul>
-            <ul class="pagination1 list-of-song"></ul>
+            <ul class="pagination list-of-song"></ul>
         </div>
         <?php
     }
