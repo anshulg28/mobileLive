@@ -935,7 +935,7 @@ class Dashboard_Model extends CI_Model
     }
     public function getEventInfoByEhId($ehId)
     {
-        $query = "SELECT * FROM eventshighmaster WHERE highId = '".$ehId."'";
+        $query = "SELECT * FROM eventshighmaster WHERE highStatus = 1 AND highId = '".$ehId."'";
 
         $result = $this->db->query($query)->row_array();
 

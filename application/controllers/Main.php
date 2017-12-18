@@ -2338,8 +2338,8 @@ $this->load->view('MobileHomeView', $data);
         $post = $this->input->post();
         $userId = '';
         $data = array();
-        $impChanges = array('eventName','eventDescription','eventDate','startTime','endTime','costType',
-            'eventPrice','eventPlace');
+        $impChanges = array('eventName','eventDescription','eventDate','startTime','endTime',
+            'creatorName','creatorPhone','creatorEmail','eventCapacity','ifMicRequired','ifProjectorRequired');
         $changeCheck = array();
         $changesMade = array();
         $changesRecord = array();
@@ -2368,6 +2368,11 @@ $this->load->view('MobileHomeView', $data);
                 if($eventOldInfo[0]['filename'] != $post['attachment'])
                 {
                     $changesMade['attachment'] = $eventOldInfo[0]['filename'].';#;'.$post['attachment'];
+                    $changesRecord['imgAttachment'] = $eventOldInfo[0]['filename'];
+                    if(isset($post['verticalImg']))
+                    {
+                        $changesRecord['verticalImg'] = $post['verticalImg'];
+                    }
                 }
                 $attachement = $post['attachment'];
                 unset($post['attachment']);
@@ -2399,6 +2404,14 @@ $this->load->view('MobileHomeView', $data);
                             $oldLoc = $this->locations_model->getLocationDetailsById($row);
                             $newLoc = $this->locations_model->getLocationDetailsById($post[$key]);
                             $changesMade[$key] = $oldLoc['locData'][0]['locName'].';#;'.$newLoc['locData'][0]['locName'];
+                        }
+                        elseif($key == 'ifMicRequired' || $key == 'ifProjectorRequired')
+                        {
+                            $ynPoll = array(
+                                '1' => 'Yes',
+                                '2' => 'No'
+                            );
+                            $changesMade[$key] = $ynPoll[$row].';#;'.$ynPoll[$post[$key]];
                         }
                         else
                         {

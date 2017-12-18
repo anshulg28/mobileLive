@@ -331,27 +331,43 @@ elseif(isset($eventDetails) && myIsMultiArray($eventDetails))
                                 ?>
                             </div>
 
-                            <div class="mdl-cell mdl-cell--12-col">Your details</div>
-                            <!--<p class="event-sub-text">We'll contact you while we curate your event.</p>-->
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                <input class="mdl-textfield__input" tabindex="7" type="text" name="creatorName" id="creatorName" value="<?php echo $row['creatorName']; ?>" />
-                                <label class="mdl-textfield__label" for="creatorName">Name</label>
-                            </div>
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                <input class="mdl-textfield__input" tabindex="8" type="number" name="creatorPhone" id="creatorPhone" maxlength="10"
-                                       oninput="maxLengthCheck(this)" value="<?php echo $row['creatorPhone']; ?>" />
-                                <label class="mdl-textfield__label" for="creatorPhone">Phone Number</label>
-                            </div>
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
-                                <input class="mdl-textfield__input" tabindex="9" type="email" name="creatorEmail" id="creatorEmail" value="<?php echo $row['creatorEmail']; ?>" />
-                                <label class="mdl-textfield__label" for="creatorEmail">Email ID</label>
-                            </div>
-                            <input type="hidden" name="userId" value="<?php echo $row['userId'];?>"/>
-                            <div class="mdl-cell mdl-cell--12-col">
+                            <?php
+                            if(!is_null($this->userMobId) && isSessionVariableSet($this->userMobId))
+                            {
+                                ?>
+                                <input type="hidden" name="creatorName" value="<?php echo $row['creatorName']; ?>" />
+                                <input type="hidden" name="creatorPhone" value="<?php echo $row['creatorPhone']; ?>" />
+                                <input type="hidden" name="creatorEmail" value="<?php echo $row['creatorEmail']; ?>" />
+                                <input type="hidden" name="aboutCreator" value="<?php echo $row['aboutCreator']; ?>" />
+                                <?php
+                            }
+                            else
+                            {
+                                ?>
+                                <div class="mdl-cell mdl-cell--12-col">Your details</div>
+                                <!--<p class="event-sub-text">We'll contact you while we curate your event.</p>-->
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                    <input class="mdl-textfield__input" tabindex="7" type="text" name="creatorName" id="creatorName" value="<?php echo $row['creatorName']; ?>" />
+                                    <label class="mdl-textfield__label" for="creatorName">Name</label>
+                                </div>
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                    <input class="mdl-textfield__input" tabindex="8" type="number" name="creatorPhone" id="creatorPhone" maxlength="10"
+                                           oninput="maxLengthCheck(this)" value="<?php echo $row['creatorPhone']; ?>" />
+                                    <label class="mdl-textfield__label" for="creatorPhone">Phone Number</label>
+                                </div>
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
+                                    <input class="mdl-textfield__input" tabindex="9" type="email" name="creatorEmail" id="creatorEmail" value="<?php echo $row['creatorEmail']; ?>" />
+                                    <label class="mdl-textfield__label" for="creatorEmail">Email ID</label>
+                                </div>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label my-fullWidth">
                                     <textarea class="mdl-textfield__input kbdfix" tabindex="10" type="text" rows= "3" id="aboutCreator" name="aboutCreator"><?php echo $row['aboutCreator']; ?></textarea>
                                     <label class="mdl-textfield__label" for="aboutCreator">Something about yourself (Optional)</label>
                                 </div>
+                                <?php
+                            }
+                            ?>
+                            <input type="hidden" name="userId" value="<?php echo $row['userId'];?>"/>
+                            <div class="mdl-cell mdl-cell--12-col">
                                 <div class="event-header-name">
                                     All events are reviewed and approved by Doolally. Once approved, we will create an Eventshigh payment link and
                                     accept payments on your behalf.
