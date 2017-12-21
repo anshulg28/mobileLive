@@ -1041,6 +1041,17 @@ class Dashboard_Model extends CI_Model
         return $result;
     }
 
+    function getCareerData()
+    {
+        $query = "SELECT cm.*,lm.locName 
+                  FROM careermaster cm 
+                  LEFT JOIN locationmaster lm ON cm.locId = lm.id
+                  WHERE ifActive = ".ACTIVE;
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+
     public function getRecentMeta()
     {
         $query = "SELECT *"

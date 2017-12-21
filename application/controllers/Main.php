@@ -2026,6 +2026,18 @@ $this->load->view('MobileHomeView', $data);
         echo json_encode($data);
     }
 
+    public function careerPage()
+    {
+        $post = $this->input->post();
+        $data = array();
+
+        $data['careerData'] = $this->dashboard_model->getCareerData();
+
+        $eventView = $this->load->view('desktop/CareerView', $data);
+
+        echo json_encode($eventView);
+    }
+
     //done
     public function saveEvent()
     {
