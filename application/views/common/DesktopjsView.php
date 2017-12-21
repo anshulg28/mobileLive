@@ -2123,6 +2123,7 @@
                 $('section#contactTab').html(data).addClass('is-active');
                 break;
             case 'career':
+                resetTabs();
                 $('#mainContent-view section.mdl-layout__tab-panel').removeClass('is-active');
                 $('section#contactTab').html(data).addClass('is-active');
                 break;
