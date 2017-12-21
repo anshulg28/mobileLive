@@ -30,6 +30,11 @@
                                 <i class="fa fa-life-ring fa-14x mdl-list__item-icon"></i> Contact
                             </li>
                         </a>
+                        <a href="career" class="my-noUnderline dynamic" data-title="Work with Us">
+                            <li class="mdl-menu__item">
+                                <i class="fa fa-suitcase fa-14x mdl-list__item-icon"></i> Career
+                            </li>
+                        </a>
                     </ul>
                 </div>
             </span>

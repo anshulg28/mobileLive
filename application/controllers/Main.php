@@ -2028,7 +2028,6 @@ $this->load->view('MobileHomeView', $data);
 
     public function careerPage()
     {
-        $post = $this->input->post();
         $data = array();
 
         $data['careerData'] = $this->dashboard_model->getCareerData();

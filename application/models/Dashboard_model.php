@@ -1046,7 +1046,7 @@ class Dashboard_Model extends CI_Model
         $query = "SELECT cm.*,lm.locName 
                   FROM careermaster cm 
                   LEFT JOIN locationmaster lm ON cm.locId = lm.id
-                  WHERE ifActive = ".ACTIVE;
+                  WHERE cm.ifActive = ".ACTIVE;
 
         $result = $this->db->query($query)->result_array();
         return $result;

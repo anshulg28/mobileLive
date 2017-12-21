@@ -1820,6 +1820,44 @@ body
 {
     background: #A2C760;
 }
+
+/* Career Page */
+.mainHome .career-page .inner-job-describ
+{
+    background-color:rgba(27, 21, 15, 0.04);
+    padding: 40px 60px;
+    margin: 25px;
+    border-radius: 5px;
+    text-align: center;
+    color:rgba(27, 21, 15, 0.7);
+}
+.mainHome .career-page .inner-job-title
+{
+    font-size:18px;
+}
+.mainHome .career-page .inner-job-depart, .mainHome .career-page .inner-job-location
+{
+    color:rgba(27, 21, 15, 0.54);
+}
+.mainHome .career-page .job-custom-hr
+{
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-bottom: 15px;
+}
+.mainHome .career-page .inner-job-caption
+{
+    font-size:14px;
+}
+.mainHome .career-page .card-content-inner
+{
+    padding-bottom:15px;
+}
+.mainHome .career-page .job-main-title
+{
+    font-size:18px;
+    color:#000;
+}
 .expand-search
 {
     width:90% !important;
@@ -2394,6 +2432,10 @@ header .main-center-header ul.list-inline li:last-child
     {
         bottom:70px;
     }
+    .mainHome .career-page .inner-job-describ
+    {
+        padding:30px 40px;
+    }
 }
 @media screen and (max-width:400px)
 {
@@ -2417,6 +2459,10 @@ header .main-center-header ul.list-inline li:last-child
     {
         margin-left: 5px;
         margin-right: 5px;
+    }
+    .mainHome .career-page .inner-job-describ
+    {
+        padding:20px 20px;
     }
 }
 

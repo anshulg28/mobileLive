@@ -2064,6 +2064,10 @@
                 {
                     replaceContent('contact_us',data);
                 }
+                else if(url.indexOf('career') != -1)
+                {
+                    replaceContent('career',data);
+                }
                 else if(url == 'fnb' || url == 'fnb/')
                 {
                     replaceContent('fnb',data);
@@ -2115,6 +2119,10 @@
                 break;
             case 'contact_us':
                 resetTabs();
+                $('#mainContent-view section.mdl-layout__tab-panel').removeClass('is-active');
+                $('section#contactTab').html(data).addClass('is-active');
+                break;
+            case 'career':
                 $('#mainContent-view section.mdl-layout__tab-panel').removeClass('is-active');
                 $('section#contactTab').html(data).addClass('is-active');
                 break;

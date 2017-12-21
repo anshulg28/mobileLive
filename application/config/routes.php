@@ -108,6 +108,7 @@ $route['thank-you'] = 'main/thankYouMug';
 $route['renderLink'] = 'main/renderLink';
 $route['saveEvent'] = 'main/saveEvent';
 $route['updateEvent'] = 'main/updateEvent';
+$route['career'] = 'main/careerPage';
 $route['checkEventSpace'] = 'main/checkEventSpace';
 $route['eventCancel'] = 'main/eventCancel';
 $route['new-mug-membership'] = 'main/newMugForm';
