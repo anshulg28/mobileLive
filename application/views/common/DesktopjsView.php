@@ -1971,6 +1971,14 @@
         {
             url = 'events';
         }
+        if(url.indexOf('&utm_medium=social&utm_source=facebook.com&utm_campaign=buffer') != -1)
+        {
+            var bufRemove = url.split('&');
+            if(bufRemove.length>0)
+            {
+                url = bufRemove[0];
+            }
+        }
         if($(window).width() < mobileSize)
         {
             if(isDynamic)

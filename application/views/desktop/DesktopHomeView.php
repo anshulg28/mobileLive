@@ -456,6 +456,7 @@
                                                 break;
                                             case 'i':
                                                 preg_match_all('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=&_/]+!', $row['unformatted_message'], $backupLink);
+                                                $row['unformatted_message'] = strip_tags($row['unformatted_message']);
                                                 $row['unformatted_message'] = preg_replace('!(http|ftp|scp)(s)?:\/\/[a-zA-Z0-9.?%=&_/]+!', "", $row['unformatted_message']);
                                                 $row['unformatted_message'] = highlight('/#\w+/',$row['unformatted_message']);
                                                 $row['unformatted_message'] = highlight('/@\w+/',$row['unformatted_message']);

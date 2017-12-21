@@ -1003,7 +1003,7 @@ class Dashboard_Model extends CI_Model
     public function getEventCancelInfo($bId)
     {
         $query = 'SELECT erm.paymentId, erm.quantity, erm.isDirectlyRegistered,erm.regPrice, em.eventId, em.eventPlace, em.eventPrice,
-                  em.eventName, em.creatorName, em.creatorEmail, um.firstName, um.lastName,
+                  em.eventName, em.creatorName, em.creatorEmail, em.eventDate, em.startTime, um.firstName, um.lastName,
                   um.emailId, ehm.highId, om.isRedeemed, om.offerType
                   FROM `eventregistermaster` erm
                   LEFT JOIN eventmaster em ON em.eventId = erm.eventId

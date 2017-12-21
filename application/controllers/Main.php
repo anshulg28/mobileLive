@@ -230,12 +230,12 @@ class Main extends MY_Controller
             }
             if(isStringSet($_SERVER['QUERY_STRING']))
             {
-                $query = explode('/',$_SERVER['QUERY_STRING']);
+                $query = explode('/',urldecode($_SERVER['QUERY_STRING']));
 
                 if(isset($query[1]))
                 {
                     $data['pageName'] = $query[1];
-                    $data['pageUrl'] = explode('?page/',$_SERVER['REQUEST_URI'])[1];
+                    $data['pageUrl'] = explode('?page/',urldecode($_SERVER['REQUEST_URI']))[1];
                     if($query[1] == 'events')
                     {
                         if(isset($query[2]) && isStringSet($query[2]))
@@ -287,6 +287,14 @@ class Main extends MY_Controller
                             else
                             {
                                 //$event = explode('-',$query[2]);
+                                if(strpos($query[2],'utm_campaign=buffer') !== false)
+                                {
+                                    $bufSplit = explode('&',$query[2]);
+                                    if(count($bufSplit) > 0)
+                                    {
+                                        $query[2] = $bufSplit[0];
+                                    }
+                                }
                                 $eventData = $this->dashboard_model->getFullEventInfoBySlug($query[2]);
                                 if(!myIsArray($eventData))
                                 {
@@ -859,8 +867,16 @@ $this->load->view('MobileHomeView', $data);
         $post = $this->input->post();
         $data = array();
 
-        if (isset($post['bId'])) {
+        if (isset($post['bId']))
+        {
             $cancelInfo = $this->dashboard_model->getEventCancelInfo($post['bId']);
+            if(isEventStarted($cancelInfo['eventDate'],$cancelInfo['startTime']))
+            {
+                $data['status'] = FALSE;
+                $data['errorMsg'] = 'Error! Event already started or completed';
+                echo json_encode($data);
+                return false;
+            }
             $this->dashboard_model->cancelUserEventBooking($post['bId']);
             if (isset($cancelInfo['eventId']) && isset($cancelInfo['eventPrice']) &&
                 $cancelInfo['eventPrice'] != 0 && isset($cancelInfo['paymentId']) && isStringSet($cancelInfo['paymentId'])
