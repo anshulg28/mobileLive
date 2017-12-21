@@ -218,6 +218,15 @@
                         </span>
                 </a>
             </li>
+            <li class="mdl-list__item" onclick="$('#demo-menu-lower-left').click();">
+                <a href="career" data-title="Contact Us" class="my-fullWidth drawer-item dynamic">
+                        <span class="mdl-list__item-primary-content">
+                            <i class="fa fa-suitcase mdl-list__item-icon"></i>
+                            <!--<i class="material-icons mdl-list__item-icon">insert_invitation</i>-->
+                            Career
+                        </span>
+                </a>
+            </li>
             <!--<li class="mdl-list__item logout-menu-item <?php /*if(isSessionVariableSet($this->isUserSession) === false){echo 'hide';}*/?>"
                 style="display:none !important;">
                 <a href="#" id="logout-btn" class="my-fullWidth drawer-item dynamic">
