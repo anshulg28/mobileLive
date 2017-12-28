@@ -4,12 +4,6 @@
 <?php
 if(isset($status) && $status === true)
 {
-    if(isset($ifFound))
-    {
-        ?>
-            <input type="hidden" id="ifFound" value="<?php echo $ifFound;?>"/>
-        <?php
-    }
     if(isset($tapSongs) && myIsMultiArray($tapSongs))
     {
         $songs = json_decode($tapSongs[0]['tapSongs'],true);

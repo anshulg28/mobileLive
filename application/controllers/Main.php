@@ -1743,26 +1743,17 @@ $this->load->view('MobileHomeView', $data);
             {
                 if(isSessionVariableSet($this->userMobEmail))
                 {
-                    if(myInArray($this->userMobEmail,$this->config->item('jukeboxBlockEmails')))
-                    {
-                        $data['status'] = TRUE;
-                        $data['ifFound'] = 1;
-                    }
-                    else
-                    {
-                        $data['ifFound'] = 0;
-                        $details = array(
-                            'email'=> $this->userMobEmail
-                        );
+                    $details = array(
+                        'email'=> $this->userMobEmail
+                    );
 
-                        $this->curl_library->verifyThirdPartyUser($details);
+                    $this->curl_library->verifyThirdPartyUser($details);
 
-                        $juke_token = encrypt_jukebx_data($this->userMobEmail);
+                    $juke_token = encrypt_jukebx_data($this->userMobEmail);
 
-                        $data['status'] = TRUE;
-                        $this->generalfunction_library->setSessionVariable('jukebox_token',$juke_token);
-                        $this->jukeboxToken = $juke_token;
-                    }
+                    $data['status'] = TRUE;
+                    $this->generalfunction_library->setSessionVariable('jukebox_token',$juke_token);
+                    $this->jukeboxToken = $juke_token;
                 }
                 else
                 {
@@ -1775,7 +1766,10 @@ $this->load->view('MobileHomeView', $data);
         if($data['status'] === TRUE && isSessionVariableSet($this->jukeboxToken))
         {
             $data['tapId'] = $id;
-            $data['tapSongs'] = $this->dashboard_model->getTapSongs($id);
+            if(!myInArray($this->userMobEmail,$this->config->item('jukeboxBlockEmails')))
+            {
+                $data['tapSongs'] = $this->dashboard_model->getTapSongs($id);
+            }
         }
 
         if(isset($post['isAjax']) && $post['isAjax'] == '1')
