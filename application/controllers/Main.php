@@ -1746,9 +1746,11 @@ $this->load->view('MobileHomeView', $data);
                     if(myInArray($this->userMobEmail,$this->config->item('jukeboxBlockEmails')))
                     {
                         $data['status'] = TRUE;
+                        $data['ifFound'] = 1;
                     }
                     else
                     {
+                        $data['ifFound'] = 0;
                         $details = array(
                             'email'=> $this->userMobEmail
                         );
