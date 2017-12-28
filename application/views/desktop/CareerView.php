@@ -19,7 +19,7 @@
                             <br>
                             <hr class="job-custom-hr"/>
                             <span class="inner-job-caption">Write to Us</span><br>
-                            <a href="mailto:<?php echo $row['contactEmail'];?>" class="inner-job-contact"><?php echo $row['contactEmail'];?></a>
+                            <a class="my-black-text" href="mailto:<?php echo $row['contactEmail'];?>" class="inner-job-contact"><?php echo $row['contactEmail'];?></a>
                         </div>
                     </div>
                 </div>

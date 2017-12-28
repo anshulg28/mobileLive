@@ -1743,17 +1743,24 @@ $this->load->view('MobileHomeView', $data);
             {
                 if(isSessionVariableSet($this->userMobEmail))
                 {
-                    $details = array(
-                        'email'=> $this->userMobEmail
-                    );
+                    if(myInArray($this->userMobEmail,JUKEBOX_BLOCKED_EMAILS))
+                    {
+                        $data['status'] = TRUE;
+                    }
+                    else
+                    {
+                        $details = array(
+                            'email'=> $this->userMobEmail
+                        );
 
-                    $this->curl_library->verifyThirdPartyUser($details);
+                        $this->curl_library->verifyThirdPartyUser($details);
 
-                    $juke_token = encrypt_jukebx_data($this->userMobEmail);
+                        $juke_token = encrypt_jukebx_data($this->userMobEmail);
 
-                    $data['status'] = TRUE;
-                    $this->generalfunction_library->setSessionVariable('jukebox_token',$juke_token);
-                    $this->jukeboxToken = $juke_token;
+                        $data['status'] = TRUE;
+                        $this->generalfunction_library->setSessionVariable('jukebox_token',$juke_token);
+                        $this->jukeboxToken = $juke_token;
+                    }
                 }
                 else
                 {
