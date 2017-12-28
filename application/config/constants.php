@@ -175,7 +175,3 @@ defined('DOOLALLY_VENUE_FEE') OR define('DOOLALLY_VENUE_FEE',118);
 
 defined('SPECIAL_EVENT_VENUE_MAIL_NAME') OR define('SPECIAL_EVENT_VENUE_MAIL_NAME','1st Brewhouse, Corinthians Resort & Club, Pune');
 defined('SPECIAL_EVENT_VENUE_MAP') OR define('SPECIAL_EVENT_VENUE_MAP','https://goo.gl/maps/UUvEKmazBsj');
-defined('JUKEBOX_BLOCKED_EMAILS') OR define('JUKEBOX_BLOCKED_EMAILS',
-    array('rajubelgaonkar7@gmail.com',
-        'store.khar@brewcraftsindiagmail.com',
-        'store.khar@brewcraftsindia.com'));

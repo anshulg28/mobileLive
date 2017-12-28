@@ -36,6 +36,11 @@ $config['eventTypes'] = array(
 $config['ccList'] = array(
     "tresha@brewcraftsindia.com"
 );
+$config['jukeboxBlockEmails'] = array(
+    'rajubelgaonkar7@gmail.com',
+    'store.khar@brewcraftsindiagmail.com',
+    'store.khar@brewcraftsindia.com'
+);
 
 $config['eventTc'] = '<div class="page-content">
     <div class="content-block">

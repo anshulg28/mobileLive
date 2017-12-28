@@ -1743,7 +1743,7 @@ $this->load->view('MobileHomeView', $data);
             {
                 if(isSessionVariableSet($this->userMobEmail))
                 {
-                    if(myInArray($this->userMobEmail,JUKEBOX_BLOCKED_EMAILS))
+                    if(myInArray($this->userMobEmail,$this->config->item('jukeboxBlockEmails')))
                     {
                         $data['status'] = TRUE;
                     }
