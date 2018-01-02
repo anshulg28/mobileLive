@@ -4,6 +4,11 @@
 <?php
 if(isset($status) && $status === true)
 {
+    ?>
+    <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-right" id="juke-logout">
+        Logout
+    </button>
+    <?php
     if(isset($tapSongs) && myIsMultiArray($tapSongs))
     {
         $songs = json_decode($tapSongs[0]['tapSongs'],true);
@@ -13,9 +18,9 @@ if(isset($status) && $status === true)
                 <input class="mdl-textfield__input search" type="text" id="sample3">
                 <label class="mdl-textfield__label" for="sample3">Search</label>
             </div>
-            <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-right" id="juke-logout">
+            <!--<button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored pull-right" id="juke-logout">
                 Logout
-            </button>
+            </button>-->
             <ul class="demo-list-two mdl-list list clear">
                 <?php
                 //$songCount = 0;

@@ -223,6 +223,29 @@ class Cron_Model extends CI_Model
 
     }
 
+    public function getWeeklyTrans()
+    {
+        $query = "SELECT erm.*,CONCAT(um.firstName,' ',um.lastName) AS 'Uname',um.mobNum,um.emailId
+                    FROM eventregistermaster erm
+                    LEFT JOIN eventmaster em ON erm.eventId = em.eventId
+                    LEFT JOIN eventcompletedmaster ecm ON erm.eventId = ecm.eventId
+                    LEFT JOIN doolally_usersmaster um ON erm.bookerUserId = um.userId
+                    WHERE (em.costType != 1 OR ecm.costType != 1) AND (DATE(erm.createdDT) >= (CURRENT_DATE() - INTERVAL 7 DAY) AND DATE(erm.createdDT) <= CURRENT_DATE())";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+
+    }
+
+    public function getWeeklyInstaMugs()
+    {
+        $query = "SELECT * FROM instamojomaster
+                  WHERE status = 1 AND (DATE(insertedDT) >= (CURRENT_DATE() - INTERVAL 7 DAY) AND DATE(insertedDT) <= CURRENT_DATE())";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+
     public function getIntaRecords()
     {
         $query = "SELECT um.firstName, um.lastName,
