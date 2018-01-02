@@ -398,7 +398,7 @@ class Cron extends MY_Controller
         //$colKeys = array('Payment ID','Refund Id','Location','Transaction Date/Time','Link/Purpose','No. of Tickets','Per Ticket Price',
             //'Sale Amount','Transaction Type','Instamojo Fees','Total Tax','Net Sale Amount','Buyer Name','Buyer Email','Buyer Phone Number');
         $ehColKeys = array('Payment ID','Refund Id','Refund Amount','Location','Transaction Date/Time','Link/Purpose','No. of Tickets','Per Ticket Price',
-            'Sale Amount','Transaction Type','Commission Rate','Total PG Charges','Net PG Charges','SGST','CGST','Net Settled','Buyer Name','Buyer Email','Buyer Phone Number');
+            'Sale Amount','Transaction Type','Commission Rate','Total PG Charges','Net PG Charges','SGST','CGST','Net Amount','Buyer Name','Buyer Email','Buyer Phone Number');
         $allTrans = $this->cron_model->getAllTrans();
         //$allInsta = $this->cron_model->getIntaRecords();
         $allRefunds = $this->curl_library->allInstaRefunds();
@@ -478,8 +478,8 @@ class Cron extends MY_Controller
                             $payRow['eventPrice'],
                             $totalPrice,
                             'Success',
-                            $commRate,
-                            $commision.'%',
+                            $commRate.'%',
+                            $commision,
                             $netCommision,
                             $cGst,
                             $sGst,
@@ -656,29 +656,31 @@ class Cron extends MY_Controller
         }
     }
 
-    function sendInstaMugReport()
+    public function sendInstaMugReport()
     {
         $colKeys = array('Payment ID','Refund Id','Refund Amount','Location','Transaction Date/Time','Link/Purpose','No. of Tickets','Per Ticket Price',
-        'Sale Amount','Transaction Type','Commission Rate','Total PG Charges','Net PG Charges','SGST','CGST','Net Settled','Buyer Name','Buyer Email','Buyer Phone Number');
+        'Sale Amount','Transaction Type','Commission Rate','Total PG Charges','Net PG Charges','SGST','CGST','Net Amount','Buyer Name','Buyer Email','Buyer Phone Number');
         $ehColKeys = array('Payment ID','Refund Id','Refund Amount','Location','Transaction Date/Time','Link/Purpose','No. of Tickets','Per Ticket Price',
-            'Sale Amount','Transaction Type','Commission Rate','Total PG Charges','Net PG Charges','SGST','CGST','Net Settled','Buyer Name','Buyer Email','Buyer Phone Number');
+            'Sale Amount','Transaction Type','Commission Rate','Total PG Charges','Net PG Charges','SGST','CGST','Net Amount','Buyer Name','Buyer Email','Buyer Phone Number');
         $allTrans = $this->cron_model->getWeeklyTrans();
         $instaMugs = $this->cron_model->getWeeklyInstaMugs();
         //$allInsta = $this->cron_model->getIntaRecords();
         //$allRefunds = $this->curl_library->allInstaRefunds();
+        $startTime = date('d_M_Y',strtotime('-7 day'));
+        $endTime = date('d_M_Y');
+        $instaFilename = "./uploads/InstaMugRecords_".$startTime."_TO_".$endTime.".csv";
+        $file = fopen($instaFilename,"w");
+        $ehFilename = "./uploads/EventsHighRecords_".$startTime."_TO_".$endTime.".csv";
+        $file1 = fopen($ehFilename,"w");
+        $isInstaSet = false;
+        $isEhSet = false;
 
 
         $refundArray = array();
         if( isset($allTrans) && myIsArray($allTrans) && isset($allTrans[0]['eventId']))
         {
-            $startTime = date('d_M_Y',strtotime('-7 day'));
-            $endTime = date('d_M_Y');
-            $instaFilename = "./uploads/InstaMugRecords_".$startTime."_TO_".$endTime.".csv";
-            $file = fopen($instaFilename,"w");
-            $ehFilename = "./uploads/EventsHighRecords_".$startTime."_TO_".$endTime.".csv";
-            $file1 = fopen($ehFilename,"w");
+            $isEhSet = true;
             $firstRow = true;
-            $isInstaSet = false;
             foreach($allTrans as $key => $row)
             {
                 if($firstRow)
@@ -745,8 +747,8 @@ class Cron extends MY_Controller
                             $payRow['eventPrice'],
                             $totalPrice,
                             'Success',
-                            $commRate,
-                            $commision.'%',
+                            $commRate.'%',
+                            $commision,
                             $netCommision,
                             $cGst,
                             $sGst,
@@ -759,56 +761,60 @@ class Cron extends MY_Controller
                         fputcsv($file1,$textToWrite);
                     }
                 }
-
-                if(isset($instaMugs) && myIsArray($instaMugs))
-                {
-                    $isInstaSet = true;
-                    $textToWrite = $colKeys;
-                    fputcsv($file,$textToWrite);
-                    foreach($instaMugs as $payKey => $payRow)
-                    {
-                        $totalPrice = (int)$payRow['price'];
-                        $commision = ((float)INSTAMOJO_GATEWAY_CHARGE / 100) * (int)$totalPrice;
-                        $cGst = (float)$commision * (GST_RATE / 100);
-                        $sGst = (float)$commision * (GST_RATE / 100);
-                        $netCommision = (float)($commision - ($cGst + $sGst));
-                        $netSettle = $totalPrice - $commision;
-                        $commRate = INSTAMOJO_GATEWAY_CHARGE;
-                        $ehRow = array(
-                            $row['paymentId'],
-                            '',
-                            '',
-                            '',
-                            $row['insertedDT'],
-                            'Mug Club Membership',
-                            '1',
-                            $payRow['price'],
-                            $payRow['price'],
-                            'Success',
-                            $commRate,
-                            $commision.'%',
-                            $netCommision,
-                            $cGst,
-                            $sGst,
-                            $netSettle,
-                            $row['buyerName'],
-                            $row['buyerEmail'],
-                            ''
-                        );
-                        $textToWrite = $ehRow;
-                        fputcsv($file1,$textToWrite);
-                    }
-                }
             }
             fclose($file1);
-            fclose($file);
+        }
+
+        if(isset($instaMugs) && myIsArray($instaMugs))
+        {
+            $isInstaSet = true;
+            $textToWrite = $colKeys;
+            fputcsv($file,$textToWrite);
+            foreach($instaMugs as $payKey => $payRow)
+            {
+                $totalPrice = (int)$payRow['price'];
+                $commision = ((float)INSTAMOJO_GATEWAY_CHARGE / 100) * (int)$totalPrice;
+                $cGst = (float)$commision * (GST_RATE / 100);
+                $sGst = (float)$commision * (GST_RATE / 100);
+                $netCommision = (float)($commision - ($cGst + $sGst));
+                $netSettle = $totalPrice - $commision;
+                $commRate = INSTAMOJO_GATEWAY_CHARGE;
+                $ehRow = array(
+                    $payRow['paymentId'],
+                    '',
+                    '',
+                    '',
+                    $payRow['insertedDT'],
+                    'Mug Club Membership',
+                    '1',
+                    $payRow['price'],
+                    $payRow['price'],
+                    'Success',
+                    $commRate.'%',
+                    $commision,
+                    $netCommision,
+                    $cGst,
+                    $sGst,
+                    $netSettle,
+                    $payRow['buyerName'],
+                    $payRow['buyerEmail'],
+                    ''
+                );
+                $textToWrite = $ehRow;
+                fputcsv($file,$textToWrite);
+            }
+        }
+        fclose($file);
+
+        if($isEhSet || $isInstaSet)
+        {
             $content = '<html><body><p>Instamojo Mug and Eventshigh Events Records!<br>Refund ID, if present, indicates that the ticket has been canceled and refund issued<br>PFA</p></body></html>';
 
             //"./uploads/InstamojoRecords_".$startTime.".csv",
             if($isInstaSet)
             {
                 $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','pranjal.rathi@rubycapital.net','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
-                    ,'admin@brewcraftsindia.com','Instamojo Mug and Eventshigh Events Daily Transaction Records | '.$startTime.' To '.$endTime,$content,array($ehFilename,$instaFilename));
+                    ,'admin@brewcraftsindia.com','Instamojo Mug and Eventshigh Events Transaction Records | '.$startTime.' To '.$endTime,$content,array($ehFilename,$instaFilename));
                 try
                 {
                     unlink($instaFilename);
@@ -822,10 +828,10 @@ class Cron extends MY_Controller
             else
             {
                 $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','pranjal.rathi@rubycapital.net','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
-                    ,'admin@brewcraftsindia.com','Instamojo Mug and Eventshigh Events Daily Transaction Records | '.$startTime.' To '.$endTime,$content,array($ehFilename));
+                    ,'admin@brewcraftsindia.com','Instamojo Mug and Eventshigh Events Transaction Records | '.$startTime.' To '.$endTime,$content,array($ehFilename));
                 try
                 {
-                    unlink($instaFilename);
+                    //unlink($instaFilename);
                     unlink($ehFilename);
                 }
                 catch(Exception $ex)
@@ -839,7 +845,7 @@ class Cron extends MY_Controller
             $content = '<html><body><p>No Records Found Today</p></body></html>';
 
             $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','pranjal.rathi@rubycapital.net','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
-                ,'admin@brewcraftsindia.com','No Transaction records Today | '.date('d_M_Y'),$content,array());
+                ,'admin@brewcraftsindia.com','No Transaction records | '.$startTime.' To '.$endTime,$content,array());
         }
     }
 
