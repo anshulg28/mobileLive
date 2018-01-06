@@ -51,6 +51,18 @@
             error: function(){}
         });
     }
+    function checkNetConnection()
+    {
+        $.ajaxSetup({async:false});
+        var re="";
+        var r=Math.round(Math.random() * 10000);
+        $.get(base_url+'asset/images/splashLogo.png',{subins:r},function(d){
+            re=true;
+    }).error(function(){
+        re=false;
+    });
+    return re;
+    }
 </script>
 <!-- Loading bar -->
 <script>
@@ -2935,6 +2947,11 @@
         var eventAddStatus = false;
         var formObj = this;
 
+        if(!checkNetConnection())
+        {
+            mySnackTime("No Internet Connection!");
+            return false;
+        }
         if($('.event-add-page #eventName').val() == '')
         {
             mySnackTime('Event Name Required!');
@@ -3132,7 +3149,11 @@
         e.preventDefault();
 
         var formObj = this;
-
+        if(!checkNetConnection())
+        {
+            mySnackTime("No Internet Connection!");
+            return false;
+        }
         if($('.event-add-page #eventName').val() == '')
         {
             mySnackTime('Event Name Required!');

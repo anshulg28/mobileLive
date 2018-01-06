@@ -109,6 +109,7 @@ class Cron extends MY_Controller
         }
     }
 
+
     public function getInstagramFeeds()
     {
         $instaFeeds = $this->curl_library->getInstagramPosts();
@@ -397,7 +398,7 @@ class Cron extends MY_Controller
     {
         //$colKeys = array('Payment ID','Refund Id','Location','Transaction Date/Time','Link/Purpose','No. of Tickets','Per Ticket Price',
             //'Sale Amount','Transaction Type','Instamojo Fees','Total Tax','Net Sale Amount','Buyer Name','Buyer Email','Buyer Phone Number');
-        $ehColKeys = array('Payment ID','Refund Id','Refund Amount','Location','Transaction Date/Time','Link/Purpose','No. of Tickets','Per Ticket Price',
+        $ehColKeys = array('Payment ID','Event Name','Refund Id','Refund Amount','Location','Transaction Date/Time','Link/Purpose','No. of Tickets','Per Ticket Price',
             'Sale Amount','Transaction Type','Commission Rate','Total PG Charges','Net PG Charges','SGST','CGST','Net Amount','Buyer Name','Buyer Email','Buyer Phone Number');
         $allTrans = $this->cron_model->getAllTrans();
         //$allInsta = $this->cron_model->getIntaRecords();
@@ -469,6 +470,7 @@ class Cron extends MY_Controller
                         }
                         $ehRow = array(
                             $row['paymentId'],
+                            $payRow['eventName'],
                             $refId,
                             $refAmt,
                             $payRow['locName'],

@@ -18,7 +18,7 @@
                             <span class="inner-job-location"><?php if(isset($row['locName'])){echo $row['locName'];}else{echo $row['otherLocation'];} ;?></span>
                             <br>
                             <hr class="job-custom-hr"/>
-                            <span class="inner-job-caption">Write to Us</span><br>
+                            <span class="inner-job-caption">Freshers can apply by writing to</span><br>
                             <a class="my-black-text" href="mailto:<?php echo $row['contactEmail'];?>" class="inner-job-contact"><?php echo $row['contactEmail'];?></a>
                         </div>
                     </div>
