@@ -21,13 +21,13 @@
                         else
                         {
                             ?>
-                            <h4 class="mdl-card__title-text my-success-text" style="font-size:20px">Thank You For Purchasing<br>You'll Receive Email regarding purchase.</h4>
+                            <h4 class="mdl-card__title-text my-success-text" style="font-size:20px">Thank You For Purchasing<br>You'll Receive a confirmation mail from us.</h4>
                             <br>
                             <?php
                         }
                         if(isset($isTriggered) && $isTriggered)
                         {
-                            echo '<br>Gift of Beer has been scheduled!';
+                            echo '<h5 class="text-center">Gift of Beer has been scheduled!</h5>';
                         }
                     ?>
                     <a href="<?php echo base_url();?>" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent bookNow-event-btn" style="text-transform: capitalize;">

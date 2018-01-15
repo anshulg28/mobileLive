@@ -1060,4 +1060,28 @@ class Cron extends MY_Controller
             }
         }
     }
+
+    public function triggerRun()
+    {
+        $triggers = $this->cron_model->getAllTodayTrigger();
+
+        if(isset($triggers) && myIsArray($triggers))
+        {
+            foreach($triggers as $key => $row)
+            {
+                $res = $this->curl_library->exeTrigger($row['urlToTrigger']);
+
+                $resDetails = array(
+                    'resultText' => json_encode($res),
+                    'insertedDT' => date('Y-m-d H:i:s')
+                );
+                $this->cron_model->saveTriggerResult($resDetails);
+
+                $sDetails = array(
+                    'status' => 1
+                );
+                $this->cron_model->updateScheduleTrigger($row['sid'],$sDetails);
+            }
+        }
+    }
 }

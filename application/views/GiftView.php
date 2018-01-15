@@ -29,6 +29,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo base_url(); ?>asset/css/animate.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>asset/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>asset/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>asset/css/vex.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>asset/css/vex-theme-plain.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>asset/css/material.min.css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans|Averia+Serif+Libre' rel='stylesheet' type='text/css'>
     <link rel="icon" sizes="76x76" href="<?php echo base_url();?>asset/images/doolally-app-icon.png"/>
@@ -48,14 +50,58 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             height:100%;
             margin:0;
         }
+        #custom-progressBar
+        {
+            margin: 0 auto;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+        .vex.vex-theme-plain .vex-dialog-button.vex-dialog-button-primary
+        {
+            background:rgba(27, 21, 15, 0.87);
+        }
+        .vex.vex-theme-plain
+        {
+            padding-left: 35px;
+            padding-right: 20px;
+            padding-top: 50px;
+        }
+        .vex {
+            z-index: 11111;
+        }
+        .vex.vex-theme-plain .vex-content, .mdl-list__item {
+            font-family: 'Averia Serif Libre' !important;
+        }
+        @-moz-document url-prefix() {
+            .vex.vex-theme-plain
+            {
+                padding-left:20px !important;
+            }
+        }
+        @supports (-ms-ime-align:auto) {
+            .vex.vex-theme-plain
+            {
+                padding-left:20px !important;
+            }
+        }
     </style>
     <script type="application/javascript" src="<?php echo base_url(); ?>asset/js/jquery-2.2.4.min.js"></script>
     <script type="application/javascript" src="<?php echo base_url(); ?>asset/js/bootstrap.min.js"></script>
     <script type="application/javascript" src="<?php echo base_url(); ?>asset/js/material.min.js"></script>
     <script type="application/javascript" src="<?php echo base_url(); ?>asset/js/vex.combined.min.js"></script>
     <script>
-        componentHandler.upgradeDom();
         window.base_url = '<?php echo base_url(); ?>';
+        vex.defaultOptions.className = 'vex-theme-plain';
+        function showProgressLoader()
+        {
+            $('#custom-progressBar').removeClass('hide');
+        }
+        function hideProgressLoader()
+        {
+            $('#custom-progressBar').addClass('hide');
+        }
         function mySnackTime(txt)
         {
             var snackbarContainer = document.querySelector('#demo-toast');
@@ -531,9 +577,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         $(document).on('submit','.middle .form-wrapper-gift-beer #main-beer-form', function(e){
             e.preventDefault();
 
-            if($('.middle .form-wrapper-gift-beer #main-beer-form #bFullName').val() == '')
+            if($('.middle .form-wrapper-gift-beer #main-beer-form #buyerFName').val() == '')
             {
-                mySnackTime("Your Name is Required!");
+                mySnackTime("First Name is Required!");
+                return false;
+            }
+            if($('.middle .form-wrapper-gift-beer #main-beer-form #buyerLName').val() == '')
+            {
+                mySnackTime("Last Name is Required!");
                 return false;
             }
             if($('.middle .form-wrapper-gift-beer #main-beer-form #buyerEmail').val() == '')
@@ -546,8 +597,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 mySnackTime("Your Phone Number is Required!");
                 return false;
             }
-            if($('.middle .form-wrapper-gift-beer #main-beer-form #buyerPints').val() == '' &&
-                $('.middle .form-wrapper-gift-beer #main-beer-form #buyerPints').val() != '0')
+            if($('.middle .form-wrapper-gift-beer #main-beer-form #buyerPints').val() == '')
             {
                 mySnackTime("Pints quantity is Required!");
                 return false;
@@ -623,6 +673,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 }
             });
         });
+        $(window).load(function(){
+            componentHandler.upgradeDom();
+        });
+        function maxLengthCheck(object)
+        {
+            if (object.value.length > object.maxLength)
+                object.value = object.value.slice(0, object.maxLength)
+        }
     </script>
 </head>
 <body class="giftABeer">
@@ -680,22 +738,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <br>
                                 <div class="mug-suggestions"></div>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="firstName" name="firstName">
+                                    <input class="mdl-textfield__input" type="text" pattern="^[a-zA-Z\s]+$" id="firstName" name="firstName">
                                     <label class="mdl-textfield__label" for="firstName">First Name</label>
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="lastName" name="lastName">
+                                    <input class="mdl-textfield__input" type="text" pattern="^[a-zA-Z\s]+$" id="lastName" name="lastName">
                                     <label class="mdl-textfield__label" for="lastName">Last Name</label>
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="email" name="email">
+                                    <input class="mdl-textfield__input" type="email" id="email" name="email">
                                     <label class="mdl-textfield__label" for="email">Email</label>
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="mobNum" name="mobNum">
+                                    <input class="mdl-textfield__input" type="number" id="mobNum" name="mobNum" maxlength="10" oninput="maxLengthCheck(this)">
                                     <label class="mdl-textfield__label" for="mobNum">Mobile Number</label>
                                 </div>
                                 <br>
@@ -722,11 +780,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <label class="mdl-textfield__label" for="buyerMonth">Month</label>
                                 </div>&nbsp;
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-date-selection">
-                                    <input class="mdl-textfield__input" type="number" id="buyerDate" name="buyerDate" value="<?php echo date('d'); ?>">
+                                    <select id="buyerDate" name="buyerDate" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
+                                        <?php
+                                        for($i=1;$i<32;$i++)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('n')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <!--<input class="mdl-textfield__input" type="number" id="buyerDate" name="buyerDate" value="<?php /*echo date('d'); */?>">-->
                                     <label class="mdl-textfield__label" for="buyerDate">Date</label>
                                 </div>&nbsp;
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-year-selection">
-                                    <input class="mdl-textfield__input" type="number" id="buyerYear" name="buyerYear" value="<?php echo date('Y'); ?>">
+                                    <select id="buyerYear" name="buyerYear" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
+                                        <?php
+                                        for($i=1920;$i<(int)date('Y');$i++)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('Y')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <!--<input class="mdl-textfield__input" type="number" id="buyerYear" name="buyerYear" value="<?php /*echo date('Y'); */?>">-->
                                     <label class="mdl-textfield__label" for="buyerYear">Year</label>
                                 </div>
                                 <br>
@@ -774,7 +852,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <h4>Your Details:</h4>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="bFullName">
+                                    <input class="mdl-textfield__input" pattern="^[a-zA-Z\s]+$" type="text" id="bFullName">
                                     <label class="mdl-textfield__label" for="bFullName">Your Name</label>
                                 </div>
                                 <br>
@@ -784,7 +862,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="buyerPhone">
+                                    <input class="mdl-textfield__input" type="number" id="buyerPhone" maxlength="10" oninput="maxLengthCheck(this)">
                                     <label class="mdl-textfield__label" for="buyerPhone">Your Mobile number</label>
                                 </div>
                                 <br>
@@ -811,11 +889,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <label class="mdl-textfield__label" for="buyerMonth">Month</label>
                                 </div>&nbsp;
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-date-selection">
-                                    <input class="mdl-textfield__input" type="number" id="buyerDate" value="<?php echo date('d'); ?>">
+                                    <select id="buyerDate" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
+                                        <?php
+                                        for($i=1;$i<32;$i++)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('n')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <!--<input class="mdl-textfield__input" type="number" id="buyerDate" value="<?php /*echo date('d'); */?>">-->
                                     <label class="mdl-textfield__label" for="buyerDate">Date</label>
                                 </div>&nbsp;
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-year-selection">
-                                    <input class="mdl-textfield__input" type="number" id="buyerYear" value="<?php echo date('Y'); ?>">
+                                    <select id="buyerYear" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
+                                        <?php
+                                        for($i=2018;$i<2025;$i++)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('Y')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <!--<input class="mdl-textfield__input" type="number" id="buyerYear" value="<?php /*echo date('Y'); */?>">-->
                                     <label class="mdl-textfield__label" for="buyerYear">Year</label>
                                 </div>
                                 <br>
@@ -831,22 +929,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <br>
                                 <div class="mug-suggestions"></div>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="firstName" name="firstName">
+                                    <input class="mdl-textfield__input" type="text" pattern="^[a-zA-Z\s]+$" id="firstName" name="firstName">
                                     <label class="mdl-textfield__label" for="firstName">First Name</label>
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="lastName" name="lastName">
+                                    <input class="mdl-textfield__input" type="text" pattern="^[a-zA-Z\s]+$" id="lastName" name="lastName">
                                     <label class="mdl-textfield__label" for="lastName">Last Name</label>
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="email" name="email">
+                                    <input class="mdl-textfield__input" type="email" id="email" name="email">
                                     <label class="mdl-textfield__label" for="email">Email</label>
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="mobNum" name="mobNum">
+                                    <input class="mdl-textfield__input" type="number" id="mobNum" name="mobNum" maxlength="10" oninput="maxLengthCheck(this)">
                                     <label class="mdl-textfield__label" for="mobNum">Mobile Number</label>
                                 </div>
                                 <br>
@@ -873,11 +971,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <label class="mdl-textfield__label" for="buyerMonth">Month</label>
                                 </div>&nbsp;
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-date-selection">
-                                    <input class="mdl-textfield__input" type="number" id="buyerDate" value="<?php echo date('d'); ?>">
+                                    <select id="buyerDate" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
+                                        <?php
+                                        for($i=1;$i<32;$i++)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('n')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <!--<input class="mdl-textfield__input" type="number" id="buyerDate" value="<?php /*echo date('d'); */?>">-->
                                     <label class="mdl-textfield__label" for="buyerDate">Date</label>
                                 </div>&nbsp;
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-year-selection">
-                                    <input class="mdl-textfield__input" type="number" id="buyerYear" value="<?php echo date('Y'); ?>">
+                                    <select id="buyerYear" name="buyerYear" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
+                                        <?php
+                                        for($i=1920;$i<(int)date('Y');$i++)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('Y')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <!--<input class="mdl-textfield__input" type="number" id="buyerYear" value="<?php /*echo date('Y'); */?>">-->
                                     <label class="mdl-textfield__label" for="buyerYear">Year</label>
                                 </div>
                                 <br>
@@ -925,35 +1043,47 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <h4>Your Details: </h4>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="bFullName" name="bFullName">
-                                    <label class="mdl-textfield__label" for="bFullName">Your Name</label>
+                                    <input class="mdl-textfield__input" pattern="^[a-zA-Z\s]+$" type="text" id="buyerFName" name="buyerFName">
+                                    <label class="mdl-textfield__label" for="buyerFName">First Name</label>
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="email" id="buyerEmail" name="buyerEmail">
+                                    <input class="mdl-textfield__input" pattern="^[a-zA-Z\s]+$" type="text" id="buyerLName" name="buyerLName">
+                                    <label class="mdl-textfield__label" for="buyerLName">Last Name</label>
+                                </div>
+                                <br>
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <input class="mdl-textfield__input" type="email" id="buyerEmail" name="buyerEmail" title="Please Provide Valid Email Id">
                                     <label class="mdl-textfield__label" for="buyerEmail">Your Email</label>
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="buyerPhone" name="buyerPhone">
+                                    <input class="mdl-textfield__input" type="number" id="buyerPhone" name="buyerPhone" maxlength="10" oninput="maxLengthCheck(this)">
                                     <label class="mdl-textfield__label" for="buyerPhone">Your Mobile number</label>
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="buyerPints" name="totalPints">
+                                    <select id="buyerPints" name="totalPints" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
+                                        <?php
+                                        for($i=1;$i<11;$i++)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $i;?>" <?php if($i==1){echo 'selected';} ?>><?php echo $i;?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
                                     <label class="mdl-textfield__label" for="buyerPints">How many pints of beer</label>
                                 </div>
                                 <br>
-                                <br>
                                 <h4>Gifting To: </h4>
-                                <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                     <input class="mdl-textfield__input" type="text" id="receiverName" name="receiverName">
                                     <label class="mdl-textfield__label" for="receiverName">Name</label>
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="receiverEmail" name="receiverEmail">
+                                    <input class="mdl-textfield__input" type="email" id="receiverEmail" name="receiverEmail">
                                     <label class="mdl-textfield__label" for="receiverEmail">Email</label>
                                 </div>
                                 <br>
@@ -985,16 +1115,36 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <label class="mdl-textfield__label" for="receiverMonth">Month</label>
                                 </div>&nbsp;
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-date-selection">
-                                    <input class="mdl-textfield__input" type="number" id="receiverDay" name="receiverDay" value="<?php echo date('d'); ?>">
+                                    <select id="receiverDay" name="receiverDay" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
+                                        <?php
+                                        for($i=1;$i<32;$i++)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('n')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <!--<input class="mdl-textfield__input" type="number" id="receiverDay" name="receiverDay" value="<?php /*echo date('d'); */?>">-->
                                     <label class="mdl-textfield__label" for="receiverDay">Date</label>
                                 </div>&nbsp;
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-year-selection">
+                                    <select id="receiverYear" name="receiverYear" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
+                                        <?php
+                                        for($i=2018;$i<2026;$i++)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('Y')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
                                     <input class="mdl-textfield__input" type="number" id="receiverYear" name="receiverYear" value="<?php echo date('Y'); ?>">
                                     <label class="mdl-textfield__label" for="receiverYear">Year</label>
                                 </div>
                                 <br>
-                                <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent bookNow-event-btn common-btn" style="text-transform: capitalize;" disabled>
-                                    Register & Pay Rs. 3000
+                                <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent bookNow-event-btn common-btn" style="text-transform: capitalize;">
+                                    Submit
                                 </button>
                             </form>
                         </div>

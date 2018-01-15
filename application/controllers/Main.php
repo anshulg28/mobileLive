@@ -2882,7 +2882,7 @@ $this->load->view('MobileHomeView', $data);
             }
 
             $instaDetails = array(
-                'amount' => '3000',
+                'amount' => '10',
                 'purpose' => 'New Mug #'.$post['mugId'],
                 'buyer_name' => $firstName.' '.$lastName,
                 'email' => $emailId,
@@ -2912,7 +2912,7 @@ $this->load->view('MobileHomeView', $data);
                         'mugTag' => $mugTag,
                         'birthDate' => date('Y-m-d',strtotime($birthDate)),
                         'invoiceDate' => date('Y-m-d'),
-                        'invoiceAmt' => '3000.00',
+                        'invoiceAmt' => '10.00',
                         'paymentId' => $payReqId,
                         'status' => '0',
                         'isApproved' => '0',
@@ -3051,7 +3051,13 @@ $this->load->view('MobileHomeView', $data);
                         else
                         {
                             $data['isTriggered'] = true;
-                            $giftSchedule = date_create($instaRecord['giftScheduleDate']);
+                            $scDetails = array(
+                                'urlToTrigger' => base_url().'main/scheduleMugGift/'.$recordId,
+                                'scheduleDate' => $instaRecord['giftScheduleDate'],
+                                'insertedDT' => date('Y-m-d H:i:s')
+                            );
+                            $this->dashboard_model->addNightTrigger($scDetails);
+                            /*$giftSchedule = date_create($instaRecord['giftScheduleDate']);
                             $timeFrame = date_diff(date_create(date('Y-m-d')),$giftSchedule);
                             //write a trigger
                             $params = array(
@@ -3063,7 +3069,7 @@ $this->load->view('MobileHomeView', $data);
                                 'url' => base_url().'main/scheduleMugGift/'.$recordId
                             );
 
-                            $mugTrigger =  $this->curl_library->setTrigger($params);
+                            $mugTrigger =  $this->curl_library->setTrigger($params);*/
                         }
                         $data['status'] = true;
                     }
@@ -3137,12 +3143,12 @@ $this->load->view('MobileHomeView', $data);
         $data = array();
         $post = $this->input->post();
 
-        if(isset($post['buyerPints']))
+        if(isset($post['totalPints']))
         {
             $instaDetails = array(
-                'amount' => '300',
-                'purpose' => 'New Pint purchase, Total Quant: '.$post['totalPints'],
-                'buyer_name' => $post['buyerName'],
+                'amount' => '10',
+                'purpose' => 'Pint purchase, Qty: '.$post['totalPints'],
+                'buyer_name' => $post['buyerFName'].' '.$post['buyerLName'],
                 'email' => $post['buyerEmail'],
                 'phone' => $post['buyerPhone'],
                 'send_email' => true,
@@ -3150,6 +3156,7 @@ $this->load->view('MobileHomeView', $data);
                 'allow_repeated_payments' => false,
                 'redirect_url' => base_url().'pint-thank-you',
             );
+
             $linkGot = $this->curl_library->createInstaMugLink($instaDetails);
 
             if(myIsArray($linkGot) && $linkGot['success'] === true)
@@ -3160,9 +3167,9 @@ $this->load->view('MobileHomeView', $data);
                     $payReqUrl = $linkGot['payment_request']['longurl'].'?embed=form';
 
                     //$birthDate = $post['buyerYear'].'-'.$post['buyerMonth'].'-'.$post['buyerDate'];
-                    $sumPints = (int)$post['totalPints'] * FULL_PINT_PRICE;
+                    $sumPints = (int)$post['totalPints'] * 10;// FULL_PINT_PRICE;
                     $details = array(
-                        'buyerName' => $post['buyerName'],
+                        'buyerName' => $post['buyerFName'].' '.$post['buyerLName'],
                         'buyerEmail' => $post['buyerEmail'],
                         'buyerPhone' => $post['buyerPhone'],
                         'totalPints' => $post['totalPints'],
@@ -3191,7 +3198,7 @@ $this->load->view('MobileHomeView', $data);
             else
             {
                 $data['status'] = false;
-                $data['errorMsg'] = "Error Connecting To Payment Server";
+                $data['errorMsg'] = "Error Connecting To Payment Server1";
             }
 
         }
@@ -3231,7 +3238,13 @@ $this->load->view('MobileHomeView', $data);
                 else
                 {
                     $data['isTriggered'] = true;
-                    $giftSchedule = date_create($instaRecord['scheduleDate']);
+                    $scDetails = array(
+                        'urlToTrigger' => base_url().'main/sendInstaBeer/'.$instaRecord['id'].'/1',
+                        'scheduleDate' => $instaRecord['scheduleDate'],
+                        'insertedDT' => date('Y-m-d H:i:s')
+                    );
+                    $this->dashboard_model->addNightTrigger($scDetails);
+                    /*$giftSchedule = date_create($instaRecord['scheduleDate']);
                     $timeFrame = date_diff(date_create(date('Y-m-d')),$giftSchedule);
                     //write a trigger
                     $params = array(
@@ -3242,7 +3255,8 @@ $this->load->view('MobileHomeView', $data);
                         'tag_id' => $instaRecord['id'],
                         'url' => base_url().'main/sendInstaBeer/'.$instaRecord['id'].'/1'
                     );
-                    $mugTrigger =  $this->curl_library->setTrigger($params);
+
+                    $mugTrigger =  $this->curl_library->setTrigger($params);*/
                 }
             }
         }

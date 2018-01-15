@@ -365,4 +365,10 @@ class curl_library
         $url = TRIGGER_API.'tasks/create?'.http_build_query($params);
         return $this->getDataByGet($url, 0);
     }
+
+    public function exeTrigger($gotUrl)
+    {
+        $url = $gotUrl;
+        return $this->getDataByGet($url, 0);
+    }
 }

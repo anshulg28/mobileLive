@@ -1090,6 +1090,12 @@ class Dashboard_Model extends CI_Model
         return $result;
     }
 
+    function addNightTrigger($details)
+    {
+        $details['status'] = '0';
+        $this->db->insert('schedulermaster',$details);
+        return true;
+    }
     public function updateInstaMug($details,$id)
     {
         $this->db->where('id', $id);

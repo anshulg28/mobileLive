@@ -326,4 +326,22 @@ class Cron_Model extends CI_Model
         $result = $this->db->query($query)->result_array();
         return $result;
     }
+
+    function getAllTodayTrigger()
+    {
+        $query = "SELECT * FROM schedulermaster WHERE scheduleDate = CURRENT_DATE() AND status = 0";
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+    function saveTriggerResult($details)
+    {
+        $this->db->insert('triggerResultmaster',$details);
+        return true;
+    }
+    public function updateScheduleTrigger($sid, $post)
+    {
+        $this->db->where('sid',$sid);
+        $this->db->update('schedulemaster', $post);
+        return true;
+    }
 }
