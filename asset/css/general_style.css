@@ -98,6 +98,10 @@ body
 {
     display:none !important;
 }
+.margin-center
+{
+    margin:0 auto;
+}
 /* Desktop Version general Style*/
 
 body
@@ -1072,6 +1076,105 @@ input::-webkit-inner-spin-button {
 {
     width:100%;
 }
+
+/* Gift a beer page */
+.giftABeer
+{
+    height:100%;
+    margin:0;
+    font-family: 'Averia Serif Libre' !important;
+    background:#F6F5F2 !important;
+}
+.giftABeer .row
+{
+    margin:0;
+}
+.giftABeer .middle
+{
+    position:relative;
+    top:30px;
+    text-align: center;
+}
+.giftABeer .push-el-down
+{
+    top:40%;
+}
+/*.giftABeer .bgimg {
+    background-image: url('../../asset/images/Belgian_Wit-min.jpg');
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    font-family: 'Averia Serif Libre' !important;
+    font-size: 20px;
+}*/
+.giftABeer .bgimg
+{
+    height:100%;
+}
+.giftABeer .middle .main-selection .choice-card .panel
+{
+    background:#fff;
+    cursor: pointer;
+}
+/*.giftABeer .middle .main-selection .choice-card .panel:hover
+{
+    background:rgba(255,255,255,1);
+}*/
+.giftABeer .middle .demo-card-square
+{
+    background:#fff;
+}
+.giftABeer .middle .form-wrapper
+{
+    text-align:center;
+}
+.giftABeer .middle .get-back-choice
+{
+    position: relative;
+    top: 20px;
+    left: 20px;
+}
+.giftABeer .middle .form-title
+{
+    font-family: 'Averia Serif Libre' !important;
+    margin:0;
+    padding-top:20px;
+}
+.giftABeer .common-btn
+{
+    background-color: rgba(27, 21, 15, 0.87) !important;
+    color:#fff;
+    font-family: 'Averia Serif Libre' !important;
+}
+.giftABeer .middle .bookNow-event-btn
+{
+    margin-bottom:20px;
+}
+.giftABeer .custom-month-selection
+{
+    width:150px;
+}
+.giftABeer .custom-date-selection,.giftABeer .custom-year-selection
+{
+    width:60px;
+}
+.giftABeer .middle .schedule-label
+{
+    margin-left:-210px;
+}
+.giftABeer .middle .birth-label
+{
+    margin-left:-230px;
+}
+.giftABeer .middle .form-wrapper .mug-suggestions .mdl-chip
+{
+    cursor:pointer;
+    font-family: 'Averia Serif Libre' !important;
+    background: #A2C760;
+    color: #fff;
+    margin-right:10px;
+}
 @media screen and (max-width: 1024px)
 {
     .mailPage .mail-content
@@ -1079,6 +1182,18 @@ input::-webkit-inner-spin-button {
         width:100% !important;
     }
 }
+@media screen and (max-width:900px)
+{
+    .giftABeer .middle .main-selection .hide-from-tab
+    {
+        display:none;
+    }
+    .giftABeer .middle .main-selection .choice-card
+    {
+        width:22% !important;
+    }
+}
+
 @media screen and (max-width:767px)
 {
     .mugCheckIn .form-horizontal .control-label
@@ -1099,6 +1214,36 @@ input::-webkit-inner-spin-button {
     {
         text-align:center;
     }
+    .giftABeer .middle .main-selection .choice-card
+    {
+        width:100% !important;
+    }
+    .giftABeer .middle
+    {
+        top:30px;
+    }
+    /*.giftABeer .bgimg
+    {
+        height:auto;
+    }*/
+    .giftABeer .middle .main-selection .choice-card .panel
+    {
+        width:50%;
+        margin:0 auto 20px auto;
+    }
+    .giftABeer
+    {
+        height:auto;
+    }
+}
+
+@media screen and (max-width:680px)
+{
+    .giftABeer .middle .get-back-choice
+    {
+        float:none !important;
+        margin-bottom:20px;
+    }
 }
 
 @media screen and (max-width:650px)
@@ -1106,6 +1251,13 @@ input::-webkit-inner-spin-button {
     .mugCheckIn .mugNumber-status ul
     {
         font-size:12px;
+    }
+}
+@media screen and (max-width: 479px)
+{
+    .hide-on-mdl-mobile
+    {
+        display:none;
     }
 }
 @media screen and (max-width:440px)
@@ -1117,6 +1269,11 @@ input::-webkit-inner-spin-button {
     .mugCheckIn .form-adjust-insmall
     {
         width:0 !important;
+    }
+    .giftABeer .middle .main-selection .choice-card .panel
+    {
+        width:80%;
+        margin:0 auto 20px auto;
     }
 }
 

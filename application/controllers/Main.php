@@ -8,6 +8,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property locations_model $locations_model
  * @property login_model $login_model
  * @property users_model $users_model
+ * @property offers_model $offers_model
  * @property mugclub_model $mugclub_model
 */
 
@@ -2862,13 +2863,30 @@ $this->load->view('MobileHomeView', $data);
             {
                 $mugTag = $post['tagName'];
             }
+            $emailId = $post['email'];
+            $mobNum = $post['mobNum'];
+            if(isset($post['gifterName']) && isStringSet($post['gifterName']))
+            {
+                $giftName = explode(' ',$post['gifterName']);
+                $firstName = $giftName[0];
+                if(count($giftName)>1)
+                {
+                    $lastName = $giftName[1];
+                }
+                else
+                {
+                    $lastName = '';
+                }
+                $emailId = $post['gifterEmail'];
+                $mobNum = $post['gifterPhone'];
+            }
 
             $instaDetails = array(
                 'amount' => '3000',
                 'purpose' => 'New Mug #'.$post['mugId'],
                 'buyer_name' => $firstName.' '.$lastName,
-                'email' => $post['email'],
-                'phone' => $post['mobNum'],
+                'email' => $emailId,
+                'phone' => $mobNum,
                 'send_email' => true,
                 'send_sms' => true,
                 'allow_repeated_payments' => false,
@@ -2883,6 +2901,7 @@ $this->load->view('MobileHomeView', $data);
                     $payReqId = $linkGot['payment_request']['id'];
                     $payReqUrl = $linkGot['payment_request']['longurl'].'?embed=form';
 
+                    $birthDate = $post['buyerYear'].'-'.$post['buyerMonth'].'-'.$post['buyerDate'];
                     $details = array(
                         'mugId' => $post['mugId'],
                         'firstName' => $firstName,
@@ -2891,7 +2910,7 @@ $this->load->view('MobileHomeView', $data);
                         'mobileNo' => $post['mobNum'],
                         'homeBase' => $post['homebase'],
                         'mugTag' => $mugTag,
-                        'birthDate' => date('Y-m-d',strtotime($post['dob'])),
+                        'birthDate' => date('Y-m-d',strtotime($birthDate)),
                         'invoiceDate' => date('Y-m-d'),
                         'invoiceAmt' => '3000.00',
                         'paymentId' => $payReqId,
@@ -2899,6 +2918,15 @@ $this->load->view('MobileHomeView', $data);
                         'isApproved' => '0',
                         'insertedDT' => date('Y-m-d H:i:s')
                     );
+
+                    if(isset($post['gifterName']) && isStringSet($post['gifterName']))
+                    {
+                        $details['gifterName'] = $post['gifterName'];
+                        $details['gifterEmail'] = $post['gifterEmail'];
+                        $details['gifterPhone'] = $post['gifterPhone'];
+                        $details['gifterOccasion'] = $post['gifterOccasion'];
+                        $details['giftScheduleDate'] = $post['giftScheduleDate'];
+                    }
 
                     $this->dashboard_model->saveInstamojoMug($details);
 
@@ -2937,9 +2965,23 @@ $this->load->view('MobileHomeView', $data);
             {
                 $details = array(
                     'invoiceNo' => $get['payment_id'],
-                    'status' => '1'
+                    'status' => '1',
+                    'isApproved' => '1'
                 );
                 $this->dashboard_model->updateInstaMug($details,$instaRecord['id']);
+                if(isset($instaRecord['gifterName']))
+                {
+                    $addMug = $this->addInstaMug($instaRecord['id'],true);
+                }
+                else
+                {
+                    $addMug = $this->addInstaMug($instaRecord['id']);
+                }
+                $addMug = json_decode($addMug,TRUE);
+                if($addMug['status'] == false)
+                {
+                    $data['errorMsg'] = $addMug['errorMsg'];
+                }
             }
         }
 
@@ -2947,6 +2989,300 @@ $this->load->view('MobileHomeView', $data);
         $data['desktopJs'] = $this->dataformatinghtml_library->getDesktopJsHtml($data);
 
         $this->load->view('ThankYouMemberView', $data);
+    }
+
+    function addInstaMug($recordId, $isGift = false)
+    {
+        $data = array();
+        //$post = $this->input->post();
+
+        $instaRecord = $this->mugclub_model->getInstaMugById($recordId);
+        if(isset($instaRecord) && myIsArray($instaRecord))
+        {
+            $mugExists = $this->mugclub_model->getMugDataById($instaRecord['mugId']);
+            if($mugExists['status'] === false)
+            {
+                $mugTag = '';
+                if(isset($instaRecord['mugTag']))
+                {
+                    $mugTag = $instaRecord['mugTag'];
+                }
+                $memStart = date('Y-m-d');
+                $details = array(
+                    'mugId' => $instaRecord['mugId'],
+                    'mugTag' => $mugTag,
+                    'homeBase' => $instaRecord['homeBase'],
+                    'firstName' => $instaRecord['firstName'],
+                    'lastName' => $instaRecord['lastName'],
+                    'mobileNo' => $instaRecord['mobileNo'],
+                    'emailId' => $instaRecord['emailId'],
+                    'birthDate' => $instaRecord['birthDate'],
+                    'invoiceDate' => $instaRecord['invoiceDate'],
+                    'invoiceNo' => $instaRecord['invoiceNo'],
+                    'invoiceAmt' => $instaRecord['invoiceAmt'],
+                    'membershipStart' => $memStart,
+                    'membershipEnd' => date('Y-m-d', strtotime($memStart.' +12 month')),
+                    'oldHomeBase' => '0',
+                    'ifActive' => '1',
+                    'notes' => '',
+                    'mailStatus' => '0',
+                    'birthdayMailStatus' => '0',
+                    'mailDate' => null,
+                    'birthMailDate' => null,
+                    'insertedDT' => date('Y-m-d H:i:s')
+                );
+
+                $this->mugclub_model->saveMugRecord($details);
+                if($isGift)
+                {
+                    if(isset($instaRecord['gifterName']))
+                    {
+                        $details['gifterName'] = $instaRecord['gifterName'];
+                        $details['gifterEmail'] = $instaRecord['gifterEmail'];
+                        $details['gifterOccasion'] = $instaRecord['gifterOccasion'];
+                        $locData = $this->locations_model->getLocationDetailsById($instaRecord['homeBase']);
+                        $details['locName'] = $locData['locData'][0]['locName'];
+                        if(strtotime($instaRecord['giftScheduleDate']) <= strtotime(date('Y-m-d')))
+                        {
+                            //sending special buy mail
+                            $this->sendemail_library->mugGiftSendMail($details);
+                            $this->sendemail_library->signUpWelcomeSendMail($details);
+                        }
+                        else
+                        {
+                            $giftSchedule = date_create($instaRecord['giftScheduleDate']);
+                            $timeFrame = date_diff(date_create(date('Y-m-d')),$giftSchedule);
+                            //write a trigger
+                            $params = array(
+                                'key' => TRIGGER_KEY,
+                                'secret' => TRIGGER_SECRET,
+                                'timeSlice' => $timeFrame->days.'day',
+                                'count' => '1',
+                                'tag_id' => $instaRecord['mugId'],
+                                'url' => base_url().'main/scheduleMugGift/'.$recordId
+                            );
+                            var_dump($params);
+                            die();
+                            $mugTrigger =  $this->curl_library->setTrigger($params);
+                        }
+                        $data['status'] = true;
+                    }
+                    else
+                    {
+                        $data['status'] = false;
+                        $data['errorMsg'] = 'Gifter Name Not Present!';
+                    }
+                }
+                else
+                {
+                    $this->sendemail_library->signUpWelcomeSendMail($details);
+                }
+                $data['status'] = true;
+            }
+            else
+            {
+                $data['status'] = false;
+                $data['errorMsg'] = 'Mug Number Already Exists!';
+            }
+        }
+
+        return json_encode($data);
+    }
+
+    public function scheduleMugGift($recordId)
+    {
+        $instaRecord = $this->mugclub_model->getInstaMugById($recordId);
+        if(isset($instaRecord) && myIsArray($instaRecord))
+        {
+            $mugExists = $this->mugclub_model->getMugDataById($instaRecord['mugId']);
+            if($mugExists['status'] === true)
+            {
+                $details = array(
+                    'mugId' => $mugExists['mugList'][0]['mugId'],
+                    'mugTag' => $mugExists['mugList'][0]['mugTag'],
+                    'homeBase' => $mugExists['mugList'][0]['homeBase'],
+                    'firstName' => $mugExists['mugList'][0]['firstName'],
+                    'lastName' => $mugExists['mugList'][0]['lastName'],
+                    'mobileNo' => $mugExists['mugList'][0]['mobileNo'],
+                    'emailId' => $mugExists['mugList'][0]['emailId'],
+                    'birthDate' => $mugExists['mugList'][0]['birthDate'],
+                    'invoiceDate' => $mugExists['mugList'][0]['invoiceDate'],
+                    'membershipStart' => $mugExists['mugList'][0]['membershipStart'],
+                    'membershipEnd' => $mugExists['mugList'][0]['membershipEnd'],
+                    'locName' => $mugExists['mugList'][0]['locName'],
+                    'gifterName' => $instaRecord['gifterName'],
+                    'gifterEmail' => $instaRecord['gifterEmail'],
+                    'gifterOccasion' => $instaRecord['gifterOccasion'],
+                    'giftScheduleDate' => $instaRecord['giftScheduleDate'],
+                );
+                //sending special buy mail
+                $this->sendemail_library->mugGiftSendMail($details);
+                $this->sendemail_library->signUpWelcomeSendMail($details);
+                echo 'Success';
+            }
+            else
+            {
+                echo 'Mug Not Found!';
+            }
+        }
+        else
+        {
+            echo 'Invalid Mug Record!';
+        }
+    }
+
+    // Buying/gifting beer pints
+    public function verifyPints()
+    {
+        $data = array();
+        $post = $this->input->post();
+
+        if(isset($post['buyerPints']))
+        {
+            $instaDetails = array(
+                'amount' => '300',
+                'purpose' => 'New Pint purchase, Total Quant: '.$post['totalPints'],
+                'buyer_name' => $post['buyerName'],
+                'email' => $post['buyerEmail'],
+                'phone' => $post['buyerPhone'],
+                'send_email' => true,
+                'send_sms' => true,
+                'allow_repeated_payments' => false,
+                'redirect_url' => base_url().'pint-thank-you',
+            );
+            $linkGot = $this->curl_library->createInstaMugLink($instaDetails);
+
+            if(myIsArray($linkGot) && $linkGot['success'] === true)
+            {
+                if(isset($linkGot['payment_request']['id']))
+                {
+                    $payReqId = $linkGot['payment_request']['id'];
+                    $payReqUrl = $linkGot['payment_request']['longurl'].'?embed=form';
+
+                    //$birthDate = $post['buyerYear'].'-'.$post['buyerMonth'].'-'.$post['buyerDate'];
+                    $sumPints = (int)$post['totalPints'] * FULL_PINT_PRICE;
+                    $details = array(
+                        'buyerName' => $post['buyerName'],
+                        'buyerEmail' => $post['buyerEmail'],
+                        'buyerPhone' => $post['buyerPhone'],
+                        'totalPints' => $post['totalPints'],
+                        'receiverName' => $post['receiverName'],
+                        'receiverEmail' => $post['receiverEmail'],
+                        'receiverOccasion' => $post['receiverOccasion'],
+                        'specialMsg' => $post['specialMsg'],
+                        'scheduleDate' => $post['receiverYear'].'-'.$post['receiverMonth'].'-'.$post['receiverDay'],
+                        'invoiceDate' => date('Y-m-d'),
+                        'invoiceAmt' => $sumPints,
+                        'paymentId' => $payReqId,
+                        'status' => '0',
+                        'insertedDT' => date('Y-m-d H:i:s')
+                    );
+                    $this->dashboard_model->saveInstamojoBeer($details);
+
+                    $data['status'] = true;
+                    $data['payUrl'] = $payReqUrl;
+                }
+                else
+                {
+                    $data['status'] = false;
+                    $data['errorMsg'] = "Error Connecting To Payment Server";
+                }
+            }
+            else
+            {
+                $data['status'] = false;
+                $data['errorMsg'] = "Error Connecting To Payment Server";
+            }
+
+        }
+        else
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = "All Fields Are Required!";
+        }
+
+        echo json_encode($data);
+    }
+
+    public function thankYouBeer()
+    {
+        $data = array();
+        $get = $this->input->get();
+        if(isset($get['payment_request_id']))
+        {
+            $instaRecord = $this->dashboard_model->getBeerInstaByReqId($get['payment_request_id']);
+            if(isset($instaRecord) && myIsArray($instaRecord))
+            {
+                $details = array(
+                    'invoiceNo' => $get['payment_id'],
+                    'status' => '1'
+                );
+                $this->dashboard_model->updateInstaBeer($details,$instaRecord['id']);
+
+                $addMug = json_decode($addMug,TRUE);
+                if($addMug['status'] == false)
+                {
+                    $data['errorMsg'] = $addMug['errorMsg'];
+                }
+            }
+        }
+
+        $data['desktopStyle'] = $this->dataformatinghtml_library->getDesktopStyleHtml($data);
+        $data['desktopJs'] = $this->dataformatinghtml_library->getDesktopJsHtml($data);
+
+        $this->load->view('ThankYouMemberView', $data);
+    }
+
+    public function sendInstaBeer($recordId)
+    {
+        $this->load->model('offers_model');
+        $data = array();
+        $instaRecord = $this->mugclub_model->getInstaBeerById($recordId);
+        if(isset($instaRecord) && myIsArray($instaRecord))
+        {
+            $allCodes = $this->offers_model->getAllCodes();
+            $usedCodes = array();
+            $toBeInserted = array();
+            $createdCodes = array();
+            foreach($allCodes['codes'] as $key => $row)
+            {
+                $usedCodes[] = $row['offerCode'];
+            }
+            for($i=0;$i<(int)$instaRecord['totalPints'];$i++)
+            {
+                $newCode = mt_rand(1000,99999);
+                while(myInArray($newCode,$usedCodes))
+                {
+                    $newCode = mt_rand(1000,99999);
+                }
+                $toBeInserted[] = array(
+                    'offerCode' => $newCode,
+                    'offerType' => 'Beer',
+                    'offerLoc' => null,
+                    'offerMug' => '0',
+                    'offerEvent' => null,
+                    'bookerPaymentId' => $instaRecord['invoiceNo'],
+                    'isRedeemed' => 0,
+                    'ifActive' => 1,
+                    'createDateTime' => date('Y-m-d H:i:s'),
+                    'validFromDate' => null,
+                    'validFromTime' => null,
+                    'useDateTime' => null
+                );
+                $createdCodes[] = 'DO-'.$newCode;
+                $usedCodes[] = $newCode;
+            }
+            $this->offers_model->setAllCodes($toBeInserted);
+
+            $instaRecord['allCodes'] = implode(',',$createdCodes);
+            //Send Mail
+            $this->sendemail_library->beerGiftSendMail($instaRecord);
+        }
+        else
+        {
+            $data['status'] = false;
+            $data['errorMsg'] = "Purchase Record Not found!";
+        }
     }
 
     function getAllUnusedMugs($mugId, $op, $searchCap, $holdMugs = array())

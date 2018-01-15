@@ -177,3 +177,7 @@ defined('DOOLALLY_VENUE_FEE') OR define('DOOLALLY_VENUE_FEE',118);
 defined('SPECIAL_EVENT_VENUE_MAIL_NAME') OR define('SPECIAL_EVENT_VENUE_MAIL_NAME','1st Brewhouse, Corinthians Resort & Club, Pune');
 defined('SPECIAL_EVENT_VENUE_MAP') OR define('SPECIAL_EVENT_VENUE_MAP','https://goo.gl/maps/UUvEKmazBsj');
 defined('GST_RATE') OR define('GST_RATE',9);
+defined('TRIGGER_API') OR define('TRIGGER_API','https://api.atrigger.com/v1/');
+defined('TRIGGER_KEY') OR define('TRIGGER_KEY','5442989893688992721');
+defined('TRIGGER_SECRET') OR define('TRIGGER_SECRET','1mhXJzK4geoU27VOpRSzkHfEVvWrIt');
+defined('FULL_PINT_PRICE') OR define('FULL_PINT_PRICE',300);

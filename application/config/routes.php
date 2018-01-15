@@ -105,6 +105,7 @@ $route['songlist/(:any)'] = 'main/requestTapSong/$1';
 $route['event_details/(:any)'] = 'main/eventDetails/$1';
 $route['signup_list/(:any)/(:any)'] = 'main/signupList/$1/$2';
 $route['thank-you'] = 'main/thankYouMug';
+$route['pint-thank-you'] = 'main/thankYouBeer';
 $route['renderLink'] = 'main/renderLink';
 $route['saveEvent'] = 'main/saveEvent';
 $route['updateEvent'] = 'main/updateEvent';

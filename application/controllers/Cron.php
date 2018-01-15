@@ -637,7 +637,7 @@ class Cron extends MY_Controller
             $content = '<html><body><p>Eventshigh Daily Transaction Records!<br>Refund ID, if present, indicates that the ticket has been canceled and refund issued<br>PFA</p></body></html>';
 
             //"./uploads/InstamojoRecords_".$startTime.".csv",
-            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','pranjal.rathi@rubycapital.net','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','finance@brewcraftsindia.com','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com','Eventshigh Daily Transaction Records | '.date('d_M_Y',strtotime('-1 day')),$content,array("./uploads/EventsHighRecords_".$startTime.".csv"));
             try
             {
@@ -653,7 +653,7 @@ class Cron extends MY_Controller
         {
             $content = '<html><body><p>No Records Found Today</p></body></html>';
 
-            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','pranjal.rathi@rubycapital.net','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','finance@brewcraftsindia.com','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com','No Transaction records Today | '.date('d_M_Y'),$content,array());
         }
     }
@@ -815,7 +815,7 @@ class Cron extends MY_Controller
             //"./uploads/InstamojoRecords_".$startTime.".csv",
             if($isInstaSet)
             {
-                $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','pranjal.rathi@rubycapital.net','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+                $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','finance@brewcraftsindia.com','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                     ,'admin@brewcraftsindia.com','Instamojo Mug and Eventshigh Events Transaction Records | '.$startTime.' To '.$endTime,$content,array($ehFilename,$instaFilename));
                 try
                 {
@@ -829,7 +829,7 @@ class Cron extends MY_Controller
             }
             else
             {
-                $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','pranjal.rathi@rubycapital.net','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+                $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','finance@brewcraftsindia.com','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                     ,'admin@brewcraftsindia.com','Instamojo Mug and Eventshigh Events Transaction Records | '.$startTime.' To '.$endTime,$content,array($ehFilename));
                 try
                 {
@@ -846,7 +846,7 @@ class Cron extends MY_Controller
         {
             $content = '<html><body><p>No Records Found Today</p></body></html>';
 
-            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','pranjal.rathi@rubycapital.net','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
+            $this->sendemail_library->sendEmail(array('saha@brewcraftsindia.com','finance@brewcraftsindia.com','accountsexecutive@brewcraftsindia.com'),'anshul@brewcraftsindia.com','admin@brewcraftsindia.com','ngks2009','Doolally'
                 ,'admin@brewcraftsindia.com','No Transaction records | '.$startTime.' To '.$endTime,$content,array());
         }
     }

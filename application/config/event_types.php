@@ -42,6 +42,21 @@ $config['jukeboxBlockEmails'] = array(
     'store.khar@brewcraftsindia.com'
 );
 
+$config['monthList'] = array(
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July ',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+);
+
 $config['eventTc'] = '<div class="page-content">
     <div class="content-block">
         <h5><strong>General rules:</strong></h5>

@@ -562,5 +562,25 @@ class Mugclub_Model extends CI_Model
 
         return $result;
     }
+    public function getInstaMugById($id)
+    {
+        $query = "SELECT * FROM instamojomugmaster WHERE id= ".$id;
+
+        $result = $this->db->query($query)->row_array();
+        return $result;
+    }
+    public function getInstaBeerById($id)
+    {
+        $query = "SELECT * FROM instamojobeermaster WHERE id= ".$id;
+
+        $result = $this->db->query($query)->row_array();
+        return $result;
+    }
+    public function updateInstaMug($details,$id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('instamojomugmaster', $details);
+        return true;
+    }
 
 }

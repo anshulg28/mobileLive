@@ -358,4 +358,11 @@ class curl_library
         );
         return $this->getJSONDataByPost($url,$details,0,$headers);
     }
+
+    //Task trigger creation
+    public function setTrigger($params)
+    {
+        $url = TRIGGER_API.'tasks/create?'.http_build_query($params);
+        return $this->getDataByGet($url, 0);
+    }
 }

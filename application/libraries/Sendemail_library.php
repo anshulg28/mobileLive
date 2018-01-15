@@ -18,39 +18,148 @@ class Sendemail_library
         $this->CI->load->model('dashboard_model');
     }
 
-    //Not in use function
+
     public function signUpWelcomeSendMail($userData)
     {
+        $mailRecord = $this->CI->users_model->searchUserByLoc($userData['homeBase']);
         $data['mailData'] = $userData;
         $data['breakfastCode'] = $this->generateBreakfastCode($userData['mugId']);
 
+        if($mailRecord['status'] === true)
+        {
+            $data['fromName'] = ucfirst(trim($mailRecord['userData']['firstName']));
+        }
+        else
+        {
+            $data['fromName'] = 'Doolally';
+        }
         $content = $this->CI->load->view('emailtemplates/signUpWelcomeMailView', $data, true);
 
         $fromEmail = DEFAULT_SENDER_EMAIL;
         $fromPass = DEFAULT_SENDER_PASS;
         $replyTo = $fromEmail;
 
-        if(isset($this->CI->userEmail))
-        {
-            $replyTo = $this->CI->userEmail;
-            /*$userInfo = $this->CI->login_model->checkEmailSender($this->CI->userEmail);
-            if(isset($userInfo) && myIsArray($userInfo))
-            {
-                $fromPass = $userInfo['gmailPass'];
-                $fromEmail = $this->CI->userEmail;
-            }*/
-
-        }
         $cc        = implode(',',$this->CI->config->item('ccList'));
         $fromName  = 'Doolally';
-        if(isset($this->CI->userFirstName))
+        if($mailRecord['status'] === true)
         {
-            $fromName = ucfirst($this->CI->userFirstName);
+            $replyTo = $mailRecord['userData']['emailId'];
+            $cc .= ','.$replyTo;
+            $fromName = $mailRecord['userData']['firstName'];
         }
         $subject = 'Breakfast for Mug #'.$userData['mugId'];
         $toEmail = $userData['emailId'];
 
-        $this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+        //Saving mail
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->dashboard_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+    }
+
+    public function mugGiftSendMail($userData)
+    {
+        $mailRecord = $this->CI->users_model->searchUserByLoc($userData['homeBase']);
+        $data['mailData'] = $userData;
+        //$data['breakfastCode'] = $this->generateBreakfastCode($userData['mugId']);
+
+        if($mailRecord['status'] === true)
+        {
+            $data['fromName'] = ucfirst(trim($mailRecord['userData']['firstName']));
+        }
+        else
+        {
+            $data['fromName'] = 'Doolally';
+        }
+        $content = $this->CI->load->view('emailtemplates/mugGiftMailView', $data, true);
+
+        $fromEmail = DEFAULT_SENDER_EMAIL;
+        $fromPass = DEFAULT_SENDER_PASS;
+        $replyTo = $fromEmail;
+
+        $cc        = implode(',',$this->CI->config->item('ccList'));
+        $fromName  = 'Doolally';
+        if($mailRecord['status'] === true)
+        {
+            $replyTo = $mailRecord['userData']['emailId'];
+            $cc .= ','.$replyTo;
+            $fromName = $mailRecord['userData']['firstName'];
+        }
+        $cc .= ','.$userData['gifterEmail'];
+        $subject = 'The gift of good mug, from '.trim(ucfirst($userData['gifterName']));
+        $toEmail = $userData['emailId'];
+
+        //Saving mail
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->dashboard_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
+    }
+
+    public function beerGiftSendMail($userData)
+    {
+        //$mailRecord = $this->CI->users_model->searchUserByLoc($userData['homeBase']);
+        $data['mailData'] = $userData;
+        $content = $this->CI->load->view('emailtemplates/beerGiftMailView', $data, true);
+
+        $fromEmail = DEFAULT_SENDER_EMAIL;
+        $fromPass = DEFAULT_SENDER_PASS;
+        $replyTo = $fromEmail;
+
+        $cc        = implode(',',$this->CI->config->item('ccList'));
+        $fromName  = 'Doolally';
+
+        $cc .= ','.$userData['buyerEmail'];
+        $subject = 'The gift of good beer, from '.trim(ucfirst($userData['buyerName']));
+        $toEmail = $userData['receiverEmail'];
+
+        //Saving mail
+        $logDetails = array(
+            'messageId' => null,
+            'sendTo' => $toEmail,
+            'sendFrom' => $fromEmail,
+            'sendFromName' => $fromName,
+            'ccList' => $cc,
+            'replyTo' => $replyTo,
+            'mailSubject' => $subject,
+            'mailBody' => $content,
+            'attachments' => '',
+            'sendStatus' => 'waiting',
+            'failIds' => null,
+            'sendDateTime' => date('Y-m-d H:i:s')
+        );
+
+        $this->CI->dashboard_model->saveWaitMailLog($logDetails);
+
+        //$this->sendEmail($toEmail, $cc, $fromEmail, $fromPass, $fromName,$replyTo, $subject, $content);
     }
 
     //For Testing only

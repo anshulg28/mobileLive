@@ -1068,10 +1068,23 @@ class Dashboard_Model extends CI_Model
         $this->db->insert('instamojomugmaster', $details);
         return true;
     }
+    public function saveInstamojoBeer($details)
+    {
+        $this->db->insert('instamojobeermaster', $details);
+        return true;
+    }
 
     public function getMugInstaByReqId($payReqId)
     {
-        $query = "SELECT id, mugId FROM instamojomugmaster WHERE paymentId LIKE '".$payReqId."'";
+        $query = "SELECT * FROM instamojomugmaster WHERE paymentId LIKE '".$payReqId."'";
+
+        $result = $this->db->query($query)->row_array();
+        return $result;
+    }
+
+    public function getBeerInstaByReqId($payReqId)
+    {
+        $query = "SELECT * FROM instamojobeermaster WHERE paymentId LIKE '".$payReqId."'";
 
         $result = $this->db->query($query)->row_array();
         return $result;
@@ -1081,6 +1094,12 @@ class Dashboard_Model extends CI_Model
     {
         $this->db->where('id', $id);
         $this->db->update('instamojomugmaster', $details);
+        return true;
+    }
+    public function updateInstaBeer($details,$id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('instamojobeermaster', $details);
         return true;
     }
 
