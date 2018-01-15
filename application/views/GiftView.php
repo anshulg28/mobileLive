@@ -732,7 +732,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <br>
                             <form action="<?php echo base_url().'main/verifyMember';?>" method="POST" id="main-mug-form">
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="mugId" name="mugId">
+                                    <input class="mdl-textfield__input" type="number" id="mugId" name="mugId" placeholder="Enter number more than 100">
                                     <label class="mdl-textfield__label" for="mugId">Mug Number</label>
                                 </div>&nbsp;
                                 <br>
@@ -923,7 +923,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </div>
                             <form action="<?php echo base_url().'main/verifyMember';?>" method="POST" class="hide" id="main-mug-gift-form">
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="mugId" name="mugId">
+                                    <input class="mdl-textfield__input" type="number" id="mugId" name="mugId" placeholder="Enter number more than 100">
                                     <label class="mdl-textfield__label" for="mugId">Mug Number</label>
                                 </div>&nbsp;
                                 <br>

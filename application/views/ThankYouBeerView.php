@@ -14,14 +14,14 @@
                         if(isset($errorMsg))
                         {
                             ?>
-                            <h4 class="mdl-card__title-text my-error-text" style="font-size:20px">Purchase Failed!<br><?php echo $errorMsg;?></h4>
+                            <h4 class="mdl-card__title-text my-error-text" style="font-size:20px">Purchase failed!<br><?php echo $errorMsg;?></h4>
                             <br>
                             <?php
                         }
                         else
                         {
                             ?>
-                            <h4 class="mdl-card__title-text my-success-text" style="font-size:20px">Thank You For Purchasing<br>You'll Receive a confirmation mail from us.</h4>
+                            <h4 class="mdl-card__title-text my-success-text" style="font-size:20px">Thank You For purchasing<br>You'll Receive a confirmation mail from us.</h4>
                             <br>
                             <?php
                         }
