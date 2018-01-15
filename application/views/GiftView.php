@@ -830,7 +830,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 <br>
                                 <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent bookNow-event-btn common-btn" style="text-transform: capitalize;" disabled>
-                                    Register & Pay Rs. 3000
+                                    Submit
                                 </button>
                             </form>
                         </div>
@@ -1021,7 +1021,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 <br>
                                 <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent bookNow-event-btn common-btn" style="text-transform: capitalize;" disabled>
-                                    Register & Pay Rs. 3000
+                                    Submit
                                 </button>
                             </form>
                         </div>
@@ -1139,7 +1139,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         }
                                         ?>
                                     </select>
-                                    <input class="mdl-textfield__input" type="number" id="receiverYear" name="receiverYear" value="<?php echo date('Y'); ?>">
+                                    <!--<input class="mdl-textfield__input" type="number" id="receiverYear" name="receiverYear" value="<?php /*echo date('Y'); */?>">-->
                                     <label class="mdl-textfield__label" for="receiverYear">Year</label>
                                 </div>
                                 <br>

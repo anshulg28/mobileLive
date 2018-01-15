@@ -341,7 +341,7 @@ class Cron_Model extends CI_Model
     public function updateScheduleTrigger($sid, $post)
     {
         $this->db->where('sid',$sid);
-        $this->db->update('schedulemaster', $post);
+        $this->db->update('schedulermaster', $post);
         return true;
     }
 }

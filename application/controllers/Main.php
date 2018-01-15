@@ -3738,4 +3738,8 @@ $this->load->view('MobileHomeView', $data);
         $this->sendemail_library->testWelcomeMail($mailData, $eventData[0]['eventPlace']);
         //$this->sendemail_library->eventHostSuccessMail($mailData, $eventData[0]['eventPlace']);
     }
+    public function forTest($id)
+    {
+        echo $id;
+    }
 }
