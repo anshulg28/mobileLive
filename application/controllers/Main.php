@@ -3050,6 +3050,7 @@ $this->load->view('MobileHomeView', $data);
                         }
                         else
                         {
+                            $data['isTriggered'] = true;
                             $giftSchedule = date_create($instaRecord['giftScheduleDate']);
                             $timeFrame = date_diff(date_create(date('Y-m-d')),$giftSchedule);
                             //write a trigger
@@ -3061,8 +3062,7 @@ $this->load->view('MobileHomeView', $data);
                                 'tag_id' => $instaRecord['mugId'],
                                 'url' => base_url().'main/scheduleMugGift/'.$recordId
                             );
-                            var_dump($params);
-                            die();
+
                             $mugTrigger =  $this->curl_library->setTrigger($params);
                         }
                         $data['status'] = true;
@@ -3219,10 +3219,30 @@ $this->load->view('MobileHomeView', $data);
                 );
                 $this->dashboard_model->updateInstaBeer($details,$instaRecord['id']);
 
-                $addMug = json_decode($addMug,TRUE);
-                if($addMug['status'] == false)
+                if(strtotime($instaRecord['scheduleDate']) <= strtotime(date('Y-m-d')))
                 {
-                    $data['errorMsg'] = $addMug['errorMsg'];
+                    $beerGift = $this->sendInstaBeer($instaRecord['id']);
+                    $addMug = json_decode($beerGift,TRUE);
+                    if($addMug['status'] == false)
+                    {
+                        $data['errorMsg'] = $addMug['errorMsg'];
+                    }
+                }
+                else
+                {
+                    $data['isTriggered'] = true;
+                    $giftSchedule = date_create($instaRecord['scheduleDate']);
+                    $timeFrame = date_diff(date_create(date('Y-m-d')),$giftSchedule);
+                    //write a trigger
+                    $params = array(
+                        'key' => TRIGGER_KEY,
+                        'secret' => TRIGGER_SECRET,
+                        'timeSlice' => $timeFrame->days.'day',
+                        'count' => '1',
+                        'tag_id' => $instaRecord['id'],
+                        'url' => base_url().'main/sendInstaBeer/'.$instaRecord['id'].'/1'
+                    );
+                    $mugTrigger =  $this->curl_library->setTrigger($params);
                 }
             }
         }
@@ -3230,10 +3250,10 @@ $this->load->view('MobileHomeView', $data);
         $data['desktopStyle'] = $this->dataformatinghtml_library->getDesktopStyleHtml($data);
         $data['desktopJs'] = $this->dataformatinghtml_library->getDesktopJsHtml($data);
 
-        $this->load->view('ThankYouMemberView', $data);
+        $this->load->view('ThankYouBeerView', $data);
     }
 
-    public function sendInstaBeer($recordId)
+    public function sendInstaBeer($recordId, $isTrigger = 0)
     {
         $this->load->model('offers_model');
         $data = array();
@@ -3277,11 +3297,20 @@ $this->load->view('MobileHomeView', $data);
             $instaRecord['allCodes'] = implode(',',$createdCodes);
             //Send Mail
             $this->sendemail_library->beerGiftSendMail($instaRecord);
+            $data['status'] = true;
         }
         else
         {
             $data['status'] = false;
             $data['errorMsg'] = "Purchase Record Not found!";
+        }
+        if($isTrigger == 1)
+        {
+            echo json_encode($data);
+        }
+        else
+        {
+            return json_encode($data);
         }
     }
 
