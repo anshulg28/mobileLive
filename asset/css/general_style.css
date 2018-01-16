@@ -1154,10 +1154,12 @@ input::-webkit-inner-spin-button {
 .giftABeer .custom-month-selection
 {
     width:150px;
+    vertical-align: top;
 }
 .giftABeer .custom-date-selection,.giftABeer .custom-year-selection
 {
     width:60px;
+    vertical-align: top;
 }
 .giftABeer .middle .schedule-label
 {
@@ -1167,7 +1169,7 @@ input::-webkit-inner-spin-button {
 {
     margin-left:-230px;
 }
-.giftABeer .middle .form-wrapper .mug-suggestions .mdl-chip
+.giftABeer .middle .form-wrapper .mug-suggestions .mdl-chip, .giftABeer .middle .form-wrapper-gift-mug .mug-suggestions .mdl-chip
 {
     cursor:pointer;
     font-family: 'Averia Serif Libre' !important;

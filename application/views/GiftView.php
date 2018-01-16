@@ -108,7 +108,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             var data = {message: txt};
             snackbarContainer.MaterialSnackbar.showSnackbar(data);
         }
-        function isValidDate(s) {
+        function isValidDate(s)
+        {
             var bits = s.split('/');
             var d = new Date(bits[2] + '/' + bits[1] + '/' + bits[0]);
             return !!(d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[0]));
@@ -273,6 +274,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             var suggHtml = '<span class="my-danger-text">Mug Number is Not Available!</span><br>';
                             if(typeof data.availMugs != 'undefined')
                             {
+                                suggHtml += '<p>Select anyone from below:</p>';
                                 var mugHtml = '';
                                 var i = 1;
                                 for(var index in data.availMugs)
@@ -434,6 +436,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             var suggHtml = '<span class="my-danger-text">Mug Number is Not Available!</span><br>';
                             if(typeof data.availMugs != 'undefined')
                             {
+                                suggHtml += '<p>Select anyone from below:</p>';
                                 var mugHtml = '';
                                 var i = 1;
                                 for(var index in data.availMugs)
@@ -758,8 +761,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="tagName" name="tagName">
+                                    <input class="mdl-textfield__input" type="text" id="tagName" name="tagName" maxlength="8">
                                     <label class="mdl-textfield__label" for="tagName">Name On Tag (if any)</label>
+                                </div>
+                                <br>
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <select id="homebase" name="homebase" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
+                                        <option value=""></option>
+                                        <?php
+                                        if(isset($locData))
+                                        {
+                                            foreach($locData as $key => $row)
+                                            {
+                                                if(isset($row['id']))
+                                                {
+                                                    ?>
+                                                    <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
+                                                    <?php
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                    <label class="mdl-textfield__label" for="homebase">Taproom Preference:</label>
                                 </div>
                                 <br>
                                 <label class="birth-label">BirthDate: </label><br>
@@ -806,27 +830,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </select>
                                     <!--<input class="mdl-textfield__input" type="number" id="buyerYear" name="buyerYear" value="<?php /*echo date('Y'); */?>">-->
                                     <label class="mdl-textfield__label" for="buyerYear">Year</label>
-                                </div>
-                                <br>
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <select id="homebase" name="homebase" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
-                                        <option value=""></option>
-                                        <?php
-                                        if(isset($locData))
-                                        {
-                                            foreach($locData as $key => $row)
-                                            {
-                                                if(isset($row['id']))
-                                                {
-                                                    ?>
-                                                    <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
-                                                    <?php
-                                                }
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                    <label class="mdl-textfield__label" for="homebase">Taproom Preference:</label>
                                 </div>
                                 <br>
                                 <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent bookNow-event-btn common-btn" style="text-transform: capitalize;" disabled>
@@ -949,8 +952,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="text" id="tagName" name="tagName">
+                                    <input class="mdl-textfield__input" type="text" id="tagName" name="tagName" maxlength="8">
                                     <label class="mdl-textfield__label" for="tagName">Name On Tag (if any)</label>
+                                </div>
+                                <br>
+                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <select id="homebase" name="homebase" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
+                                        <option value=""></option>
+                                        <?php
+                                        if(isset($locData))
+                                        {
+                                            foreach($locData as $key => $row)
+                                            {
+                                                if(isset($row['id']))
+                                                {
+                                                    ?>
+                                                    <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
+                                                    <?php
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                    <label class="mdl-textfield__label" for="homebase">Taproom Preference</label>
                                 </div>
                                 <br>
                                 <label class="birth-label">BirthDate: </label><br>
@@ -997,27 +1021,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </select>
                                     <!--<input class="mdl-textfield__input" type="number" id="buyerYear" value="<?php /*echo date('Y'); */?>">-->
                                     <label class="mdl-textfield__label" for="buyerYear">Year</label>
-                                </div>
-                                <br>
-                                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <select id="homebase" name="homebase" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
-                                        <option value=""></option>
-                                        <?php
-                                        if(isset($locData))
-                                        {
-                                            foreach($locData as $key => $row)
-                                            {
-                                                if(isset($row['id']))
-                                                {
-                                                    ?>
-                                                    <option value="<?php echo $row['id'];?>"><?php echo $row['locName'];?></option>
-                                                    <?php
-                                                }
-                                            }
-                                        }
-                                        ?>
-                                    </select>
-                                    <label class="mdl-textfield__label" for="homebase">Taproom Preference</label>
                                 </div>
                                 <br>
                                 <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent bookNow-event-btn common-btn" style="text-transform: capitalize;" disabled>
