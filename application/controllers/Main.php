@@ -2892,6 +2892,7 @@ $this->load->view('MobileHomeView', $data);
                 'allow_repeated_payments' => false,
                 'redirect_url' => base_url().'thank-you',
             );
+
             $linkGot = $this->curl_library->createInstaMugLink($instaDetails);
 
             if(myIsArray($linkGot) && $linkGot['success'] === true)

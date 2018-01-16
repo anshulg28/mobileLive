@@ -114,6 +114,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             var d = new Date(bits[2] + '/' + bits[1] + '/' + bits[0]);
             return !!(d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[0]));
         }
+        function validateEmail($email) {
+            var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+            return emailReg.test( $email );
+        }
 
         function readjustHeight()
         {
@@ -218,17 +222,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         $(document).on('click','#proceedMugForm', function(){
             if($('#bFullName').val() == '')
             {
-                mySnackTime('Please Provide Your Name!');
+                mySnackTime('Please provide your Name!');
+                return false;
+            }
+            var nameReg = new RegExp("^[a-zA-Z\\s]+$");
+            if(!nameReg.test($('#bFullName').val()))
+            {
+                mySnackTime("Enter valid name!");
                 return false;
             }
             if($('#buyerEmail').val() == '')
             {
-                mySnackTime('Please Provide Your Email!');
+                mySnackTime('Please provide your Email!');
+                return false;
+            }
+            if(!validateEmail($('#buyerEmail').val()))
+            {
+                mySnackTime('Please provide valid Email!');
                 return false;
             }
             if($('#buyerPhone').val() == '')
             {
-                mySnackTime('Please Provide Your Mobile number!');
+                mySnackTime('Please provide valid Mobile number!');
+                return false;
+            }
+            if($('#buyerPhone').val().length != 10)
+            {
+                mySnackTime('Please provide valid Mobile number!');
                 return false;
             }
             if($('#buyerOccasion').val() == '')
@@ -251,6 +271,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             $('.buyer-form').animateCss("slideOutLeft",function(){
                 $('.buyer-form').addClass('hide');
                 $('#main-mug-gift-form').removeClass('hide').animateCss("slideInRight");
+            });
+        });
+        $(document).on('click','.middle .go-back-gift-form', function(){
+            $('#main-mug-gift-form').animateCss("slideOutRight",function(){
+                $('#main-mug-gift-form').addClass('hide');
+                $('.buyer-form').removeClass('hide').animateCss("slideInLeft");
             });
         });
         $(document).on('focusout','.middle .form-wrapper-gift-mug #mugId', function(){
@@ -300,35 +326,43 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 });
             }
         });
-        $(document).on('click','.middle .form-wrapper-gift-mug .avail-mugs',function(){
-            $('.middle .form-wrapper-gift-mug #mugId').val($(this).find('.mdl-chip__text').html());
-            $('.middle .form-wrapper-gift-mug #mugId').trigger('focusout');
+        $(document).on('click','.middle #main-mug-gift-form .avail-mugs',function(){
+            var e = this;
+            console.log(e);
+            $('.middle #main-mug-gift-form #mugId').val($(e).find('.mdl-chip__text').html());
+            $('.middle #main-mug-gift-form #mugId').trigger('focusout');
         });
 
         $(document).on('submit','.middle .form-wrapper-gift-mug #main-mug-gift-form',function(e){
             e.preventDefault();
 
-            var curDate = $('.middle .form-wrapper-gift-mug #buyerDate').val()+"/"+$('.middle .form-wrapper-gift-mug #buyerMonth').val()+"/"+$('.middle .form-wrapper-gift-mug #buyerYear').val();
+            var curDate = $('.middle #main-mug-gift-form #buyerDate').val()+"/"+$('.middle #main-mug-gift-form #buyerMonth').val()+"/"+$('.middle #main-mug-gift-form #buyerYear').val();
 
-            if($('.middle .form-wrapper-gift-mug #firstName').val() == '')
+            if($('.middle #main-mug-gift-form #firstName').val() == '')
             {
                 mySnackTime('Please Provide First Name');
                 return false;
             }
-            if($('.middle .form-wrapper-gift-mug #lastName').val() == '')
+            if($('.middle #main-mug-gift-form #lastName').val() == '')
             {
                 mySnackTime('Please Provide Last Name');
                 return false;
             }
 
-            if($('.middle .form-wrapper-gift-mug #email').val() == '')
+            if($('.middle #main-mug-gift-form #email').val() == '')
             {
                 mySnackTime('Please Provide Email');
                 return false;
             }
-            if($('.middle .form-wrapper-gift-mug #mobNum').val() == '')
+            if($('.middle #main-mug-gift-form #mobNum').val() == '')
             {
                 mySnackTime('Mobile Number Required!');
+                return false;
+            }
+
+            if($('.middle #main-mug-gift-form #mobNum').val().length != 10)
+            {
+                mySnackTime('Valid Mobile number required!');
                 return false;
             }
 
@@ -343,31 +377,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 mySnackTime('Not a Legal Drinking Age(21 yrs)');
                 return false;
             }
-            if($('.middle .form-wrapper-gift-mug #homebase').val() == '')
+            if($('.middle #main-mug-gift-form #homebase').val() == '')
             {
                 mySnackTime('Please Select The Homebase!');
                 return false;
             }
 
-            if($('.middle .form-wrapper-gift-mug #mugId').val() == '')
+            if($('.middle #main-mug-gift-form #mugId').val() == '')
             {
                 mySnackTime('Mug Number is Required!');
                 return false;
             }
 
             showProgressLoader();
-            $('.middle .form-wrapper-gift-mug button[type="submit"]').attr('disabled','disabled');
+            $('.middle #main-mug-gift-form button[type="submit"]').attr('disabled','disabled');
 
-            giftMugData['firstName'] = $('.middle .form-wrapper-gift-mug #firstName').val();
-            giftMugData['lastName'] = $('.middle .form-wrapper-gift-mug #lastName').val();
-            giftMugData['email'] = $('.middle .form-wrapper-gift-mug #email').val();
-            giftMugData['mobNum'] = $('.middle .form-wrapper-gift-mug #mobNum').val();
-            giftMugData['tagName'] = $('.middle .form-wrapper-gift-mug #tagName').val();
-            giftMugData['mugId'] = $('.middle .form-wrapper-gift-mug #mugId').val();
-            giftMugData['homebase'] = $('.middle .form-wrapper-gift-mug #homebase').val();
-            giftMugData['buyerMonth'] = $('.middle .form-wrapper-gift-mug #buyerMonth').val();
-            giftMugData['buyerDate'] = $('.middle .form-wrapper-gift-mug #buyerDate').val();
-            giftMugData['buyerYear'] = $('.middle .form-wrapper-gift-mug #buyerYear').val();
+            giftMugData['firstName'] = $('.middle #main-mug-gift-form #firstName').val();
+            giftMugData['lastName'] = $('.middle #main-mug-gift-form #lastName').val();
+            giftMugData['email'] = $('.middle #main-mug-gift-form #email').val();
+            giftMugData['mobNum'] = $('.middle #main-mug-gift-form #mobNum').val();
+            giftMugData['tagName'] = $('.middle #main-mug-gift-form #tagName').val();
+            giftMugData['mugId'] = $('.middle #main-mug-gift-form #mugId').val();
+            giftMugData['homebase'] = $('.middle #main-mug-gift-form #homebase').val();
+            giftMugData['buyerMonth'] = $('.middle #main-mug-gift-form #buyerMonth').val();
+            giftMugData['buyerDate'] = $('.middle #main-mug-gift-form #buyerDate').val();
+            giftMugData['buyerYear'] = $('.middle #main-mug-gift-form #buyerYear').val();
 
             $.ajax({
                 type:'POST',
@@ -385,6 +419,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         }
                         else
                         {
+                            $('.middle #main-mug-gift-form button[type="submit"]').removeAttr('disabled');
                             vex.dialog.buttons.YES.text = 'Close';
                             vex.dialog.alert({
                                 unsafeMessage: '<label class="head-title">Error!</label><br><br>Failed To Process Request, Please Try Again!'
@@ -393,6 +428,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     }
                     else
                     {
+                        $('.middle #main-mug-gift-form button[type="submit"]').removeAttr('disabled');
                         vex.dialog.buttons.YES.text = 'Close';
                         vex.dialog.alert({
                             unsafeMessage: '<label class="head-title">Error!</label><br><br>'+data.errorMsg
@@ -402,7 +438,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 },
                 error: function(xhr, status, error){
                     hideProgressLoader();
-                    $('.middle .form-wrapper-gift-mug button[type="submit"]').removeAttr('disabled');
+                    $('.middle #main-mug-gift-form button[type="submit"]').removeAttr('disabled');
                     vex.dialog.buttons.YES.text = 'Close';
                     vex.dialog.alert({
                         unsafeMessage: '<label class="head-title">Error!</label><br><br>'+'Some Error Occurred!'
@@ -504,6 +540,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 mySnackTime('Mobile Number Required!');
                 return false;
             }
+            if($('.middle .form-wrapper #mobNum').val().length != 10)
+            {
+                mySnackTime('Valid Mobile number required!');
+                return false;
+            }
 
             if(!isValidDate(curDate))
             {
@@ -548,6 +589,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         }
                         else
                         {
+                            $('.middle .form-wrapper button[type="submit"]').removeAttr('disabled');
                             vex.dialog.buttons.YES.text = 'Close';
                             vex.dialog.alert({
                                 unsafeMessage: '<label class="head-title">Error!</label><br><br>Failed To Process Request, Please Try Again!'
@@ -556,6 +598,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     }
                     else
                     {
+                        $('.middle .form-wrapper button[type="submit"]').removeAttr('disabled');
                         vex.dialog.buttons.YES.text = 'Close';
                         vex.dialog.alert({
                             unsafeMessage: '<label class="head-title">Error!</label><br><br>'+data.errorMsg
@@ -598,6 +641,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             if($('.middle .form-wrapper-gift-beer #main-beer-form #buyerPhone').val() == '')
             {
                 mySnackTime("Your Phone Number is Required!");
+                return false;
+            }
+            if($('.middle .form-wrapper-gift-beer #main-beer-form #buyerPhone').val().length != 10)
+            {
+                mySnackTime("Valid Phone Number is required!");
                 return false;
             }
             if($('.middle .form-wrapper-gift-beer #main-beer-form #buyerPints').val() == '')
@@ -649,6 +697,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         }
                         else
                         {
+                            $('.middle .form-wrapper-gift-beer button[type="submit"]').removeAttr('disabled');
                             vex.dialog.buttons.YES.text = 'Close';
                             vex.dialog.alert({
                                 unsafeMessage: '<label class="head-title">Error!</label><br><br>Failed To Process Request, Please Try Again!'
@@ -657,6 +706,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     }
                     else
                     {
+                        $('.middle .form-wrapper-gift-beer button[type="submit"]').removeAttr('disabled');
                         vex.dialog.buttons.YES.text = 'Close';
                         vex.dialog.alert({
                             unsafeMessage: '<label class="head-title">Error!</label><br><br>'+data.errorMsg
@@ -729,7 +779,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="mdl-cell--10-col margin-center">
                         <div class="demo-card-square mdl-shadow--2dp text-center">
                             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent get-back-choice common-btn pull-left">
-                                <i class="fa fa-chevron-left"></i> Go Back
+                                <i class="fa fa-home"></i> Home
                             </button>
                             <h3 class="form-title">Doolally New Mug Membership</h3>
                             <br>
@@ -756,7 +806,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="mobNum" name="mobNum" maxlength="10" oninput="maxLengthCheck(this)">
+                                    <input class="mdl-textfield__input" type="number" id="mobNum" name="mobNum" minlength="10" maxlength="10" oninput="maxLengthCheck(this)">
                                     <label class="mdl-textfield__label" for="mobNum">Mobile Number</label>
                                 </div>
                                 <br>
@@ -809,7 +859,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         for($i=1;$i<32;$i++)
                                         {
                                             ?>
-                                            <option value="<?php echo $i;?>" <?php if($i == date('n')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('j')){echo 'Selected';} ?>><?php echo $i;?></option>
                                             <?php
                                         }
                                         ?>
@@ -847,7 +897,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="mdl-cell--10-col margin-center">
                         <div class="demo-card-square mdl-shadow--2dp text-center">
                             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent get-back-choice common-btn pull-left">
-                                <i class="fa fa-chevron-left"></i> Go Back
+                                <i class="fa fa-home"></i> Home
                             </button>
                             <h3 class="form-title">Doolally Gift Mug Membership</h3>
                             <br>
@@ -865,7 +915,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="buyerPhone" maxlength="10" oninput="maxLengthCheck(this)">
+                                    <input class="mdl-textfield__input" type="number" id="buyerPhone" minlength="10" maxlength="10" oninput="maxLengthCheck(this)">
                                     <label class="mdl-textfield__label" for="buyerPhone">Your Mobile number</label>
                                 </div>
                                 <br>
@@ -897,7 +947,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         for($i=1;$i<32;$i++)
                                         {
                                             ?>
-                                            <option value="<?php echo $i;?>" <?php if($i == date('n')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('j')){echo 'Selected';} ?>><?php echo $i;?></option>
                                             <?php
                                         }
                                         ?>
@@ -925,6 +975,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </button>
                             </div>
                             <form action="<?php echo base_url().'main/verifyMember';?>" method="POST" class="hide" id="main-mug-gift-form">
+                                <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent common-btn go-back-gift-form">
+                                    <i class="fa fa-chevron-left"></i> Go Back
+                                </button>
+                                <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                     <input class="mdl-textfield__input" type="number" id="mugId" name="mugId" placeholder="Enter number more than 100">
                                     <label class="mdl-textfield__label" for="mugId">Mug Number</label>
@@ -947,7 +1001,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="mobNum" name="mobNum" maxlength="10" oninput="maxLengthCheck(this)">
+                                    <input class="mdl-textfield__input" type="number" id="mobNum" name="mobNum" minlength="10" maxlength="10" oninput="maxLengthCheck(this)">
                                     <label class="mdl-textfield__label" for="mobNum">Mobile Number</label>
                                 </div>
                                 <br>
@@ -1000,7 +1054,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         for($i=1;$i<32;$i++)
                                         {
                                             ?>
-                                            <option value="<?php echo $i;?>" <?php if($i == date('n')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('j')){echo 'Selected';} ?>><?php echo $i;?></option>
                                             <?php
                                         }
                                         ?>
@@ -1038,7 +1092,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="mdl-cell--10-col margin-center">
                         <div class="demo-card-square mdl-shadow--2dp text-center">
                             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent get-back-choice common-btn pull-left">
-                                <i class="fa fa-chevron-left"></i> Go Back
+                                <i class="fa fa-home"></i> Home
                             </button>
                             <h3 class="form-title">Buy/Gift Beer Pints</h3>
                             <br>
@@ -1061,7 +1115,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="buyerPhone" name="buyerPhone" maxlength="10" oninput="maxLengthCheck(this)">
+                                    <input class="mdl-textfield__input" type="number" id="buyerPhone" name="buyerPhone" minlength="10" maxlength="10" oninput="maxLengthCheck(this)">
                                     <label class="mdl-textfield__label" for="buyerPhone">Your Mobile number</label>
                                 </div>
                                 <br>
@@ -1123,7 +1177,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         for($i=1;$i<32;$i++)
                                         {
                                             ?>
-                                            <option value="<?php echo $i;?>" <?php if($i == date('n')){echo 'Selected';} ?>><?php echo $i;?></option>
+                                            <option value="<?php echo $i;?>" <?php if($i == date('j')){echo 'Selected';} ?>><?php echo $i;?></option>
                                             <?php
                                         }
                                         ?>
