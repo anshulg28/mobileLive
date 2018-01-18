@@ -2902,11 +2902,19 @@ $this->load->view('MobileHomeView', $data);
                     $payReqId = $linkGot['payment_request']['id'];
                     $payReqUrl = $linkGot['payment_request']['longurl'].'?embed=form';
 
-                    $birthDate = $post['buyerYear'].'-'.$post['buyerMonth'].'-'.$post['buyerDate'];
+                    if(isset($post['notAvail']))
+                    {
+                        $birthDate = '0000-00-00';
+                    }
+                    else
+                    {
+                        $birthDate = $post['buyerYear'].'-'.$post['buyerMonth'].'-'.$post['buyerDate'];
+                    }
+
                     $details = array(
                         'mugId' => $post['mugId'],
-                        'firstName' => $firstName,
-                        'lastName' => $lastName,
+                        'firstName' => $post['firstName'],
+                        'lastName' => $post['lastName'],
                         'emailId' => $post['email'],
                         'mobileNo' => $post['mobNum'],
                         'homeBase' => $post['homebase'],
@@ -2922,10 +2930,15 @@ $this->load->view('MobileHomeView', $data);
 
                     if(isset($post['gifterName']) && isStringSet($post['gifterName']))
                     {
+                        $occasion = '';
+                        if(isset($post['gifterOccasion']))
+                        {
+                            $occasion = $post['gifterOccasion'];
+                        }
                         $details['gifterName'] = $post['gifterName'];
                         $details['gifterEmail'] = $post['gifterEmail'];
                         $details['gifterPhone'] = $post['gifterPhone'];
-                        $details['gifterOccasion'] = $post['gifterOccasion'];
+                        $details['gifterOccasion'] = $occasion;
                         $details['giftScheduleDate'] = $post['giftScheduleDate'];
                     }
 
@@ -3146,8 +3159,9 @@ $this->load->view('MobileHomeView', $data);
 
         if(isset($post['totalPints']))
         {
+            $totPrice = (int)$post['totalPints'] * 10;
             $instaDetails = array(
-                'amount' => '10',
+                'amount' => $totPrice,
                 'purpose' => 'Pint purchase, Qty: '.$post['totalPints'],
                 'buyer_name' => $post['buyerFName'].' '.$post['buyerLName'],
                 'email' => $post['buyerEmail'],
@@ -3167,6 +3181,16 @@ $this->load->view('MobileHomeView', $data);
                     $payReqId = $linkGot['payment_request']['id'];
                     $payReqUrl = $linkGot['payment_request']['longurl'].'?embed=form';
 
+                    $specialMsg = '';
+                    if(isset($post['specialMsg']))
+                    {
+                        $specialMsg = $post['specialMsg'];
+                    }
+                    $receiverOccasion = '';
+                    if(isset($post['receiverOccasion']) && isStringSet($post['receiverOccasion']))
+                    {
+                        $receiverOccasion = $post['receiverOccasion'];
+                    }
                     //$birthDate = $post['buyerYear'].'-'.$post['buyerMonth'].'-'.$post['buyerDate'];
                     $sumPints = (int)$post['totalPints'] * 10;// FULL_PINT_PRICE;
                     $details = array(
@@ -3176,8 +3200,8 @@ $this->load->view('MobileHomeView', $data);
                         'totalPints' => $post['totalPints'],
                         'receiverName' => $post['receiverName'],
                         'receiverEmail' => $post['receiverEmail'],
-                        'receiverOccasion' => $post['receiverOccasion'],
-                        'specialMsg' => $post['specialMsg'],
+                        'receiverOccasion' => $receiverOccasion,
+                        'specialMsg' => $specialMsg,
                         'scheduleDate' => $post['receiverYear'].'-'.$post['receiverMonth'].'-'.$post['receiverDay'],
                         'invoiceDate' => date('Y-m-d'),
                         'invoiceAmt' => $sumPints,

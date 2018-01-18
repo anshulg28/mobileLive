@@ -21,7 +21,7 @@
                         else
                         {
                             ?>
-                            <h4 class="mdl-card__title-text my-success-text" style="font-size:20px">Thank you for purchasing<br>You'll receive a confirmation mail from us.</h4>
+                            <h4 class="mdl-card__title-text my-success-text" style="font-size:20px">Thank you for purchasing Doolally Beers.<br>We'll send a confirmation email and beer codes.</h4>
                             <br>
                             <?php
                         }

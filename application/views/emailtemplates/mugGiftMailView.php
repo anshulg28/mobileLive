@@ -7,15 +7,35 @@
 
 <body>
 <p>Hi <?php echo trim(ucfirst($mailData['firstName']));?>,</p>
-<p>Your friend, <?php echo trim(ucfirst($mailData['gifterName']));?> just bought you something awesome, the gift of good mug!<br><br>
-    As a present for your <?php echo $mailData['gifterOccasion'];?>, you are now part of Doolally's Mug Club.<br><br>
+<p>Your friend, <?php echo trim(ucfirst($mailData['gifterName']));?> just bought you something awesome, the gift of good beer!<br><br>
+    <?php
+        if(isset($mailData['gifterOccasion']) && isStringSet(trim($mailData['gifterOccasion'])))
+        {
+            ?>
+            As a present for your <?php echo $mailData['gifterOccasion'];?>, you are now part of Doolally's Mug Club.<br><br>
+            <?php
+        }
+        else
+        {
+            ?>
+            As a present, you are now part of Doolally's Mug Club.<br><br>
+            <?php
+        }
+    ?>
     Anytime you are in the mood for a mug, drop into Doolally Taproom (Andheri, Bandra, Khar, Kemps Corner, Colaba), ask for your mug and enjoy your thoughtful present.<br><br>
     Here are your mug club details:<br><br>
     Name of Member: <?php echo trim(ucfirst($mailData['firstName'])).' '.trim(ucfirst($mailData['lastName']));?><br>
     Mug Number: <?php echo $mailData['mugId'];?><br>
     Home Base: <?php echo $mailData['locName'];?> Taproom<br>
     Name on Dog Tag: <?php echo $mailData['mugTag'];?><br>
-    Date of Birth: <?php $d = date_create($mailData['birthDate']); echo date_format($d,'jS M');?><br>
+    <?php
+        if($mailData['birthDate'] != '0000-00-00')
+        {
+            ?>
+            Date of Birth: <?php $d = date_create($mailData['birthDate']); echo date_format($d,'jS M');?><br>
+            <?php
+        }
+    ?>
     Date of Joining: <?php $d = date_create($mailData['membershipStart']); echo date_format($d,'jS F Y');?><br>
     Date of Expiry: <?php $d = date_create($mailData['membershipEnd']); echo date_format($d,'jS F Y');?><br>
     E Mail Address: <?php echo $mailData['emailId'];?><br>

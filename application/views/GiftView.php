@@ -251,11 +251,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 mySnackTime('Please provide valid Mobile number!');
                 return false;
             }
-            if($('#buyerOccasion').val() == '')
+            /*if($('#buyerOccasion').val() == '')
             {
                 mySnackTime('Occasion is required!');
                 return false;
-            }
+            }*/
             var curDate = $('#buyerDate').val()+"/"+$('#buyerMonth').val()+"/"+$('#buyerYear').val();
             if(!isValidDate(curDate))
             {
@@ -279,58 +279,61 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 $('.buyer-form').removeClass('hide').animateCss("slideInLeft");
             });
         });
-        $(document).on('focusout','.middle .form-wrapper-gift-mug #mugId', function(){
+        $(document).on('keyup','.middle .form-wrapper-gift-mug #mugId', function(){
             if($(this).val() != '')
             {
                 var mugNum = $(this).val();
-                $.ajax({
-                    type:"GET",
-                    dataType:"json",
-                    url:base_url+'main/MugAvailability/'+mugNum,
-                    success: function(data)
-                    {
-                        if(data.status === true)
+                if(Number(mugNum) >100)
+                {
+                    $.ajax({
+                        type:"GET",
+                        dataType:"json",
+                        url:base_url+'main/MugAvailability/'+mugNum,
+                        success: function(data)
                         {
-                            $('.middle .form-wrapper-gift-mug .mug-suggestions').addClass('my-success-text').html('Mug Number is Available');
-                            $('.middle .form-wrapper-gift-mug button[type="submit"]').removeAttr('disabled');
-                        }
-                        else
-                        {
-                            $('.middle .form-wrapper-gift-mug button[type="submit"]').attr('disabled','disabled');
-                            var suggHtml = '<span class="my-danger-text">Mug Number is Not Available!</span><br>';
-                            if(typeof data.availMugs != 'undefined')
+                            if(data.status === true)
                             {
-                                suggHtml += '<p>Select anyone from below:</p>';
-                                var mugHtml = '';
-                                var i = 1;
-                                for(var index in data.availMugs)
-                                {
-                                    if(i == 5)
-                                    {
-                                        $('.middle .form-wrapper-gift-mug .mug-suggestions').html(suggHtml);
-                                        return false;
-                                    }
-                                    suggHtml += '<span class="mdl-chip avail-mugs"><span class="mdl-chip__text">'+data.availMugs[index]+'</span></span>';
-                                    i++;
-                                }
+                                $('.middle .form-wrapper-gift-mug .mug-suggestions').addClass('my-success-text').html('Mug Number is Available');
+                                $('.middle .form-wrapper-gift-mug button[type="submit"]').removeAttr('disabled');
                             }
-                            $('.middle .form-wrapper-gift-mug .mug-suggestions').addClass('my-danger-text').html(suggHtml);
+                            else
+                            {
+                                $('.middle .form-wrapper-gift-mug button[type="submit"]').attr('disabled','disabled');
+                                var suggHtml = '<span class="my-danger-text">Mug Number is Not Available!</span><br>';
+                                if(typeof data.availMugs != 'undefined')
+                                {
+                                    suggHtml += '<p>Select anyone from below:</p>';
+                                    var mugHtml = '';
+                                    var i = 1;
+                                    for(var index in data.availMugs)
+                                    {
+                                        if(i == 5)
+                                        {
+                                            $('.middle .form-wrapper-gift-mug .mug-suggestions').html(suggHtml);
+                                            return false;
+                                        }
+                                        suggHtml += '<span class="mdl-chip avail-mugs"><span class="mdl-chip__text">'+data.availMugs[index]+'</span></span>';
+                                        i++;
+                                    }
+                                }
+                                $('.middle .form-wrapper-gift-mug .mug-suggestions').addClass('my-danger-text').html(suggHtml);
+                            }
+                        },
+                        error: function(xhr, status, error)
+                        {
+                            $('.middle .form-wrapper-gift-mug .mug-suggestions').addClass('my-danger-text').html('Unable To Connect To Server!');
+                            var err = '<pre>'+xhr.responseText+'</pre>';
+                            saveErrorLog(err);
                         }
-                    },
-                    error: function(xhr, status, error)
-                    {
-                        $('.middle .form-wrapper-gift-mug .mug-suggestions').addClass('my-danger-text').html('Unable To Connect To Server!');
-                        var err = '<pre>'+xhr.responseText+'</pre>';
-                        saveErrorLog(err);
-                    }
-                });
+                    });
+                }
             }
         });
         $(document).on('click','.middle #main-mug-gift-form .avail-mugs',function(){
             var e = this;
             console.log(e);
             $('.middle #main-mug-gift-form #mugId').val($(e).find('.mdl-chip__text').html());
-            $('.middle #main-mug-gift-form #mugId').trigger('focusout');
+            $('.middle #main-mug-gift-form #mugId').trigger('keyup');
         });
 
         $(document).on('submit','.middle .form-wrapper-gift-mug #main-mug-gift-form',function(e){
@@ -451,56 +454,59 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         });
 
 
-        $(document).on('focusout','.middle .form-wrapper #mugId', function(){
+        $(document).on('keyup','.middle .form-wrapper #mugId', function(){
             if($(this).val() != '')
             {
                 var mugNum = $(this).val();
-                $.ajax({
-                    type:"GET",
-                    dataType:"json",
-                    url:base_url+'main/MugAvailability/'+mugNum,
-                    success: function(data)
-                    {
-                        if(data.status === true)
+                if(Number(mugNum)>100)
+                {
+                    $.ajax({
+                        type:"GET",
+                        dataType:"json",
+                        url:base_url+'main/MugAvailability/'+mugNum,
+                        success: function(data)
                         {
-                            $('.middle .form-wrapper .mug-suggestions').addClass('my-success-text').html('Mug Number is Available');
-                            $('.middle .form-wrapper button[type="submit"]').removeAttr('disabled');
-                        }
-                        else
-                        {
-                            $('.middle .form-wrapper button[type="submit"]').attr('disabled','disabled');
-                            var suggHtml = '<span class="my-danger-text">Mug Number is Not Available!</span><br>';
-                            if(typeof data.availMugs != 'undefined')
+                            if(data.status === true)
                             {
-                                suggHtml += '<p>Select anyone from below:</p>';
-                                var mugHtml = '';
-                                var i = 1;
-                                for(var index in data.availMugs)
-                                {
-                                    if(i == 5)
-                                    {
-                                        $('.middle .form-wrapper .mug-suggestions').html(suggHtml);
-                                        return false;
-                                    }
-                                    suggHtml += '<span class="mdl-chip avail-mugs"><span class="mdl-chip__text">'+data.availMugs[index]+'</span></span>';
-                                    i++;
-                                }
+                                $('.middle .form-wrapper .mug-suggestions').addClass('my-success-text').html('Mug Number is Available');
+                                $('.middle .form-wrapper button[type="submit"]').removeAttr('disabled');
                             }
-                            $('.middle .form-wrapper .mug-suggestions').addClass('my-danger-text').html(suggHtml);
+                            else
+                            {
+                                $('.middle .form-wrapper button[type="submit"]').attr('disabled','disabled');
+                                var suggHtml = '<span class="my-danger-text">Mug Number is Not Available!</span><br>';
+                                if(typeof data.availMugs != 'undefined')
+                                {
+                                    suggHtml += '<p>Select anyone from below:</p>';
+                                    var mugHtml = '';
+                                    var i = 1;
+                                    for(var index in data.availMugs)
+                                    {
+                                        if(i == 5)
+                                        {
+                                            $('.middle .form-wrapper .mug-suggestions').html(suggHtml);
+                                            return false;
+                                        }
+                                        suggHtml += '<span class="mdl-chip avail-mugs"><span class="mdl-chip__text">'+data.availMugs[index]+'</span></span>';
+                                        i++;
+                                    }
+                                }
+                                $('.middle .form-wrapper .mug-suggestions').addClass('my-danger-text').html(suggHtml);
+                            }
+                        },
+                        error: function(xhr, status, error)
+                        {
+                            $('.middle .form-wrapper .mug-suggestions').addClass('my-danger-text').html('Unable To Connect To Server!');
+                            var err = '<pre>'+xhr.responseText+'</pre>';
+                            saveErrorLog(err);
                         }
-                    },
-                    error: function(xhr, status, error)
-                    {
-                        $('.middle .form-wrapper .mug-suggestions').addClass('my-danger-text').html('Unable To Connect To Server!');
-                        var err = '<pre>'+xhr.responseText+'</pre>';
-                        saveErrorLog(err);
-                    }
-                });
+                    });
+                }
             }
         });
         $(document).on('click','.middle .form-wrapper .avail-mugs',function(){
             $('.middle .form-wrapper #mugId').val($(this).find('.mdl-chip__text').html());
-            $('.middle .form-wrapper #mugId').trigger('focusout');
+            $('.middle .form-wrapper #mugId').trigger('keyup');
         });
         function getAge(dateString)
         {
@@ -663,11 +669,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 mySnackTime("Giftee Email is Required!");
                 return false;
             }
-            if($('.middle .form-wrapper-gift-beer #main-beer-form #receiverOccasion').val() == '')
+            /*if($('.middle .form-wrapper-gift-beer #main-beer-form #receiverOccasion').val() == '')
             {
                 mySnackTime("Occasion is Required!");
                 return false;
-            }
+            }*/
             var sendDate = $('.middle .form-wrapper-gift-beer #main-beer-form #receiverDay').val()+'/'+
                 $('.middle .form-wrapper-gift-beer #main-beer-form #receiverMonth').val()+'/'+
                 $('.middle .form-wrapper-gift-beer #main-beer-form #receiverYear').val();
@@ -734,6 +740,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             if (object.value.length > object.maxLength)
                 object.value = object.value.slice(0, object.maxLength)
         }
+        $(document).on('change','.middle .form-wrapper-gift-beer #notAvail', function(){
+            if($(this).is(':checked'))
+            {
+                $('.middle .form-wrapper-gift-beer .custom-month-selection select').attr('disabled','disabled');
+                $('.middle .form-wrapper-gift-beer .custom-date-selection select').attr('disabled','disabled');
+                $('.middle .form-wrapper-gift-beer .custom-year-selection select').attr('disabled','disabled');
+            }
+            else
+            {
+                $('.middle .form-wrapper-gift-beer .custom-month-selection select').removeAttr('disabled');
+                $('.middle .form-wrapper-gift-beer .custom-date-selection select').removeAttr('disabled');
+                $('.middle .form-wrapper-gift-beer .custom-year-selection select').removeAttr('disabled');
+            }
+        });
     </script>
 </head>
 <body class="giftABeer">
@@ -747,7 +767,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="panel-body">
                             <i class="fa fa-beer fa-3x"></i>
                             <br>
-                            <p>Buy Mug</p>
+                            <p>Buy A Mug Club Membership</p>
                         </div>
                     </div>
                 </div>
@@ -757,7 +777,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="panel-body">
                             <i class="fa fa-gift fa-3x"></i>
                             <br>
-                            <p>Gift Mug</p>
+                            <p>Gift A Mug Club Membership</p>
                         </div>
                     </div>
                 </div>
@@ -767,7 +787,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="panel-body">
                             <i class="fa fa-beer fa-3x"></i>
                             <br>
-                            <p>Gift Beer</p>
+                            <p>Gift A Beer</p>
                         </div>
                     </div>
                 </div>
@@ -781,11 +801,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent get-back-choice common-btn pull-left">
                                 <i class="fa fa-home"></i> Home
                             </button>
-                            <h3 class="form-title">Doolally New Mug Membership</h3>
+                            <h3 class="form-title">New Doolally Mug Club Membership</h3>
                             <br>
                             <form action="<?php echo base_url().'main/verifyMember';?>" method="POST" id="main-mug-form">
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="mugId" name="mugId" placeholder="Enter number more than 100">
+                                    <input class="mdl-textfield__input" type="number" id="mugId" maxlength="4" name="mugId" placeholder="Enter between 100 and 9999">
                                     <label class="mdl-textfield__label" for="mugId">Mug Number</label>
                                 </div>&nbsp;
                                 <br>
@@ -833,7 +853,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         }
                                         ?>
                                     </select>
-                                    <label class="mdl-textfield__label" for="homebase">Taproom Preference:</label>
+                                    <label class="mdl-textfield__label" for="homebase">Taproom Preference (Can change it later):</label>
                                 </div>
                                 <br>
                                 <label class="birth-label">BirthDate: </label><br>
@@ -899,10 +919,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent get-back-choice common-btn pull-left">
                                 <i class="fa fa-home"></i> Home
                             </button>
-                            <h3 class="form-title">Doolally Gift Mug Membership</h3>
+                            <h3 class="form-title">Gift A Doolally Mug Club Membership</h3>
                             <br>
                             <div class="buyer-form">
-                                <h4>Your Details:</h4>
+                                <h4 style="font-family: 'Averia Serif Libre' !important;">Your Details:</h4>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                     <input class="mdl-textfield__input" pattern="^[a-zA-Z\s]+$" type="text" id="bFullName">
@@ -924,7 +944,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <label class="mdl-textfield__label" for="buyerOccasion">Occasion (eg. just a gift, birthday)</label>
                                 </div>
                                 <br>
-                                <label class="schedule-label">Schedule Date:</label><br>
+                                <label class="schedule-label">Schedule Your Gift:</label><br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-month-selection">
                                     <select id="buyerMonth" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
                                         <?php
@@ -980,7 +1000,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </button>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input class="mdl-textfield__input" type="number" id="mugId" name="mugId" placeholder="Enter number more than 100">
+                                    <input class="mdl-textfield__input" type="number" id="mugId" maxlength="4" name="mugId" placeholder="Enter between 100 and 9999">
                                     <label class="mdl-textfield__label" for="mugId">Mug Number</label>
                                 </div>&nbsp;
                                 <br>
@@ -1028,10 +1048,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         }
                                         ?>
                                     </select>
-                                    <label class="mdl-textfield__label" for="homebase">Taproom Preference</label>
+                                    <label class="mdl-textfield__label" for="homebase">Taproom Preference (Can change it later)</label>
                                 </div>
                                 <br>
-                                <label class="birth-label">BirthDate: </label><br>
+                                <label class="birth-label">BirthDate (we'll send them goodies): </label>
+                                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="confirmMail">
+                                    <input type="checkbox" id="notAvail" name="notAvail" value="1" class="mdl-checkbox__input">
+                                    <span class="mdl-checkbox__label">Not sure</span>
+                                </label>
+                                <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-month-selection">
                                     <select id="buyerMonth" class="mdl-textfield__input" style="font-family: 'Averia Serif Libre' !important;">
                                         <?php
@@ -1097,7 +1122,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <h3 class="form-title">Buy/Gift Beer Pints</h3>
                             <br>
                             <form action="<?php echo base_url().'main/verifyPints';?>" method="POST" id="main-beer-form">
-                                <h4>Your Details: </h4>
+                                <h4 style="font-family: 'Averia Serif Libre' !important;">Your Details: </h4>
                                 <br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                     <input class="mdl-textfield__input" pattern="^[a-zA-Z\s]+$" type="text" id="buyerFName" name="buyerFName">
@@ -1148,11 +1173,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <input class="mdl-textfield__input" type="text" id="receiverOccasion" name="receiverOccasion">
                                     <label class="mdl-textfield__label" for="receiverOccasion">Occasion (eg. just a gift, birthday)</label>
                                 </div>
-                                <br>
+                                <!--<br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                     <textarea class="mdl-textfield__input" id="specialMsg" name="specialMsg"></textarea>
                                     <label class="mdl-textfield__label" for="specialMsg">Personal Message (if any)</label>
-                                </div>
+                                </div>-->
                                 <br>
                                 <label class="schedule-label">Schedule Date:</label><br>
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label custom-month-selection">

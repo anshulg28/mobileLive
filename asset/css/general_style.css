@@ -1177,6 +1177,19 @@ input::-webkit-inner-spin-button {
     color: #fff;
     margin-right:10px;
 }
+.giftABeer .middle .mdl-textfield__label:after
+{
+    background-color:#000 !important;
+}
+.giftABeer .middle .mdl-textfield--floating-label.is-focused .mdl-textfield__label
+{
+    color:#000 !important;
+}
+.giftABeer .middle .mdl-textfield__input
+{
+    font-family:'Averia Serif Libre' !important;
+}
+
 @media screen and (max-width: 1024px)
 {
     .mailPage .mail-content

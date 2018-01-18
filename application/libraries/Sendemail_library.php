@@ -99,8 +99,8 @@ class Sendemail_library
             $cc .= ','.$replyTo;
             $fromName = $mailRecord['userData']['firstName'];
         }
-        $cc .= ','.$userData['gifterEmail'];
-        $subject = 'The gift of good mug, from '.trim(ucfirst($userData['gifterName']));
+
+        $subject = 'The gift of good beer, from '.trim(ucfirst($userData['gifterName']));
         $toEmail = $userData['emailId'];
 
         //Saving mail
@@ -110,6 +110,7 @@ class Sendemail_library
             'sendFrom' => $fromEmail,
             'sendFromName' => $fromName,
             'ccList' => $cc,
+            'ccView' => $userData['gifterEmail'],
             'replyTo' => $replyTo,
             'mailSubject' => $subject,
             'mailBody' => $content,
@@ -137,7 +138,6 @@ class Sendemail_library
         $cc        = implode(',',$this->CI->config->item('ccList'));
         $fromName  = 'Doolally';
 
-        $cc .= ','.$userData['buyerEmail'];
         $subject = 'The gift of good beer, from '.trim(ucfirst($userData['buyerName']));
         $toEmail = $userData['receiverEmail'];
 
@@ -148,6 +148,7 @@ class Sendemail_library
             'sendFrom' => $fromEmail,
             'sendFromName' => $fromName,
             'ccList' => $cc,
+            'ccView' => $userData['buyerEmail'],
             'replyTo' => $replyTo,
             'mailSubject' => $subject,
             'mailBody' => $content,
