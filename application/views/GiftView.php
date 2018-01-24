@@ -340,6 +340,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             e.preventDefault();
 
             var curDate = $('.middle #main-mug-gift-form #buyerDate').val()+"/"+$('.middle #main-mug-gift-form #buyerMonth').val()+"/"+$('.middle #main-mug-gift-form #buyerYear').val();
+            var isBirthNotAvail = true;
 
             if($('.middle #main-mug-gift-form #firstName').val() == '')
             {
@@ -369,16 +370,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 return false;
             }
 
-            if(!isValidDate(curDate))
+            if(!$('.middle #main-mug-gift-form #notAvail').is(':checked'))
             {
-                mySnackTime('Invalid Date');
-                return false;
-            }
+                isBirthNotAvail = false;
+                if(!isValidDate(curDate))
+                {
+                    mySnackTime('Invalid Date');
+                    return false;
+                }
 
-            if(getAge(curDate) < 21)
-            {
-                mySnackTime('Not a Legal Drinking Age(21 yrs)');
-                return false;
+                if(getAge(curDate) < 21)
+                {
+                    mySnackTime('Not a Legal Drinking Age(21 yrs)');
+                    return false;
+                }
             }
             if($('.middle #main-mug-gift-form #homebase').val() == '')
             {
@@ -405,6 +410,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             giftMugData['buyerMonth'] = $('.middle #main-mug-gift-form #buyerMonth').val();
             giftMugData['buyerDate'] = $('.middle #main-mug-gift-form #buyerDate').val();
             giftMugData['buyerYear'] = $('.middle #main-mug-gift-form #buyerYear').val();
+            if(isBirthNotAvail)
+            {
+                giftMugData['notAvail'] = $('.middle #main-mug-gift-form #notAvail').val();
+            }
 
             $.ajax({
                 type:'POST',
@@ -740,18 +749,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             if (object.value.length > object.maxLength)
                 object.value = object.value.slice(0, object.maxLength)
         }
-        $(document).on('change','.middle .form-wrapper-gift-beer #notAvail', function(){
+        $(document).on('change','.middle .form-wrapper-gift-mug #notAvail', function(){
             if($(this).is(':checked'))
             {
-                $('.middle .form-wrapper-gift-beer .custom-month-selection select').attr('disabled','disabled');
-                $('.middle .form-wrapper-gift-beer .custom-date-selection select').attr('disabled','disabled');
-                $('.middle .form-wrapper-gift-beer .custom-year-selection select').attr('disabled','disabled');
+                $('.middle .form-wrapper-gift-mug .custom-month-selection select').attr('disabled','disabled');
+                $('.middle .form-wrapper-gift-mug .custom-date-selection select').attr('disabled','disabled');
+                $('.middle .form-wrapper-gift-mug .custom-year-selection select').attr('disabled','disabled');
             }
             else
             {
-                $('.middle .form-wrapper-gift-beer .custom-month-selection select').removeAttr('disabled');
-                $('.middle .form-wrapper-gift-beer .custom-date-selection select').removeAttr('disabled');
-                $('.middle .form-wrapper-gift-beer .custom-year-selection select').removeAttr('disabled');
+                $('.middle .form-wrapper-gift-mug .custom-month-selection select').removeAttr('disabled');
+                $('.middle .form-wrapper-gift-mug .custom-date-selection select').removeAttr('disabled');
+                $('.middle .form-wrapper-gift-mug .custom-year-selection select').removeAttr('disabled');
             }
         });
     </script>
@@ -1052,7 +1061,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
                                 <br>
                                 <label class="birth-label">BirthDate (we'll send them goodies): </label>
-                                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="confirmMail">
+                                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect not-sure-label" for="notAvail">
                                     <input type="checkbox" id="notAvail" name="notAvail" value="1" class="mdl-checkbox__input">
                                     <span class="mdl-checkbox__label">Not sure</span>
                                 </label>

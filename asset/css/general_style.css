@@ -1167,7 +1167,7 @@ input::-webkit-inner-spin-button {
 }
 .giftABeer .middle .birth-label
 {
-    margin-left:-230px;
+    margin-left:30px;
 }
 .giftABeer .middle .form-wrapper .mug-suggestions .mdl-chip, .giftABeer .middle .form-wrapper-gift-mug .mug-suggestions .mdl-chip
 {
@@ -1181,7 +1181,8 @@ input::-webkit-inner-spin-button {
 {
     background-color:#000 !important;
 }
-.giftABeer .middle .mdl-textfield--floating-label.is-focused .mdl-textfield__label
+.giftABeer .middle .mdl-textfield--floating-label.is-focused .mdl-textfield__label,
+.mdl-textfield--floating-label.is-dirty .mdl-textfield__label
 {
     color:#000 !important;
 }
@@ -1189,7 +1190,12 @@ input::-webkit-inner-spin-button {
 {
     font-family:'Averia Serif Libre' !important;
 }
-
+.giftABeer .middle .form-wrapper-gift-mug .not-sure-label
+{
+    display: inline;
+    vertical-align: top;
+    margin-left: 10px;
+}
 @media screen and (max-width: 1024px)
 {
     .mailPage .mail-content
@@ -1289,6 +1295,15 @@ input::-webkit-inner-spin-button {
     {
         width:80%;
         margin:0 auto 20px auto;
+    }
+    .giftABeer .middle .birth-label
+    {
+        font-size:12px;
+        margin-left: -10px;
+    }
+    .giftABeer .middle .form-wrapper-gift-mug .not-sure-label .mdl-checkbox__label
+    {
+        font-size:12px;
     }
 }
 

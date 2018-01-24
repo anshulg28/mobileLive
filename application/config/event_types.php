@@ -102,10 +102,11 @@ $config['eventTc'] = '<div class="page-content">
         <li>If an attendee cancels their attendance to your event, the transaction fee of 2.24% will be borne by the attendee.</li></ol></p>
         
         <br><h5><strong>Pay Outs to Organisers:</strong></h5>
-        <p><ol><li>For paid events, we will collect money from the customer on your behalf. This is to ensure complete refund in case of cancelled events.</li>
+        <p><ol><li>For paid events, we will collect money from the customer on your behalf. This is to ensure a refund in case of cancelled events.</li>
         <li>Doolally will bear the 2.24% payment gateway fees except during cancellations by either the organiser or attendee.</li>
         <li>Eventshigh is our payment partner. Please check out their credentials here - www.eventshigh.com</li>
-        <li>For payment for events, we will hand over a cheque in the name of organiser. As an organiser, once you have crossed Rs 30,000 in earnings, Doolally will deduct 10% TDS.</li></ol></p>
+        <li>For payment for events, we will hand over a cheque in the name of organiser. As an organiser, once you have crossed Rs 30,000 in earnings, Doolally will deduct 10% TDS.</li>
+        <li>Please refer to the organiser’s dashboard in the My Events section for deductions.</li></ol></p>
 
         <br><h5><strong>Contact:</strong></h5>
         <p>Email: events@doolally.in</p>

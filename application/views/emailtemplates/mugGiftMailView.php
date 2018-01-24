@@ -35,6 +35,12 @@
             Date of Birth: <?php $d = date_create($mailData['birthDate']); echo date_format($d,'jS M');?><br>
             <?php
         }
+        else
+        {
+            ?>
+            Date of Birth: NA
+            <?php
+        }
     ?>
     Date of Joining: <?php $d = date_create($mailData['membershipStart']); echo date_format($d,'jS F Y');?><br>
     Date of Expiry: <?php $d = date_create($mailData['membershipEnd']); echo date_format($d,'jS F Y');?><br>

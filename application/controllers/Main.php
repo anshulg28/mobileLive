@@ -49,17 +49,24 @@ class Main extends MY_Controller
                             $d = date_create($eventData[0]['eventDate']);
                             $st = date_create($eventData[0]['startTime']);
                             $et = date_create($eventData[0]['endTime']);
-                            $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
-                            if ($eventData[0]['isEventEverywhere'] == '1') {
-                                $forDescription .= " @ All Taprooms";
-                            }
-                            elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                            if($event[1] == TWITTER_DESCRIPTION_REMOVE)
                             {
-                                $forDescription .= " @ " ."1st Brewhouse, Pune";
+                                $forDescription = '';
                             }
                             else
                             {
-                                $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
+                                $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
+                                if ($eventData[0]['isEventEverywhere'] == '1') {
+                                    $forDescription .= " @ All Taprooms";
+                                }
+                                elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                                {
+                                    $forDescription .= " @ " ."1st Brewhouse, Pune";
+                                }
+                                else
+                                {
+                                    $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
+                                }
                             }
                             $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
                             $data['meta']['description'] = $forDescription;
@@ -85,17 +92,24 @@ class Main extends MY_Controller
                             $d = date_create($eventData[0]['eventDate']);
                             $st = date_create($eventData[0]['startTime']);
                             $et = date_create($eventData[0]['endTime']);
-                            $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
-                            if ($eventData[0]['isEventEverywhere'] == '1') {
-                                $forDescription .= " @ All Taprooms";
-                            }
-                            elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                            if($eventData[0]['eventId'] == TWITTER_DESCRIPTION_REMOVE)
                             {
-                                $forDescription .= " @ " ."1st Brewhouse, Pune";
+                                $forDescription = '';
                             }
                             else
                             {
-                                $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
+                                $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
+                                if ($eventData[0]['isEventEverywhere'] == '1') {
+                                    $forDescription .= " @ All Taprooms";
+                                }
+                                elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                                {
+                                    $forDescription .= " @ " ."1st Brewhouse, Pune";
+                                }
+                                else
+                                {
+                                    $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
+                                }
                             }
                             $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
                             $data['meta']['description'] = $forDescription;
@@ -254,18 +268,26 @@ class Main extends MY_Controller
                                 $d = date_create($eventData[0]['eventDate']);
                                 $st = date_create($eventData[0]['startTime']);
                                 $et = date_create($eventData[0]['endTime']);
-                                $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
-                                if ($eventData[0]['isEventEverywhere'] == '1') {
-                                    $forDescription .= " @ All Taprooms";
-                                }
-                                elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                                if($event[1] == TWITTER_DESCRIPTION_REMOVE)
                                 {
-                                    $forDescription .= " @ " ."1st Brewhouse, Pune";
+                                    $forDescription = '';
                                 }
                                 else
                                 {
-                                    $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
+                                    $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
+                                    if ($eventData[0]['isEventEverywhere'] == '1') {
+                                        $forDescription .= " @ All Taprooms";
+                                    }
+                                    elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                                    {
+                                        $forDescription .= " @ " ."1st Brewhouse, Pune";
+                                    }
+                                    else
+                                    {
+                                        $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
+                                    }
                                 }
+
                                 $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
                                 $data['meta']['description'] = $forDescription;
                                 $data['meta']['link'] = $eventData[0]['eventShareLink'];
@@ -306,18 +328,26 @@ class Main extends MY_Controller
                                 $d = date_create($eventData[0]['eventDate']);
                                 $st = date_create($eventData[0]['startTime']);
                                 $et = date_create($eventData[0]['endTime']);
-                                $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
-                                if ($eventData[0]['isEventEverywhere'] == '1') {
-                                    $forDescription .= " @ All Taprooms";
-                                }
-                                elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                                if($eventData[0]['eventId'] == TWITTER_DESCRIPTION_REMOVE)
                                 {
-                                    $forDescription .= " @ " ."1st Brewhouse, Pune";
+                                    $forDescription = '';
                                 }
                                 else
                                 {
-                                    $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
+                                    $forDescription = date_format($d, DATE_FORMAT_SHARE) . ", " . date_format($st, 'g:ia');
+                                    if ($eventData[0]['isEventEverywhere'] == '1') {
+                                        $forDescription .= " @ All Taprooms";
+                                    }
+                                    elseif($eventData[0]['isSpecialEvent'] == STATUS_YES)
+                                    {
+                                        $forDescription .= " @ " ."1st Brewhouse, Pune";
+                                    }
+                                    else
+                                    {
+                                        $forDescription .= " @ " . $eventData[0]['locName'] . " Taproom";
+                                    }
                                 }
+
                                 $truncated_RestaurantName = (strlen(strip_tags($eventData[0]['eventDescription'])) > 140) ? substr(strip_tags($eventData[0]['eventDescription']), 0, 140) . '..' : strip_tags($eventData[0]['eventDescription']);
                                 $data['meta']['description'] = $forDescription;
                                 $data['meta']['link'] = $eventData[0]['eventShareLink'];
@@ -2882,7 +2912,7 @@ $this->load->view('MobileHomeView', $data);
             }
 
             $instaDetails = array(
-                'amount' => '10',
+                'amount' => '3000',
                 'purpose' => 'New Mug #'.$post['mugId'],
                 'buyer_name' => $firstName.' '.$lastName,
                 'email' => $emailId,
@@ -3159,7 +3189,7 @@ $this->load->view('MobileHomeView', $data);
 
         if(isset($post['totalPints']))
         {
-            $totPrice = (int)$post['totalPints'] * 10;
+            $totPrice = (int)$post['totalPints'] * 300;
             $instaDetails = array(
                 'amount' => $totPrice,
                 'purpose' => 'Pint purchase, Qty: '.$post['totalPints'],
@@ -3192,7 +3222,7 @@ $this->load->view('MobileHomeView', $data);
                         $receiverOccasion = $post['receiverOccasion'];
                     }
                     //$birthDate = $post['buyerYear'].'-'.$post['buyerMonth'].'-'.$post['buyerDate'];
-                    $sumPints = (int)$post['totalPints'] * 10;// FULL_PINT_PRICE;
+                    $sumPints = (int)$post['totalPints'] * 300;// FULL_PINT_PRICE;
                     $details = array(
                         'buyerName' => $post['buyerFName'].' '.$post['buyerLName'],
                         'buyerEmail' => $post['buyerEmail'],

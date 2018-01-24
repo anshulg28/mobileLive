@@ -163,7 +163,11 @@
                             if($row['costType'] != "1")
                             {
                                 $hostEarns = $superTotal;
-                                $hostTds = ($hostEarns*10)/100;
+                                $hostTds = 0;
+                                if($superTotal>30000)
+                                {
+                                    $hostTds = ($hostEarns*10)/100;
+                                }
                                 ?>
                                 <div class="host-event-segregation">
                                     <hr>
@@ -203,24 +207,31 @@
 
                                         </div>
                                     </div>
-                                    <div class="custom-host-card mdl-shadow--2dp">
-                                        <div class="mdl-card__supporting-text">
-                                            <ul class="demo-list-icon mdl-list">
-                                                <li class="mdl-list__item">
+                                    <?php
+                                        if($hostTds != 0)
+                                        {
+                                            ?>
+                                            <div class="custom-host-card mdl-shadow--2dp">
+                                                <div class="mdl-card__supporting-text">
+                                                    <ul class="demo-list-icon mdl-list">
+                                                        <li class="mdl-list__item">
                                                     <span class="pull-left cost-heading">
                                                         TDS
                                                     </span>
-                                                    <span class="pull-right">
+                                                            <span class="pull-right">
                                                         <?php
                                                         $hostEarns -= $hostTds;
                                                         echo '- Rs. '.$hostTds;
                                                         ?>
                                                     </span>
-                                                </li>
-                                            </ul>
+                                                        </li>
+                                                    </ul>
 
-                                        </div>
-                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php
+                                        }
+                                    ?>
                                     <div class="custom-host-card mdl-shadow--2dp">
                                         <div class="mdl-card__supporting-text">
                                             <ul class="demo-list-icon mdl-list">

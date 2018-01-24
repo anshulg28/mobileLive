@@ -3142,6 +3142,11 @@
         }
     }
 
+
+    $(document).on('click','#eventEditSave .click-overlay', function(){
+        mySnackTime("You can't edit this. You will need to contact the Community Manager.");
+    });
+
     //For Event Edit
     var eventEditStatus = false;
     var isReqEditPending = false;

@@ -157,6 +157,7 @@ elseif(isset($eventDetails) && myIsMultiArray($eventDetails))
                         <div class="event-header-name mdl-grid">
                             <div class="mdl-cell mdl-cell--6-col">
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                    <div class="click-overlay"></div>
                                     <select id="eventPlace" class="mdl-textfield__input" disabled>
                                         <option value="">Select</option>
                                         <?php
