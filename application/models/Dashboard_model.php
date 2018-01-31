@@ -1215,4 +1215,20 @@ class Dashboard_Model extends CI_Model
         return true;
     }
 
+    function getOrgCombinedEvents($userId)
+    {
+        $query = "SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames', creatorName,
+                    creatorEmail, creatorPhone, 'new' as 'type'
+                    FROM eventmaster WHERE costType != 1 AND ifActive = ".ACTIVE." AND ifApproved = ".EVENT_APPROVED." AND isEventCancel = 0 
+                    AND ifAutoCreated = 0 AND userId = ".$userId." GROUP BY userId
+                    UNION
+                    SELECT GROUP_CONCAT(eventId) AS 'ids', GROUP_CONCAT(eventName SEPARATOR ';') AS 'eveNames', creatorName, 
+                    creatorEmail, creatorPhone, 'old' as 'type'
+                    FROM eventcompletedmaster WHERE costType != 1 AND ifActive = ".ACTIVE." AND ifApproved = ".EVENT_APPROVED." AND isEventCancel = 0 
+                    AND ifAutoCreated = 0 AND userId = ".$userId." GROUP BY userId";
+
+        $result = $this->db->query($query)->result_array();
+        return $result;
+    }
+
 }

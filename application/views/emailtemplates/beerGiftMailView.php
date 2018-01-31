@@ -34,7 +34,7 @@
             <?php
         }
     ?>
-    Anytime you are in the mood for a pint, or <?php echo $mailData['totalPints'];?>, drop into to any Doolally Taproom, show the person serving you this email and enjoy your thoughtful present.<br><br>
+    Anytime you are in the mood for a pint, or <?php echo $mailData['totalPints'];?>, drop into any Doolally Taproom, show the person serving you this email and enjoy your thoughtful present.<br><br>
     In case you don't want to drink all at one go, that's perfectly fine. Just redeem one code for each pint.<br><br>
     <?php
         if(isset($mailData['specialMsg']) && isStringSet($mailData['specialMsg']))

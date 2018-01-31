@@ -893,6 +893,29 @@ $this->load->view('MobileHomeView', $data);
 
     }
 
+
+    /*function getOrgSum()
+    {
+        $data = array();
+
+        $orgEvents = $this->dashboard_model->getOrgCombinedEvents($this->userMobId);
+        if(isset($orgEvents) && myIsArray($orgEvents))
+        {
+            foreach($orgEvents as $key => $row)
+            {
+                switch($row['type'])
+                {
+                    case 'new':
+
+                        break;
+                    case 'old':
+                        break;
+                }
+            }
+        }
+
+        return $data;
+    }*/
     public function eventCancel()
     {
         $post = $this->input->post();
